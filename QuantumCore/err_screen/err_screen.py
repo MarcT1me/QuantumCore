@@ -1,0 +1,152 @@
+
+import pygame
+
+import time
+import traceback
+import sys
+from loguru import logger
+
+from QuantumCore.data.config import __APPLICATION_FOLDER__
+from QuantumCore.data.config import APPLICATION_ICO_path, APPLICATION_ICO_name
+
+
+def err_screen(err):
+    """ Окно ошибки """
+
+    # reinit pygame
+    pygame.quit()      # reset everything
+    pygame.init()      # standard init
+
+    # printing error
+    caption = f'ERROR: {traceback.extract_stack()[0]}'
+    traceback.print_exc()
+    logger.error(f'ERROR: {err}')
+
+    # background surface
+    background = pygame.image.load(rf'{__APPLICATION_FOLDER__}/QuantumCore/err_screen/err_background.png')
+    background_size = .9
+    background = pygame.transform.scale_by(background, background_size)
+    # text surface
+    text_surface = pygame.Surface(background.get_size())
+    text_surface.set_colorkey((0, 0, 0))
+    clock = pygame.time.Clock()
+
+    # animation
+    animation_time: float = 1
+    background.set_alpha(1)
+
+    # set pygame screen
+    screen = pygame.display.set_mode(background.get_size(),
+                                     flags=pygame.NOFRAME)
+    pygame.display.set_caption(caption)
+    pygame.display.set_icon(
+        pygame.image.load(rf'{__APPLICATION_FOLDER__}/{APPLICATION_ICO_path}/{APPLICATION_ICO_name}')
+    )
+
+    # traceback text variable
+    default_col = 5
+    col: int = default_col
+    color_1: int = 1
+    color: tuple = (220, 60, 60)
+    max_text_lines = screen.get_height()/18
+
+    # text
+    first_font = pygame.font.SysFont('Calibri', 20, bold=True).render(
+        f'  In progress been get Exception. to close press:'
+        f'esc, quit or  on font  ', True, 'white')
+    first_font_pos = (20, 10)
+    first_font_rect = pygame.rect.Rect(*first_font_pos, *first_font.get_size())
+
+    second_font1 = pygame.font.SysFont('Arial', 18).render(
+        f'We have`t check your logs, but you cen believe that we already working on it bug',
+        True, (150, 220, 220))
+    second_font1_pos = (10, (max_text_lines + 2) * 15 - 5)
+    # second_font1_rect = pygame.rect.Rect(*second_font1_pos, *second_font1.get_size())
+
+    second_font2 = pygame.font.SysFont('Arial', 15).render(
+        f'  that restart press R or on font  ', True, (220, 220, 150))
+    second_font2_pos = (10, (max_text_lines + 3) * 15)
+    second_font2_rect = pygame.rect.Rect(*second_font2_pos, *second_font2.get_size())
+
+    start_time: float = time.time()
+    while True:
+        """events"""
+        for event in pygame.event.get():
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    pygame.quit()
+                    sys.exit()
+                elif event.key == pygame.K_r:
+                    pygame.quit()
+                    return True
+            elif event.type == pygame.MOUSEBUTTONUP:
+                if event.button == 1 and second_font2_rect.collidepoint(*pygame.mouse.get_pos()):
+                    pygame.quit()
+                    return True
+                elif event.button == 1 and first_font_rect.collidepoint(*pygame.mouse.get_pos()):
+                    pygame.quit()
+                    sys.exit()
+
+        """update app"""
+        def add_text(*, nl=False):
+            text_lines.append({
+                'text': '',
+                'pos_variable': [col, line],
+                'color': color,
+                'count': nl,
+            })
+
+        line: int = 3
+        text_lines = list()
+        add_text()
+
+        if time.time() - start_time <= animation_time:
+            for symbol in traceback.format_exc():
+                if symbol == f'\n':
+                    col = default_col
+                    line += 1
+                    add_text(nl=True)
+                else:
+                    if line <= max_text_lines:
+                        col += 1
+                        if symbol == '"' and symbol != '\n':
+                            color_1 = color_1 * -1
+                            color = (220, 60, 60) if color_1 == 1 else (200, 200, 200)
+                            add_text()
+
+                        text_lines[-1]['text'] += str(symbol)
+                        text_lines[-1]['pos_variable'] = [min(col, text_lines[-1]['pos_variable'][0]), line]
+                        text_lines[-1]['color'] = color
+
+        """Update window"""
+        screen.fill((0, 0, 0))
+
+        t = time.time() - start_time
+        screen.blit(background, (0, -20 / (.75/background_size)))
+        background.set_alpha(int(t/animation_time*100) if t <= animation_time else 100)
+
+        pygame.draw.rect(screen, 'gray', first_font_rect, 1)
+        pygame.draw.rect(screen, 'gray', second_font2_rect, 1)
+
+        screen.blit(first_font, first_font_pos)
+
+        pust_font_width = 0
+        for text_line in text_lines:
+            current_pos = text_line['pos_variable']
+            text_font = pygame.font.SysFont('Calibri', 15).render(f'{text_line["text"]}' if col <= 87 else '.',
+                                                                  True, text_line['color'])
+
+            text_surface.blit(
+                text_font, (current_pos[0]+pust_font_width if not text_line['count'] else 0,
+                            current_pos[1] * 15 - text_font.get_height()//2)
+            )
+            pust_font_width = text_font.get_width()
+        screen.blit(text_surface, (0, 0))
+
+        screen.blit(second_font1, second_font1_pos)
+        pygame.draw.line(screen, (150, 150, 150),
+                         (0, (max_text_lines+1)*15+5), (screen.get_width(), (max_text_lines+1)*15+5), 4)
+        screen.blit(second_font2, second_font2_pos)
+
+        pygame.display.flip()
+        clock.tick(30)
