@@ -17,6 +17,10 @@ class TestScene(Location):
         self.builder = Builder(target=rf"{config.__APPLICATION_FOLDER__}/{settings.SAVES_path}/dev.xml")
 
     def build(self, app, add) -> None:
-            
+        
+        self.builder.read_tpt()
+        self.builder.read_sav(app, add)
+        self.builder.read_custom_tags(app, add)
+        
         logger.debug('TestScene - load\n\n')
         
