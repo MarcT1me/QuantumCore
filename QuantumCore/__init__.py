@@ -13,7 +13,7 @@ import QuantumCore.graphic
 import QuantumCore.time
 import QuantumCore.scene
 
-__version__ = '0.8.7'
+__version = '0.9.2:1'
 name, short_name = 'QuantumCore', 'PyQC'
 
 __authors: dict = {
@@ -28,7 +28,7 @@ __authors: dict = {
     'composers': 'Dmitry Shcherbinin'
 }
 
-logger.info(f'\n\n{name}: {__version__=}\n')
+logger.info(f'\n\n{name}: {__version=}\n')
 logger.info(f'\n\n{pformat(__authors)}\n')
 
 
