@@ -7,7 +7,7 @@ import time
 from loguru import logger
 
 import QuantumCore
-from gamedata import settings  # there is a rewrite
+from GameData import settings  # there is a rewrite
 # engine elements imports
 from QuantumCore.data import config
 

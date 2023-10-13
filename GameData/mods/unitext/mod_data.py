@@ -2,7 +2,7 @@
 import QuantumCore.graphic
 
 from QuantumCore.data import config
-from gamedata import settings
+from GameData import settings
 
 from core.elements.locations import TestScene
 from core.elements.entities import Earth

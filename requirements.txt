@@ -1,16 +1,12 @@
-QuantumCore dependencies:
+QuantumCore:
 
 PyGame
 ModernGL
+PyGlm
 Numpy
 PyWaveFront
-PyGlm
 Loguru
+
 PyBullet (await)
 PyAssimp (await)
-
-Game dependencies:
-PyGame
-PyGlm
-Numpy
 jmespath (await)

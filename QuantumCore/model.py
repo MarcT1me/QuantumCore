@@ -12,11 +12,12 @@ from QuantumCore.data.config import FAR, GAMMA
 class BaseModel:
 
     # vectors, used in update, that calculate
-    vec_x = glm.vec3(1, 0, 0)
-    vec_y = glm.vec3(0, 1, 0)
-    vec_z = glm.vec3(0, 0, 1)
+    __vec_x = glm.vec3(1, 0, 0)
+    __vec_y = glm.vec3(0, 1, 0)
+    __vec_z = glm.vec3(0, 0, 1)
 
-    def __init__(self, app, vao_name, tex_id, pos=(0, 0, 0), rot=(0, 0, 0), scale=(1, 1, 1), render_area=FAR) -> None:
+    def __init__(self, app, vao_name: str, tex_id: str,
+                 pos=(0, 0, 0), rot=(0, 0, 0), scale=(1, 1, 1), render_area=FAR) -> None:
         self.app = app
 
         # location in space
@@ -43,9 +44,9 @@ class BaseModel:
         # translate
         m_model = glm.translate(m_model, self.pos)
         # rotate
-        m_model = glm.rotate(m_model, self.rot.x, self.vec_x)
-        m_model = glm.rotate(m_model, self.rot.y, self.vec_y)
-        m_model = glm.rotate(m_model, self.rot.z, self.vec_z)
+        m_model = glm.rotate(m_model, self.rot.x, self.__vec_x)
+        m_model = glm.rotate(m_model, self.rot.y, self.__vec_y)
+        m_model = glm.rotate(m_model, self.rot.z, self.__vec_z)
         # scale
         m_model = glm.scale(m_model, self.scale)
         return m_model
@@ -99,6 +100,7 @@ ATTENTION!!! ModelName to be match in all place ATTENTION!!!"""
         self.lights = QuantumCore.graphic.light.lights_list
         self._on_init_()
 
+    # in development
     """def on_init(self):
         self.program['m_view_light'].write(self.app.light.m_view_light)
         # resolution
@@ -169,11 +171,12 @@ ATTENTION!!! ModelName to be match in all place ATTENTION!!!"""
         """ update light position """
         for count in range(min(len(self.lights), 200)):
             self.shader_program[f'lights_source[{count}].position'].write(self.lights[count].position)
+    
+    # in development
+    """def update_shadow(self) -> None:
+        self.shadow_program['m_model'].write(self.m_model)
 
-    """def update_shadow(self):
-        self.shadow_program['m_model'].write(self.m_model)"""
-
-    """def render_shadow(self):
+    def render_shadow(self) -> None:
         self.update_shadow()
         self.shadow_vao.render()"""
 
@@ -187,6 +190,7 @@ class Cube(ExtendedBaseModel):
         super().__init__(app, vao_name, tex_id, self.combine_vector(pos, (0, 0, 0)), rot, scale, render_area)
 
 
+# in development
 """
 class SkyBox(BaseModel):
     def __init__(self, app, vao_name='skybox', tex_id='skybox',

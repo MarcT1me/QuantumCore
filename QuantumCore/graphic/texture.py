@@ -28,7 +28,7 @@ class Texture:
     * !!! attention: init before Mash class !!!
     """
 
-    name = dict()
+    name: dict[str: str] = dict()
 
     def __init__(self) -> None:
         """ NOT USE THIS INITIALIZATION;
@@ -39,7 +39,7 @@ class Texture:
         self.ctx = QuantumCore.graphic.context
 
         # textures array
-        self.textures = {
+        self.textures: dict[str: moderngl.Texture] = {
             'test1': self.__get_texture__(
                 path=rf'{config.__APPLICATION_FOLDER__}/QuantumCore/data/textures/test_texture.jpg'),
             'empty': self.__get_texture__(

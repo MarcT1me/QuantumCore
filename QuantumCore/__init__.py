@@ -13,10 +13,10 @@ import QuantumCore.graphic
 import QuantumCore.time
 import QuantumCore.scene
 
-version = '0.8.7'
+__version__ = '0.8.7'
 name, short_name = 'QuantumCore', 'PyQC'
 
-authors: dict = {
+__authors: dict = {
     'programmers': {
         'CoreTech programmers': 'Timur Shestakov',
         'Gameplay programmers': ('Timur Shestakov', 'Dmitry Shcherbinin'),
@@ -28,8 +28,8 @@ authors: dict = {
     'composers': 'Dmitry Shcherbinin'
 }
 
-logger.info(f'\n\n{name}: {version=}\n')
-logger.info(f'\n\n{pformat(authors)}\n')
+logger.info(f'\n\n{name}: {__version__=}\n')
+logger.info(f'\n\n{pformat(__authors)}\n')
 
 
 def init() -> None:

@@ -32,6 +32,7 @@ Micro code tag with name "code" that do load easy
             <Imports>
                 <main1>import glm</main1>
                 <main2>import QuantumCore</main2>
+                <dep1>from gamedata.settings import MODEL_path</dep1>
                 <i1>from core.elements.entities import Cat, Cube, MovingCube, WoodenWatchTower, Earth</i1>
             </Imports>
             <list>(Cat, Cube, MovingCube, WoodenWatchTower, Earth)</list>

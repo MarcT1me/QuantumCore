@@ -10,8 +10,8 @@ APPLICATION_VERSION: str = '0.4.3'
 """ Path settings """
 MODEL_path: str = r'core/models'
 TEXTURE_path: str = r'core/textures'
-MODS_path: str = r'gamedata/mods'
-SAVES_path: str = r'gamedata/saves'
+MODS_path: str = r'GameData/mods'
+SAVES_path: str = r'GameData/saves'
 
 
 """ Settings functional """
@@ -20,7 +20,7 @@ datafile = None
 
 def _read_datafile_():
     """ Read CONFIG files """
-    with open(rf"{config.__APPLICATION_FOLDER__}/gamedata/config.json") as file:
+    with open(rf"{config.__APPLICATION_FOLDER__}/GameData/config.json") as file:
         return json.load(file)
 
 

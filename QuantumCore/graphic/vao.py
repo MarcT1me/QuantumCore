@@ -1,4 +1,3 @@
-
 # other
 from loguru import logger
 
@@ -9,7 +8,7 @@ from QuantumCore.graphic.shaders.shader_program import ShaderProgram
 
 
 class VAO:
-    def __init__(self, shader_name) -> None:
+    def __init__(self, shader_name: tuple[str, str]) -> None:
         self.ctx = QuantumCore.graphic.context
 
         # VAO dependencies
@@ -18,8 +17,8 @@ class VAO:
         self.program.add(shader_name[0], shader_name[1])
 
         # VAO array
-        self.VAOs = {
-            'cube': self.__get_vao__(
+        self.VAOs: dict[str, QuantumCore.graphic.context.vertex_array] = {
+            'cube': self.__get_vao(
                 program=self.program.programs[shader_name[1]],
                 vbo=self.vbo.VBOs['cube']
             )
@@ -30,25 +29,27 @@ class VAO:
             #     program=self.program.programs['advanced_skybox'],
             #     vbo=self.vbo.VBOs['advanced_skybox'])
         }
-        self.load_vaos(shader_name)
+        self._load_vaos(shader_name)
     
-    def load_vaos(self, shader_name) -> None:
+    def _load_vaos(self, shader_name) -> None:
         # load custom VAO`s
         for name in self.vbo.VBOs.keys():
-            # initialize VAO models
-            self.VAOs[name] = self.__get_vao__(
+            self.VAOs[name] = self.__get_vao(
                 program=self.program.programs[shader_name[1]],
-                vbo=self.vbo.VBOs[name])
-            # initialize the shadow of the VAO model
+                vbo=self.vbo.VBOs[name]
+            )  # initialize VAO models
+            
+            # in development
             """
             self.VAOs[f'shadow_{name}'] = self.get_vao(
                 program=self.program.programs['shadow_map'],
-                vbo=self.vbo.VBOs[name])
+                vbo=self.vbo.VBOs[name]
+                )  # initialize the shadow of the VAO model
             """
         
         logger.debug('VAO - init\n\n')
 
-    def __get_vao__(self, program, vbo):
+    def __get_vao(self, program, vbo):
         vao = self.ctx.vertex_array(program, [(vbo.vbo, vbo.formats, *vbo.attributes)], skip_errors=True)
         return vao
 

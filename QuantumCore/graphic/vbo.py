@@ -20,7 +20,7 @@ class VBO:
         """ All VBO`s of the application itself. """
 
         # VBO array
-        self.VBOs = {
+        self.VBOs: dict[str: BaseVBO] = {
             'cube': CubeVBO(),
             # 'skybox': SkyBoxVBO(),
             # 'advanced_skybox': AdvancedSkyBoxVBO(),
@@ -137,9 +137,10 @@ class SkyBoxVBO(BaseVBO):
         return vertex_data
 
 
-class AdvancedSkyBoxVBO(BaseVBO):
+# in development
+"""class AdvancedSkyBoxVBO(BaseVBO):
 
-    __z__ = 0.9999  # z cord in shader cords system
+    __z: int = 0.9999  # z cord in shader cords system
 
     def __init__(self) -> None:
         super().__init__()
@@ -149,9 +150,9 @@ class AdvancedSkyBoxVBO(BaseVBO):
         self.attributes: list = ['in_position']
 
     def _get_vertex_data_(self) -> np.array:
-        vertices = [(-1, -1, self.__z__), (3, -1, self.__z__), (-1, 3, self.__z__)]
+        vertices = [(-1, -1, self.__z), (3, -1, self.__z), (-1, 3, self.__z)]
         vertex_data = np.array(vertices, dtype='f4')
-        return vertex_data
+        return vertex_data"""
 
 
 class CustomVBO(BaseVBO):
@@ -162,12 +163,12 @@ class CustomVBO(BaseVBO):
 
 
     # custom VBO`s init.
-    for name, (form, atr, f_path, f_ext, t_path, t_ext) in CustomVBO.name.items():
+    for name, (form, atr, f_path, f_ext, t_ext) in CustomVBO.name.items():
         self.VBOs[name] = CustomVBO(app, formats=form, attributes=atr)
 
     * !!! attention: init before Mash class !!!
     """
-    name = dict()
+    name: dict[str: tuple[str, tuple[str], str, str, str]] = dict()
 
     def __init__(self, *, formats, attributes, path, ext) -> None:
         """ NOT USE THIS INITIALIZATION;

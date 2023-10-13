@@ -93,8 +93,8 @@ def resset() -> None:
     logger.info(f'screen size = {config.SCREEN_size},  context size= {context.screen.size}')
     
     """ REWRITE Engine variables """
-    QuantumCore.graphic.camera.camera.aspect_ratio = config.SCREEN_size[0] / config.SCREEN_size[1]
-    QuantumCore.graphic.camera.camera.m_proj = QuantumCore.graphic.camera.camera.__get_projection_matrix__
+    QuantumCore.graphic.camera.camera._aspect_ratio = config.SCREEN_size[0] / config.SCREEN_size[1]
+    QuantumCore.graphic.camera.camera.m_proj = QuantumCore.graphic.camera.camera._get_projection_matrix_
 
     logger.debug(f'graphics - restart\n\n')
     
