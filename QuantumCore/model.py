@@ -2,6 +2,7 @@
 That your code work correct inheritance on ExtendedBaseModel
  """
 
+from copy import copy
 import glm  # math
 
 import QuantumCore.graphic
@@ -97,7 +98,8 @@ ATTENTION!!! ModelName to be match in all place ATTENTION!!!"""
 
         # variable
         self.texture = None
-        self.lights = QuantumCore.graphic.light.lights_list
+        self.lights = copy(QuantumCore.graphic.light.lights_list)
+        self.glas = lambda: min(len(self.lights[0]), 200)
         self._on_init_()
 
     # in development
@@ -133,14 +135,18 @@ ATTENTION!!! ModelName to be match in all place ATTENTION!!!"""
         """ init model """
 
         # light
-        arr_size: int = min(len(self.lights), 200)
+        arr_size: int = self.glas()
         self.shader_program['lights_source_size'] = arr_size
-        for count in range(arr_size):
-            self.shader_program[f'lights_source[{count}].position'].write(self.lights[count].position)
-            self.shader_program[f'lights_source[{count}].Ia'].write(self.lights[count].Ia)
-            self.shader_program[f'lights_source[{count}].Id'].write(self.lights[count].Id)
-            self.shader_program[f'lights_source[{count}].Is'].write(self.lights[count].Is)
-            self.shader_program[f'lights_source[{count}].size'] = self.lights[count].size
+        i = 0
+        for light in self.lights[0].values():
+            if i >= arr_size:
+                break
+            self.shader_program[f'lights_source[{i}].position'].write(light.position)
+            self.shader_program[f'lights_source[{i}].Ia'].write(light.Ia)
+            self.shader_program[f'lights_source[{i}].Id'].write(light.Id)
+            self.shader_program[f'lights_source[{i}].Is'].write(light.Is)
+            self.shader_program[f'lights_source[{i}].size'] = light.size
+            i += 1
 
         # gamma
         self.shader_program['gamma'] = GAMMA
@@ -169,8 +175,10 @@ ATTENTION!!! ModelName to be match in all place ATTENTION!!!"""
 
     def __update_light__(self) -> None:
         """ update light position """
-        for count in range(min(len(self.lights), 200)):
-            self.shader_program[f'lights_source[{count}].position'].write(self.lights[count].position)
+        i = 0
+        for light in self.lights[0].values():
+            self.shader_program[f'lights_source[{i}].position'].write(light.position)
+            i += 1
     
     # in development
     """def update_shadow(self) -> None:

@@ -44,23 +44,23 @@ class Cat(ExtendedBaseModel):
         velocity = self.speed * QuantumCore.time.delta_time
         keys = pygame.key.get_pressed()
         if keys[pygame.K_i]:
-            self.pos += velocity * self.vec_x
+            self.pos += velocity * self.__vec_x
         if keys[pygame.K_k]:
-            self.pos -= velocity * self.vec_x
+            self.pos -= velocity * self.__vec_x
         if keys[pygame.K_l]:
-            self.pos += velocity * self.vec_z
+            self.pos += velocity * self.__vec_z
         if keys[pygame.K_j]:
-            self.pos -= velocity * self.vec_z
+            self.pos -= velocity * self.__vec_z
         if keys[pygame.K_m]:
-            self.pos += velocity * self.vec_y
+            self.pos += velocity * self.__vec_y
         if keys[pygame.K_n]:
-            self.pos -= velocity * self.vec_y
+            self.pos -= velocity * self.__vec_y
 
         velocity /= 5
         if keys[pygame.K_DELETE]:
-            self.rot -= velocity * self.vec_z
+            self.rot -= velocity * self.__vec_z
         if keys[pygame.K_PAGEDOWN]:
-            self.rot += velocity * self.vec_z
+            self.rot += velocity * self.__vec_z
 
         if keys[pygame.K_LCTRL]:
             self.speed = 0.03

@@ -8,12 +8,16 @@ from loguru import logger
 
 import QuantumCore
 from GameData import settings  # there is a rewrite
-# engine elements imports
-from QuantumCore.data import config
 
 # core elements
 from core.elements.locations import TestScene, Location  # load game scenes
 from core.skripts import Mods
+
+# engine elements imports
+from QuantumCore.graphic.texture import CustomTexture_name
+from QuantumCore.graphic.vbo import CustomVBO_name
+from QuantumCore.data import config
+from GameData.settings import MODEL_path
 
 
 class Source:
@@ -21,6 +25,22 @@ class Source:
         """ THE CORE OF THE GAME """
         pygame.init(), pygame.font.init(), settings.rewrite_config()  # Initializing game dependencies
 
+        CustomVBO_name['WoodenWatchTower'] = (
+            '2f 3f 3f',
+            ['in_texcoord_0', 'in_normal', 'in_position'],
+            f'{config.__APPLICATION_FOLDER__}/{MODEL_path}/WoodenWatchTower', 'obj', 'jpg')
+        CustomVBO_name['cat'] = (
+            '2f 3f 3f',
+            ['in_texcoord_0', 'in_normal', 'in_position'],
+            rf'{config.__APPLICATION_FOLDER__}/{MODEL_path}/cat', 'obj', 'jpg')
+        CustomVBO_name['earth'] = (
+            '2f 3f 3f',
+            ['in_texcoord_0', 'in_normal', 'in_position'],
+            rf'{config.__APPLICATION_FOLDER__}/{MODEL_path}/earth', 'obj', 'png')
+
+        CustomTexture_name['box1'] = rf'{config.__APPLICATION_FOLDER__}/QuantumCore/data/textures/box1.jpg'
+        CustomTexture_name['wall1'] = rf'{config.__APPLICATION_FOLDER__}/QuantumCore/data/textures/wall1.jpg'
+        
         """ init Engine (create context, window, camera, mesh and default scene) """
         QuantumCore.init()
 
@@ -113,9 +133,7 @@ class Source:
         self.get_time()
         
         """ main update """
-        QuantumCore.graphic.camera.camera.update()
-        # QuantumCore.graphic.light.lights_list[1].position = QuantumCore.graphic.camera.camera.position
-        ...
+        QuantumCore.scene.scene.__update__()
 
     def update_window(self) -> None:
         """ Rendering the application itself (GPU) """

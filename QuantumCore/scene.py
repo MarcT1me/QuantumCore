@@ -1,104 +1,43 @@
 
+# other
+from copy import copy
+import pickle
+from datetime import datetime
+import time
+
 import QuantumCore.graphic
 # engine elements imports
 from QuantumCore.data import config
-
-
-# NOT WORK  in development
-"""class Builder:
-    def __init__(self, target: str) -> None:
-        self.path: str = target
-        self.root: ETree.Element = None
-        self.import_list: list = None
-        
-        with open(self.path, 'r') as file:
-            xml_data = file.read()
-        self.root = ETree.fromstringlist(xml_data)
-    
-    def read_tpt(self):
-        # read TPT teg - load. imports/data/camera
-        tpt_tag = self.root.find('TPT')  # Top PrioriTy core load (<!-- sav requirements -->)
-        
-        include: ETree.Element = tpt_tag.find('Include')
-        if include is not None:
-            
-            # sav IMPORTS
-            imports = include.find('Imports')
-            if imports is not None:
-                
-                for element in imports:
-                    exec(f"{element.text}")
-                    
-            list_ = include.find("list")
-            self.import_list = [] if list_ is None else list_
-            
-            # sav CUSTOM data loading
-            loads = include.find('Loads')
-            if loads is not None:
-                
-                vbos = loads.find('vbos')
-                if vbos is not None:
-                    for element in vbos:
-                        exec(f"QuantumCore.graphic.vbo.{element.text}")  # vbo`s
-                
-                textures = loads.find('textures')
-                if textures is not None:
-                    for element in textures:
-                        exec(f"QuantumCore.graphic.texture.{element.text}")  # texture`s
-            
-        # sav CAMERA
-        camera: ETree.Element = tpt_tag.find('Camera')
-        if camera is not None:
-            for element in camera:
-                exec(f"QuantumCore.graphic.camera.camera.{element.tag} = {element.text}")
-    
-    def read_sav(self, app, add):
-        # init Map
-        save = self.root.find('Save')
-        
-        objects = save.find('Objects')
-        for object in objects.iter():
-            exec(object.text)
-            
-        objects = save.find('Lights')
-        for light in objects.iter():
-            exec(f"QuantumCore.graphic.light.lights_list.append({light.text})")
-        
-        code = save.find('code')
-        for element in code:
-            exec(element.text)
-    
-    def read_custom_tags(self, app, add, use_tags: tuple = None):
-        # Read custom tags. Use_tag arg, that loader know, why load you save
-        for tag in use_tags:
-            element_tag = tag.find(tag)
-            self.use_tag(element_tag, app=app, add=add)
-    
-    @staticmethod
-    def use_tag(tag, *, first_text='', second_text='', app=None, add=None):
-        if tag is not None:
-            for element in tag:
-                exec(f"{first_text}{element.text}{second_text"")
-    
-    def unimport(self) -> None:
-        for include in self.import_list:
-            exec(f"del {include}")"""
 
 
 class Location:
     def __init__(self, app) -> None:
         """ Base location """
         self.app = app
-        self.objects_list = dict()
+        
+        self.objects_list: dict[hash: object] = dict()
+        self.lights_list: dict[hash: object] = copy(QuantumCore.graphic.light.lights_list)
+        
         self.render_area = config.FAR*1.2
+        
         self.builder = None
+        self.ids: dict[str: hash] = dict()
+        
+        self.game_time = 0
 
-    def __add_object__(self, id: str, obj) -> None:
+    def __add_object(self, obj) -> int:
         """ add object in list """
-        self.objects_list[id] = obj
+        __id = id(obj)
+        self.objects_list[__id] = obj
+        return __id
+    
+    def __add_light(self, light) -> int:
+        __id = id(light)
+        self.lights_list[0][__id] = light
+        return __id
 
     @staticmethod
-    def build(app, add) -> None:
+    def build(app, obj, light) -> None:
         """ Write all the objects of the scene to this method """
         ...
     
@@ -117,13 +56,53 @@ class Location:
     def load(self) -> None:
         """  """
         app = self.app
-        add = self.__add_object__
-
-        self.build(app, add)
+        add_obj = self.__add_object
+        add_light = self.__add_light
+        
+        self.build(app, add_obj, add_light)
+    
+    def __update__(self):
+        QuantumCore.graphic.camera.camera.update()
         
     def __render__(self) -> None:
         QuantumCore.graphic.context.clear(color=(0.08, 0.16, 0.18, 1.0))
-        [entity.__render__() for entity in self.objects_list]
+        [entity.__render__() for entity in self.objects_list.values()]
     
     
 scene: Location = None
+
+
+class Builder:
+    
+    def __init__(self, target: str, *, scene=None) -> None:
+        self.path: str = target
+        self.scene: Location = scene
+        
+        self.root = lambda: ' '.join(self.path.split('/')[0:-1])
+        self.name = lambda: self.path.split('/')[-1]
+        self.time = datetime.fromtimestamp(time.time()).strftime("%d.%m.%y %H:%M:%S")
+        
+        self.save = None
+    
+    def format_sav(self):
+        return {
+            'file': {
+                'root': self.root(),
+                'name': self.name()
+            },
+            'time': {
+                'system': self.time,
+                'in game': self.scene.game_time
+            },
+            'scene': self.scene
+        }
+    
+    def dump(self):
+        if self.scene is not None:
+            with open(self.path, 'wb') as file:
+                pickle.dump(self.format_sav(), file)
+    
+    def load(self):
+        with open(self.path, 'rb') as file:
+            self.save = pickle.load(file)
+            return self.save

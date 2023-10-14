@@ -1,6 +1,5 @@
 """ Addicted game core
  """
-from loguru import logger
 
 # engine config import
 from QuantumCore.data.config import __APPLICATION_FOLDER__
