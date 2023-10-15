@@ -2,8 +2,7 @@
 # other
 from copy import copy
 import pickle
-from datetime import datetime
-import time
+import os.path
 
 import QuantumCore.graphic
 # engine elements imports
@@ -23,15 +22,15 @@ class Location:
         self.builder = None
         self.ids: dict[str: hash] = dict()
         
-        self.game_time = 0
+        self.time = 0
 
-    def __add_object(self, obj) -> int:
+    def _add_object(self, obj) -> int:
         """ add object in list """
         __id = id(obj)
         self.objects_list[__id] = obj
         return __id
     
-    def __add_light(self, light) -> int:
+    def _add_light(self, light) -> int:
         __id = id(light)
         self.lights_list[0][__id] = light
         return __id
@@ -54,13 +53,14 @@ class Location:
         QuantumCore.graphic.mash.mesh.__destroy__()
 
     def load(self) -> None:
-        """  """
+        """ Load game scene """
         app = self.app
-        add_obj = self.__add_object
-        add_light = self.__add_light
+        
+        add_obj = self._add_object
+        add_light = self._add_light
         
         self.build(app, add_obj, add_light)
-    
+        
     def __update__(self):
         QuantumCore.graphic.camera.camera.update()
         
@@ -74,35 +74,105 @@ scene: Location = None
 
 class Builder:
     
-    def __init__(self, target: str, *, scene=None) -> None:
+    def __init__(self, target: str, *, scene_=None) -> None:
+        """ Build in save.sav your scene """
         self.path: str = target
-        self.scene: Location = scene
+        self.scene: Location = scene_
         
-        self.root = lambda: ' '.join(self.path.split('/')[0:-1])
-        self.name = lambda: self.path.split('/')[-1]
-        self.time = datetime.fromtimestamp(time.time()).strftime("%d.%m.%y %H:%M:%S")
+        """ file info """
+        self.root: str = lambda: os.path.dirname(self.path)
+        self.name: str = lambda: os.path.basename(self.path)
+        self.size: bin = lambda: os.path.getsize(self.path) if os.path.isfile(path=self.path) else None
         
-        self.save = None
+        """ builder variable """
+        self.save = self._format_sav_(self)
+        self.new_id = None  # from changing id
     
-    def format_sav(self):
+    @staticmethod
+    def _format_sav_(sav) -> dict[str: Location]:
+        """ format save for load in file, or get satisfaction format """
+        root: str = sav.root()
+        name: str = sav.name()
+        objects_list = [{'id': id_,
+                         'name': obj.name,
+                         'pos': tuple(obj.pos),
+                         'rot': tuple(obj.rot),
+                         'r_area': obj.render_area,
+                         'scale': tuple(obj.scale),
+                         'tex_id': obj.tex_id,
+                         'vao': obj.vao_name}
+                        for id_, obj in sav.scene.objects_list.items()]
+        light_list = [{'id': id_,
+                       'color': tuple(light.color),
+                       'pos': tuple(light.position),
+                       'Ia': tuple(light.Ia),
+                       'Id': tuple(light.Id),
+                       'Is': tuple(light.Is),
+                       'size': light.size}
+                      for id_, light in sav.scene.lights_list[0].items()]
         return {
             'file': {
-                'root': self.root(),
-                'name': self.name()
+                'root': root,
+                'name': name
             },
-            'time': {
-                'system': self.time,
-                'in game': self.scene.game_time
-            },
-            'scene': self.scene
+            'time': sav.scene.app.time_list,
+            'scene': {
+                'objects': objects_list,
+                'lights': light_list,
+                'ids': sav.scene.ids
+            }
         }
     
-    def dump(self):
+    def _dump_(self, save) -> None:
+        """ dump save in fail.sav """
         if self.scene is not None:
             with open(self.path, 'wb') as file:
-                pickle.dump(self.format_sav(), file)
+                pickle.dump(save, file)
     
-    def load(self):
-        with open(self.path, 'rb') as file:
-            self.save = pickle.load(file)
-            return self.save
+    def load(self) -> dict[str: Location]:
+        """ load save.sav """
+        if os.path.isfile(path=self.path):
+            with open(self.path, 'rb') as file:
+                self.save = pickle.load(file)
+                return self.save
+        else:
+            print('not found file')
+    
+    def write(self) -> None:
+        """ write save before format method """
+        self._dump_(self._format_sav_(self))
+    
+    def dell(self):
+        """ dell file.sav """
+        if os.path.isfile(path=self.path):
+            os.remove(self.path)
+            return True
+        else:
+            print('not found file')
+            return False
+    
+    def read(self, scene_, import_code_):
+        """ easy constructing your scene """
+        if self.scene is None:
+            print('I can`t read save')
+            return False
+        
+        exec(import_code_)
+        
+        scene_.ids = self.save['scene']['ids']
+        scene_.app.time_list = self.save['time']
+        
+        def change_id():
+            for key, old_id in scene_.ids.items():
+                if old_id == i['id']:
+                    scene_.ids[key] = self.new_id
+                    break
+    
+        for i in self.save['scene']['lights']:
+            exec(f"""self.new_id = scene_._add_light(Light(color={i['color']}, pos={i['pos']}, ambient={i['Ia']}, diffuse={i['Id']}, specular={i['Is']}, size={i['size']}))""")
+            change_id()
+            
+        for i in self.save['scene']['objects']:
+            exec(f"""self.new_id = scene_._add_object({i['name']}(scene_.app, pos={i['pos']}, rot={i['rot']}, render_area={i['r_area']}, scale={i['scale']}, tex_id="{i['tex_id']}", vao_name="{i['vao']}"))""")
+            change_id()
+    

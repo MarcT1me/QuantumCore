@@ -13,9 +13,11 @@ from QuantumCore.data.config import FAR, GAMMA
 class BaseModel:
 
     # vectors, used in update, that calculate
-    __vec_x = glm.vec3(1, 0, 0)
-    __vec_y = glm.vec3(0, 1, 0)
-    __vec_z = glm.vec3(0, 0, 1)
+    _vec_x = glm.vec3(1, 0, 0)
+    _vec_y = glm.vec3(0, 1, 0)
+    _vec_z = glm.vec3(0, 0, 1)
+    
+    name: str = 'BaseModel'
 
     def __init__(self, app, vao_name: str, tex_id: str,
                  pos=(0, 0, 0), rot=(0, 0, 0), scale=(1, 1, 1), render_area=FAR) -> None:
@@ -45,9 +47,9 @@ class BaseModel:
         # translate
         m_model = glm.translate(m_model, self.pos)
         # rotate
-        m_model = glm.rotate(m_model, self.rot.x, self.__vec_x)
-        m_model = glm.rotate(m_model, self.rot.y, self.__vec_y)
-        m_model = glm.rotate(m_model, self.rot.z, self.__vec_z)
+        m_model = glm.rotate(m_model, self.rot.x, self._vec_x)
+        m_model = glm.rotate(m_model, self.rot.y, self._vec_y)
+        m_model = glm.rotate(m_model, self.rot.z, self._vec_z)
         # scale
         m_model = glm.scale(m_model, self.scale)
         return m_model
@@ -95,6 +97,7 @@ ATTENTION!!! ModelName to be match in all place ATTENTION!!!"""
 
         # inheritance
         super().__init__(app, vao_name, tex_id, pos, rot, scale, render_area)
+        self.name = 'ExtendedBaseModel'
 
         # variable
         self.texture = None
@@ -193,9 +196,10 @@ ATTENTION!!! ModelName to be match in all place ATTENTION!!!"""
 
 
 class Cube(ExtendedBaseModel):
-    def __init__(self, app, vao_name='cube', tex_id='box 1',
+    def __init__(self, app, vao_name='Cube', tex_id='box 1',
                  pos=(0, 0, 0), rot=(0, 0, 0), scale=(1, 1, 1), render_area=FAR) -> None:
         super().__init__(app, vao_name, tex_id, self.combine_vector(pos, (0, 0, 0)), rot, scale, render_area)
+        self.name = 'Cube'
 
 
 # in development

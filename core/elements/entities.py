@@ -14,6 +14,7 @@ import QuantumCore.time
 class MovingCube(Cube):
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
+        self.name = 'MovingCube'
 
     def update(self) -> None:
 
@@ -30,13 +31,15 @@ class MovingCube(Cube):
 
 
 class Cat(ExtendedBaseModel):
-    def __init__(self, app, vao_name='cat', tex_id='cat',
-                 pos=(0, 0, 0), rot=(0, 0, 0), scale=(1, 1, 1), ) -> None:
+    def __init__(self, app, vao_name='Cat', tex_id='Cat',
+                 pos=(0, 0, 0), rot=(0, 0, 0), scale=(1, 1, 1), render_area=FAR) -> None:
 
         super().__init__(app, vao_name, tex_id,
                          self.combine_vector(pos, [0, 1, 0]),
                          self.combine_vector(rot, (-90, 0, 0)),
-                         scale, render_area=FAR)
+                         scale, render_area)
+        self.name = 'Cat'
+        
         self.speed: float = .05
 
     def update(self) -> None:
@@ -44,23 +47,23 @@ class Cat(ExtendedBaseModel):
         velocity = self.speed * QuantumCore.time.delta_time
         keys = pygame.key.get_pressed()
         if keys[pygame.K_i]:
-            self.pos += velocity * self.__vec_x
+            self.pos += velocity * self._vec_x
         if keys[pygame.K_k]:
-            self.pos -= velocity * self.__vec_x
+            self.pos -= velocity * self._vec_x
         if keys[pygame.K_l]:
-            self.pos += velocity * self.__vec_z
+            self.pos += velocity * self._vec_z
         if keys[pygame.K_j]:
-            self.pos -= velocity * self.__vec_z
+            self.pos -= velocity * self._vec_z
         if keys[pygame.K_m]:
-            self.pos += velocity * self.__vec_y
+            self.pos += velocity * self._vec_y
         if keys[pygame.K_n]:
-            self.pos -= velocity * self.__vec_y
+            self.pos -= velocity * self._vec_y
 
         velocity /= 5
         if keys[pygame.K_DELETE]:
-            self.rot -= velocity * self.__vec_z
+            self.rot -= velocity * self._vec_z
         if keys[pygame.K_PAGEDOWN]:
-            self.rot += velocity * self.__vec_z
+            self.rot += velocity * self._vec_z
 
         if keys[pygame.K_LCTRL]:
             self.speed = 0.03
@@ -78,18 +81,20 @@ class Cat(ExtendedBaseModel):
 
 class WoodenWatchTower(ExtendedBaseModel):
     def __init__(self, app, vao_name='WoodenWatchTower', tex_id='WoodenWatchTower',
-                 pos=(0, 0, 0), rot=(0, 0, 0), scale=(1, 1, 1)) -> None:
+                 pos=(0, 0, 0), rot=(0, 0, 0), scale=(1, 1, 1), render_area=FAR) -> None:
 
         super().__init__(app, vao_name, tex_id,
                          self.combine_vector(pos, (0, -0.55, 0)),
-                         rot, scale, render_area=FAR)
+                         rot, scale, render_area)
+        self.name = 'WoodenWatchTower'
 
 
 class Earth(ExtendedBaseModel):
-    def __init__(self, app, vao_name='earth', tex_id='earth',
-                 pos=(0, 0, 0), rot=(0, 0, 0), scale=(1, 1, 1)) -> None:
+    def __init__(self, app, vao_name='Earth', tex_id='Earth',
+                 pos=(0, 0, 0), rot=(0, 0, 0), scale=(1, 1, 1), render_area=FAR) -> None:
 
-        super().__init__(app, vao_name, tex_id, pos, rot, scale, render_area=FAR)
+        super().__init__(app, vao_name, tex_id, pos, rot, scale, render_area)
+        self.name = 'Earth'
 
     def update(self) -> None:
 

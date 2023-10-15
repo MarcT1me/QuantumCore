@@ -13,7 +13,7 @@ import QuantumCore.graphic
 import QuantumCore.time
 import QuantumCore.scene
 
-__version = '0.9.3'
+__version = '0.9.4'
 name, short_name = 'QuantumCore', 'PyQC'
 
 __authors: dict = {

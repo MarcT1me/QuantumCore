@@ -18,9 +18,9 @@ class VAO:
 
         # VAO array
         self.VAOs: dict[str, QuantumCore.graphic.context.vertex_array] = {
-            'cube': self.__get_vao(
+            'Cube': self.__get_vao(
                 program=self.program.programs[shader_name[1]],
-                vbo=self.vbo.VBOs['cube']
+                vbo=self.vbo.VBOs['Cube']
             )
             # 'skybox': self.get_vao(
             #     program=self.program.programs['skybox'],

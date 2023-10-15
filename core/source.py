@@ -29,11 +29,11 @@ class Source:
             '2f 3f 3f',
             ['in_texcoord_0', 'in_normal', 'in_position'],
             f'{config.__APPLICATION_FOLDER__}/{MODEL_path}/WoodenWatchTower', 'obj', 'jpg')
-        CustomVBO_name['cat'] = (
+        CustomVBO_name['Cat'] = (
             '2f 3f 3f',
             ['in_texcoord_0', 'in_normal', 'in_position'],
             rf'{config.__APPLICATION_FOLDER__}/{MODEL_path}/cat', 'obj', 'jpg')
-        CustomVBO_name['earth'] = (
+        CustomVBO_name['Earth'] = (
             '2f 3f 3f',
             ['in_texcoord_0', 'in_normal', 'in_position'],
             rf'{config.__APPLICATION_FOLDER__}/{MODEL_path}/earth', 'obj', 'png')
@@ -54,6 +54,13 @@ class Source:
         )
         pygame.event.set_grab(True), pygame.mouse.set_visible(False)  # mouse
         
+        # time variables
+        self.time_list: dict = {
+            'cube animation': 0,
+            'earth animation': 0,
+            'get Cam&cube pos': time.time()
+        }
+        
         """ set locations, and main render scene """
         self.test_scene: Location = TestScene(self)
         QuantumCore.scene.scene = self.test_scene
@@ -62,13 +69,6 @@ class Source:
         """ Additional variable """
         self.mods = Mods()
         self.mods.search(), self.mods.load()
-        
-        # time variables
-        self.time_list: dict = {
-            'cube animation': 0,
-            'earth animation': 0,
-            'get Cam&cube pos': time.time()
-        }
         
         self.spec_keys: dict = {
             'L-Ctrl': False

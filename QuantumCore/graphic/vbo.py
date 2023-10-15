@@ -21,7 +21,7 @@ class VBO:
 
         # VBO array
         self.VBOs: dict[str: BaseVBO] = {
-            'cube': CubeVBO(),
+            'Cube': CubeVBO(),
             # 'skybox': SkyBoxVBO(),
             # 'advanced_skybox': AdvancedSkyBoxVBO(),
         }
