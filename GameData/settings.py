@@ -5,7 +5,7 @@ import json  # for rewrite engine configs
 
 """ Application settings """
 APPLICATION_NAME: str = 'QuantumGame'
-APPLICATION_VERSION: str = '0.4.3'
+APPLICATION_VERSION: str = '0.4.4'
 
 """ Path settings """
 MODEL_path: str = r'core/models'

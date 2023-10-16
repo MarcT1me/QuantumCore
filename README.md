@@ -35,7 +35,7 @@ To calculate complex formulas in the engine, the `Cython` plugin and the **C** l
 
 
 ## COMPILE:
-Compile command: `pyinstaller --name "Quantum Game v0.3.2" --icon="QuantumCore/data/QuantumCore_ico.ico" --add-data "C:/Program Files/Python311/Lib/site-packages/moderngl;moderngl" --add-data "C:/Program Files/Python311/Lib/site-packages/glcontext;glcontext" --add-data "F:/project/QuantumCore/core/elements/entities.py;entities" main.pyw`\
+Compile command: `pyinstaller --name "Quantum Game v0.4.4" --icon="QuantumCore/data/QuantumCore.ico" --add-data "C:/Program Files/Python311/Lib/site-packages/moderngl;moderngl" --add-data "C:/Program Files/Python311/Lib/site-packages/glcontext;glcontext" --add-data "F:/project/QuantumCore/core/elements/entities.py;entities" main.pyw`\
 Eclipse the python version, icon name and game version to your own before using
 After compile - copy all data in directory (textures, models, game data and other)
 

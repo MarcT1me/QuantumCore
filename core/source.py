@@ -45,7 +45,7 @@ class Source:
         QuantumCore.init()
 
         """ working with pygame """
-        config.APPLICATION_ICO_name = 'QuamtumCore.png'
+        config.APPLICATION_ICO_name = 'QuantumCore.ico'
         pygame.display.set_caption(f"{settings.APPLICATION_NAME}    v{settings.APPLICATION_VERSION}"
                                    f"      powered by {QuantumCore.name}({QuantumCore.short_name})")  # for IDE
         pygame.display.set_icon(pygame.image.load(  # for IDE
