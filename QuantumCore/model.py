@@ -196,7 +196,7 @@ ATTENTION!!! ModelName to be match in all place ATTENTION!!!"""
 
 
 class Cube(ExtendedBaseModel):
-    def __init__(self, app, vao_name='Cube', tex_id='box 1',
+    def __init__(self, app, vao_name='Cube', tex_id='empty',
                  pos=(0, 0, 0), rot=(0, 0, 0), scale=(1, 1, 1), render_area=FAR) -> None:
         super().__init__(app, vao_name, tex_id, self.combine_vector(pos, (0, 0, 0)), rot, scale, render_area)
         self.name = 'Cube'

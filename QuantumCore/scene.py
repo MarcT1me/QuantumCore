@@ -3,6 +3,7 @@
 from copy import copy
 import pickle
 import os.path
+from glm import vec3
 
 import QuantumCore.graphic
 # engine elements imports
@@ -16,6 +17,10 @@ class Location:
         
         self.objects_list: dict[hash: object] = dict()
         self.lights_list: dict[hash: object] = copy(QuantumCore.graphic.light.lights_list)
+        
+        self.unload()
+        if QuantumCore.graphic.mash.mesh is not None:
+            QuantumCore.graphic.mash.mesh.__destroy__()
         
         self.render_area = config.FAR*1.2
         
@@ -40,7 +45,7 @@ class Location:
         """ Write all the objects of the scene to this method """
         ...
     
-    def unload(self):
+    def unload(self) -> None:
         """ Unload scene """
 
         """ work with scene itself """
@@ -48,11 +53,9 @@ class Location:
         """ clear all graphic lists """
         QuantumCore.graphic.vbo.CustomVBO_name.clear()
         QuantumCore.graphic.texture.CustomTexture_name.clear()
-        QuantumCore.graphic.light.lights_list.clear()
-        """ work with mash """
-        QuantumCore.graphic.mash.mesh.__destroy__()
+        self.lights_list[0].clear()
 
-    def load(self) -> None:
+    def load(self):
         """ Load game scene """
         app = self.app
         
@@ -60,8 +63,9 @@ class Location:
         add_light = self._add_light
         
         self.build(app, add_obj, add_light)
+        return self
         
-    def __update__(self):
+    def __update__(self) -> None:
         QuantumCore.graphic.camera.camera.update()
         
     def __render__(self) -> None:
@@ -93,7 +97,7 @@ class Builder:
         """ format save for load in file, or get satisfaction format """
         root: str = sav.root()
         name: str = sav.name()
-        objects_list = [{'id': id_,
+        objects_data = [{'id': id_,
                          'name': obj.name,
                          'pos': tuple(obj.pos),
                          'rot': tuple(obj.rot),
@@ -102,7 +106,7 @@ class Builder:
                          'tex_id': obj.tex_id,
                          'vao': obj.vao_name}
                         for id_, obj in sav.scene.objects_list.items()]
-        light_list = [{'id': id_,
+        light_data = [{'id': id_,
                        'color': tuple(light.color),
                        'pos': tuple(light.position),
                        'Ia': tuple(light.Ia),
@@ -110,16 +114,26 @@ class Builder:
                        'Is': tuple(light.Is),
                        'size': light.size}
                       for id_, light in sav.scene.lights_list[0].items()]
+        camera = QuantumCore.graphic.camera.camera
+        camera_data = None
+        if camera is not None:
+            camera_data = {
+                'pos': tuple(camera.position),
+                'yaw': camera.yaw,
+                'pitch': camera.pitch,
+                'speed': camera.speed
+            }
         return {
             'file': {
                 'root': root,
-                'name': name
+                'name': name,
             },
             'time': sav.scene.app.time_list,
             'scene': {
-                'objects': objects_list,
-                'lights': light_list,
-                'ids': sav.scene.ids
+                'objects': objects_data,
+                'lights': light_data,
+                'ids': sav.scene.ids,
+                'camera': camera_data
             }
         }
     
@@ -142,7 +156,7 @@ class Builder:
         """ write save before format method """
         self._dump_(self._format_sav_(self))
     
-    def dell(self):
+    def dell(self) -> bool:
         """ dell file.sav """
         if os.path.isfile(path=self.path):
             os.remove(self.path)
@@ -151,7 +165,7 @@ class Builder:
             print('not found file')
             return False
     
-    def read(self, scene_, import_code_):
+    def read(self, scene_, import_code_) -> bool:
         """ easy constructing your scene """
         if self.scene is None:
             print('I can`t read save')
@@ -159,20 +173,30 @@ class Builder:
         
         exec(import_code_)
         
-        scene_.ids = self.save['scene']['ids']
+        sav = self.save['scene']
+        scene_.ids = sav['ids']
         scene_.app.time_list = self.save['time']
         
-        def change_id():
+        def change_id() -> None:
             for key, old_id in scene_.ids.items():
                 if old_id == i['id']:
                     scene_.ids[key] = self.new_id
                     break
-    
-        for i in self.save['scene']['lights']:
+        
+        # lights sources
+        for i in sav['lights']:
             exec(f"""self.new_id = scene_._add_light(Light(color={i['color']}, pos={i['pos']}, ambient={i['Ia']}, diffuse={i['Id']}, specular={i['Is']}, size={i['size']}))""")
             change_id()
-            
-        for i in self.save['scene']['objects']:
+        
+        # scene objects
+        for i in sav['objects']:
             exec(f"""self.new_id = scene_._add_object({i['name']}(scene_.app, pos={i['pos']}, rot={i['rot']}, render_area={i['r_area']}, scale={i['scale']}, tex_id="{i['tex_id']}", vao_name="{i['vao']}"))""")
             change_id()
+        
+        QuantumCore.graphic.camera.camera.position = vec3(sav['camera']['pos'])
+        QuantumCore.graphic.camera.camera.yaw = sav['camera']['yaw']
+        QuantumCore.graphic.camera.camera.pitch = sav['camera']['pitch']
+        QuantumCore.graphic.camera.camera.speed = sav['camera']['speed']
+        
+        return True
     

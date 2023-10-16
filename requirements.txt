@@ -6,7 +6,3 @@ PyGlm
 Numpy
 PyWaveFront
 Loguru
-
-PyBullet (await)
-PyAssimp (await)
-jmespath (await)

@@ -41,11 +41,19 @@ class Texture:
         # textures array
         self.textures: dict[str: moderngl.Texture] = {
             'test1': self.__get_texture__(
-                path=rf'{config.__APPLICATION_FOLDER__}/QuantumCore/data/textures/test_texture.jpg'),
+                path=rf'{config.__APPLICATION_FOLDER__}/QuantumCore/data/textures/test_texture.jpg'
+            ),
             'empty': self.__get_texture__(
-                path=rf'{config.__APPLICATION_FOLDER__}/QuantumCore/data/textures/no_textures.jpg')
-            # 'skybox': self.get_texture_cube(dir_path='textures/skybox1/'),
-            # 'depth_texture': self.get_depth_texture(),
+                path=rf'{config.__APPLICATION_FOLDER__}/QuantumCore/data/textures/no_textures.jpg'
+            ),
+            'box1': self.__get_texture__(
+                path=rf'{config.__APPLICATION_FOLDER__}/QuantumCore/data/textures/box1.jpg'
+            ),
+            'wall1': self.__get_texture__(
+                path=rf'{config.__APPLICATION_FOLDER__}/QuantumCore/data/textures/wall1.jpg'
+            ),
+            # 'skybox': self.__get_texture_cube__(dir_path='textures/skybox1/'),
+            'depth_texture': self.__get_depth_texture__(),
         }
 
         # load custom texture
@@ -111,7 +119,6 @@ class Texture:
 
         return texture_cube
 
-    @property
     def __get_depth_texture__(self) -> moderngl.DEPTH_TEST:
         depth_texture = self.ctx.depth_texture(config.SCREEN_size)
         depth_texture.repeat_x = False

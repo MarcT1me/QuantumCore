@@ -14,32 +14,23 @@ from core.elements.locations import TestScene, Location  # load game scenes
 from core.skripts import Mods
 
 # engine elements imports
-from QuantumCore.graphic.texture import CustomTexture_name
-from QuantumCore.graphic.vbo import CustomVBO_name
 from QuantumCore.data import config
-from GameData.settings import MODEL_path
 
 
 class Source:
     def __init__(self) -> None:
         """ THE CORE OF THE GAME """
         pygame.init(), pygame.font.init(), settings.rewrite_config()  # Initializing game dependencies
+        
+        """ Init additional variable """
+        self.time_list: dict = {
+            'cube animation': 0,
+            'earth animation': 0,
+            'get Cam&cube pos': time.time()
+        }
 
-        CustomVBO_name['WoodenWatchTower'] = (
-            '2f 3f 3f',
-            ['in_texcoord_0', 'in_normal', 'in_position'],
-            f'{config.__APPLICATION_FOLDER__}/{MODEL_path}/WoodenWatchTower', 'obj', 'jpg')
-        CustomVBO_name['Cat'] = (
-            '2f 3f 3f',
-            ['in_texcoord_0', 'in_normal', 'in_position'],
-            rf'{config.__APPLICATION_FOLDER__}/{MODEL_path}/cat', 'obj', 'jpg')
-        CustomVBO_name['Earth'] = (
-            '2f 3f 3f',
-            ['in_texcoord_0', 'in_normal', 'in_position'],
-            rf'{config.__APPLICATION_FOLDER__}/{MODEL_path}/earth', 'obj', 'png')
-
-        CustomTexture_name['box1'] = rf'{config.__APPLICATION_FOLDER__}/QuantumCore/data/textures/box1.jpg'
-        CustomTexture_name['wall1'] = rf'{config.__APPLICATION_FOLDER__}/QuantumCore/data/textures/wall1.jpg'
+        self.mods = Mods().search()
+        self.test_scene: Location = TestScene(self).add_vbos()
         
         """ init Engine (create context, window, camera, mesh and default scene) """
         QuantumCore.init()
@@ -54,21 +45,9 @@ class Source:
         )
         pygame.event.set_grab(True), pygame.mouse.set_visible(False)  # mouse
         
-        # time variables
-        self.time_list: dict = {
-            'cube animation': 0,
-            'earth animation': 0,
-            'get Cam&cube pos': time.time()
-        }
-        
-        """ set locations, and main render scene """
-        self.test_scene: Location = TestScene(self)
-        QuantumCore.scene.scene = self.test_scene
-        QuantumCore.scene.scene.load()
-
-        """ Additional variable """
-        self.mods = Mods()
-        self.mods.search(), self.mods.load()
+        """ Load additional variable """
+        self.mods.load()
+        QuantumCore.scene.scene = self.test_scene.load()
         
         self.spec_keys: dict = {
             'L-Ctrl': False

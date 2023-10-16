@@ -10,12 +10,12 @@ import QuantumCore.time
 
 
 class Camera:
-    def __init__(self, position=(0, 0, 4), yaw: float = 0, pitch: float = 0, speed=0.01) -> None:
+    def __init__(self, pos=(0, 0, 4), yaw: float = 0, pitch: float = 0, speed=0.01) -> None:
         """ Camera init """
         self._aspect_ratio: float = config.SCREEN_size[0] / config.SCREEN_size[1]
 
         """ orientation in space """
-        self.position = glm.vec3(position)
+        self.position = glm.vec3(pos)
         self.attach_object: QuantumCore = None  # attach a camera to an object
 
         self.__up = glm.vec3(0, 1, 0)

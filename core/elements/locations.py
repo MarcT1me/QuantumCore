@@ -1,16 +1,18 @@
 
 # other
 from loguru import logger
+import glm
 
 from QuantumCore.data.config import __APPLICATION_FOLDER__
 # engine elements import
 from QuantumCore.scene import Location, Builder
 import QuantumCore.graphic.light
 from QuantumCore.graphic.light import Light
+from QuantumCore.graphic.vbo import CustomVBO_name
 
-from GameData.settings import SAVES_path
-from core.elements.entities import Cat, Cube, MovingCube, WoodenWatchTower, Earth
 # core elements
+from GameData.settings import SAVES_path, MODEL_path
+from core.elements.entities import Cat, Cube, MovingCube, WoodenWatchTower, Earth
 
 
 class TestScene(Location):
@@ -18,12 +20,24 @@ class TestScene(Location):
         super().__init__(app)
         self.builder = Builder(rf'{__APPLICATION_FOLDER__}/{SAVES_path}/data.sav', scene_=self)
 
-    def build(self, app, obj, light) -> None:
+    def add_vbos(self):
+        CustomVBO_name['WoodenWatchTower'] = (
+            '2f 3f 3f',
+            ['in_texcoord_0', 'in_normal', 'in_position'],
+            f'{__APPLICATION_FOLDER__}/{MODEL_path}/WoodenWatchTower', 'obj', 'jpg')
+        CustomVBO_name['Cat'] = (
+            '2f 3f 3f',
+            ['in_texcoord_0', 'in_normal', 'in_position'],
+            rf'{__APPLICATION_FOLDER__}/{MODEL_path}/cat', 'obj', 'jpg')
+        CustomVBO_name['Earth'] = (
+            '2f 3f 3f',
+            ['in_texcoord_0', 'in_normal', 'in_position'],
+            rf'{__APPLICATION_FOLDER__}/{MODEL_path}/earth', 'obj', 'png')
+        return self
 
-        self.lights_list[0].clear()
-        load_scene = self.builder.load()
+    def build(self, app, obj, light) -> None:
         
-        if load_scene is not None:
+        if self.builder.load() is not None:
             """ if scene.sav load successful """
             
             self.builder.read(
@@ -32,7 +46,6 @@ class TestScene(Location):
             )  # use builder, that easy constructing scene
                         
             logger.debug('TestScene - construct .sav\n\n')
-
         else:
             """ in other a build scene in code """
             light(Light(pos=(25, 25, 25), ambient=.2, diffuse=1.5, specular=.5))
@@ -48,11 +61,16 @@ class TestScene(Location):
             obj(Cat(app, pos=(7, 0, 44), rot=(0, 0, 125)))
             obj(MovingCube(app, pos=(44, 10, 44), tex_id='empty', scale=(5, 5, 5)))
             
+            QuantumCore.graphic.camera.camera.position = glm.vec3((-7, 7, -7))
+            QuantumCore.graphic.camera.camera.yaw = 45
+            QuantumCore.graphic.camera.camera.pitch = -15
+            QuantumCore.graphic.camera.camera.speed = 0.01
+            
             logger.debug('TestScene - build\n\n')
             
             self.builder.write()
     
-    def __update__(self):
+    def __update__(self) -> None:
         super().__update__()
         
         if len(self.lights_list[0]) >= 2:

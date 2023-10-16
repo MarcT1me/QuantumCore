@@ -1,6 +1,8 @@
 """ Addicted game core
  """
 
+from os import walk
+
 # engine config import
 from QuantumCore.data.config import __APPLICATION_FOLDER__
 
@@ -15,11 +17,11 @@ class Mods:
 
     def __init__(self) -> None: ...
     
-    def search(self) -> None:
-        from os import walk
+    def search(self):
         for root, mod_list, _ in walk(self.PATH):
             self.root, self.mods_list = root, mod_list
             break  # rewrite mods list
+        return self
         
     def load(self) -> None:
         for mod in self.mods_list:

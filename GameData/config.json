@@ -2,12 +2,12 @@
   "engine":
   {
     "fps": 0,
-    "full_screen": true,
+    "full_screen": false,
     "SCREEN_size": [1600, 900],
     "vsync": true,
     "sensitivity": 0.05,
 
-    "DISPLAY_num": 1,
+    "DISPLAY_num": 0,
     "FOV": 70
   },
 

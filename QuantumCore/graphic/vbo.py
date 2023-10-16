@@ -22,8 +22,8 @@ class VBO:
         # VBO array
         self.VBOs: dict[str: BaseVBO] = {
             'Cube': CubeVBO(),
-            # 'skybox': SkyBoxVBO(),
-            # 'advanced_skybox': AdvancedSkyBoxVBO(),
+            'skybox': SkyBoxVBO(),
+            'advanced_skybox': AdvancedSkyBoxVBO(),
         }
 
         # load custom VBO`s
@@ -107,12 +107,13 @@ class CubeVBO(BaseVBO):
         return vertex_data
 
 
+# in development
 class SkyBoxVBO(BaseVBO):
     def __init__(self) -> None:
         super().__init__()
 
         # Shader variable
-        self.format: str = '3f'
+        self.formats: str = '3f'
         self.attributes: list = ['in_position']
 
     """ Static, Property and other mandatory methods """
@@ -138,7 +139,7 @@ class SkyBoxVBO(BaseVBO):
 
 
 # in development
-"""class AdvancedSkyBoxVBO(BaseVBO):
+class AdvancedSkyBoxVBO(BaseVBO):
 
     __z: int = 0.9999  # z cord in shader cords system
 
@@ -146,13 +147,13 @@ class SkyBoxVBO(BaseVBO):
         super().__init__()
 
         # Shader variable
-        self.forma: str = '3f'
+        self.formats: str = '3f'
         self.attributes: list = ['in_position']
 
     def _get_vertex_data_(self) -> np.array:
         vertices = [(-1, -1, self.__z), (3, -1, self.__z), (-1, 3, self.__z)]
         vertex_data = np.array(vertices, dtype='f4')
-        return vertex_data"""
+        return vertex_data
 
 
 class CustomVBO(BaseVBO):
