@@ -3,7 +3,7 @@
 from copy import copy
 import pickle
 import os.path
-from glm import vec3
+import glm
 
 import QuantumCore.graphic
 # engine elements imports
@@ -98,9 +98,9 @@ class Builder:
         root: str = sav.root()
         name: str = sav.name()
         objects_data = [{'id': id_,
-                         'name': obj.name,
+                         'name': obj.name(),
                          'pos': tuple(obj.pos),
-                         'rot': tuple(obj.rot),
+                         'rot': [glm.degrees(cord) for cord in obj.rot],
                          'r_area': obj.render_area,
                          'scale': tuple(obj.scale),
                          'tex_id': obj.tex_id,
@@ -190,10 +190,10 @@ class Builder:
         
         # scene objects
         for i in sav['objects']:
-            exec(f"""self.new_id = scene_._add_object({i['name']}(scene_.app, pos={i['pos']}, rot={i['rot']}, render_area={i['r_area']}, scale={i['scale']}, tex_id="{i['tex_id']}", vao_name="{i['vao']}"))""")
+            exec(f"""self.new_id = scene_._add_object({i['name']}(scene_.app, pos={i['pos']}, rot={i['rot']}, render_area={i['r_area']}, scale={i['scale']}, tex_id="{i['tex_id']}", vao_name="{i['vao']}", sav=True))""")
             change_id()
         
-        QuantumCore.graphic.camera.camera.position = vec3(sav['camera']['pos'])
+        QuantumCore.graphic.camera.camera.position = glm.vec3(sav['camera']['pos'])
         QuantumCore.graphic.camera.camera.yaw = sav['camera']['yaw']
         QuantumCore.graphic.camera.camera.pitch = sav['camera']['pitch']
         QuantumCore.graphic.camera.camera.speed = sav['camera']['speed']

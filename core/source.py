@@ -107,8 +107,6 @@ class Source:
 
     def update_app(self) -> None:
         """ updating the application itself (CPU) """
-        
-        # update animation time
         self.get_time()
         
         """ main update """

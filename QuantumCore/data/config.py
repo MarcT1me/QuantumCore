@@ -27,5 +27,5 @@ sensitivity: float = 0.05
 """ Shaders settings """
 FOV: float = 60
 NEAR: float = 0.05
-FAR: int = 100
+FAR: int = 1000
 GAMMA: float = 2.2

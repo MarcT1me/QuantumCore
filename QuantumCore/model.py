@@ -16,8 +16,6 @@ class BaseModel:
     _vec_x = glm.vec3(1, 0, 0)
     _vec_y = glm.vec3(0, 1, 0)
     _vec_z = glm.vec3(0, 0, 1)
-    
-    name: str = 'BaseModel'
 
     def __init__(self, app, vao_name: str, tex_id: str,
                  pos=(0, 0, 0), rot=(0, 0, 0), scale=(1, 1, 1), render_area=FAR) -> None:
@@ -67,11 +65,18 @@ class BaseModel:
         """ the method that decides which rendering method to use """
         render_area = self.render_area if render_area is None else render_area
         
-        if (abs(self.pos[0] - self.camera.position[0]) <= render_area) \
-                and abs(self.pos[1] - self.camera.position[1]) <= render_area \
-                and abs(self.pos[2] - self.camera.position[2]) <= render_area:
+        if (abs(self.pos[0] - self.camera.position[0]) <= render_area*1.2) \
+                and abs(self.pos[1] - self.camera.position[1]) <= render_area*1.2 \
+                and abs(self.pos[2] - self.camera.position[2]) <= render_area*1.2:
             return True
         return False
+    
+    @classmethod
+    def name(cls): return cls.__name__
+
+    @staticmethod
+    def combine_vector(vec1: tuple, vec2: tuple, *, sav: bool):
+        return glm.vec3(glm.vec3(vec1) + glm.vec3(vec2)) if not sav else vec1
 
 
 class ExtendedBaseModel(BaseModel):
@@ -97,7 +102,6 @@ ATTENTION!!! ModelName to be match in all place ATTENTION!!!"""
 
         # inheritance
         super().__init__(app, vao_name, tex_id, pos, rot, scale, render_area)
-        self.name = 'ExtendedBaseModel'
 
         # variable
         self.texture = None
@@ -191,15 +195,13 @@ ATTENTION!!! ModelName to be match in all place ATTENTION!!!"""
         self.update_shadow()
         self.shadow_vao.render()"""
 
-    @staticmethod
-    def combine_vector(vec1, vec2) -> glm.vec3: return glm.vec3(glm.vec3(vec1) + glm.vec3(vec2))
-
 
 class Cube(ExtendedBaseModel):
     def __init__(self, app, vao_name='Cube', tex_id='empty',
-                 pos=(0, 0, 0), rot=(0, 0, 0), scale=(1, 1, 1), render_area=FAR) -> None:
-        super().__init__(app, vao_name, tex_id, self.combine_vector(pos, (0, 0, 0)), rot, scale, render_area)
-        self.name = 'Cube'
+                 pos=(0, 0, 0), rot=(0, 0, 0), scale=(1, 1, 1), render_area=FAR, sav=False) -> None:
+        super().__init__(app, vao_name, tex_id,
+                         self.combine_vector(pos, (0, 0, 0), sav=sav),
+                         rot, scale, render_area)
 
 
 # in development

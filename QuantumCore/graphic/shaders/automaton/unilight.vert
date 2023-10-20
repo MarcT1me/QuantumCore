@@ -14,7 +14,10 @@ uniform mat4 m_model;
 
 
 void main() {
+    // textures
     uv_0 = in_texcoord_0;
+
+    // other .frag args
     fragPos = vec3(m_model * vec4(in_position, 1.0));
     normal = mat3(transpose(inverse(m_model))) * normalize(in_normal);
     gl_Position = m_proj * m_view * m_model * vec4(in_position, 1.0);

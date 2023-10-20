@@ -14,7 +14,6 @@ import QuantumCore.time
 class MovingCube(Cube):
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
-        self.name = 'MovingCube'
 
     def update(self) -> None:
 
@@ -31,14 +30,13 @@ class MovingCube(Cube):
 
 
 class Cat(ExtendedBaseModel):
-    def __init__(self, app, vao_name='Cat', tex_id='Cat',
-                 pos=(0, 0, 0), rot=(0, 0, 0), scale=(1, 1, 1), render_area=FAR) -> None:
+    def __init__(self, app, vao_name='Cat', tex_id='Cat', *,
+                 pos=(0, 0, 0), rot=(0, 0, 0), scale=(1, 1, 1), render_area=FAR, sav=False) -> None:
 
         super().__init__(app, vao_name, tex_id,
-                         self.combine_vector(pos, [0, 1, 0]),
-                         self.combine_vector(rot, (-90, 0, 0)),
+                         self.combine_vector(pos, (0, 1, 0), sav=sav),
+                         self.combine_vector(rot, (-90, 0, 0), sav=sav),
                          scale, render_area)
-        self.name = 'Cat'
         
         self.speed: float = .05
 
@@ -80,21 +78,19 @@ class Cat(ExtendedBaseModel):
 
 
 class WoodenWatchTower(ExtendedBaseModel):
-    def __init__(self, app, vao_name='WoodenWatchTower', tex_id='WoodenWatchTower',
-                 pos=(0, 0, 0), rot=(0, 0, 0), scale=(1, 1, 1), render_area=FAR) -> None:
+    def __init__(self, app, vao_name='WoodenWatchTower', tex_id='WoodenWatchTower', *,
+                 pos=(0, 0, 0), rot=(0, 0, 0), scale=(1, 1, 1), render_area=FAR, sav=False) -> None:
 
         super().__init__(app, vao_name, tex_id,
-                         self.combine_vector(pos, (0, -0.55, 0)),
+                         self.combine_vector(pos, (0, -1, 0), sav=sav),
                          rot, scale, render_area)
-        self.name = 'WoodenWatchTower'
 
 
 class Earth(ExtendedBaseModel):
-    def __init__(self, app, vao_name='Earth', tex_id='Earth',
-                 pos=(0, 0, 0), rot=(0, 0, 0), scale=(1, 1, 1), render_area=FAR) -> None:
+    def __init__(self, app, vao_name='Earth', tex_id='Earth', *,
+                 pos=(0, 0, 0), rot=(0, 0, 0), scale=(1, 1, 1), render_area=FAR, sav=False) -> None:
 
         super().__init__(app, vao_name, tex_id, pos, rot, scale, render_area)
-        self.name = 'Earth'
 
     def update(self) -> None:
 

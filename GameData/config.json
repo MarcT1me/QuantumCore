@@ -2,7 +2,7 @@
   "engine":
   {
     "fps": 0,
-    "full_screen": false,
+    "full_screen": true,
     "SCREEN_size": [1600, 900],
     "vsync": true,
     "sensitivity": 0.05,
