@@ -30,7 +30,7 @@ class Source:
         }
 
         self.mods = Mods().search()
-        self.test_scene: Location = TestScene(self).add_vbos()
+        self.test_scene: Location = TestScene(self).on_init()
         
         """ init Engine (create context, window, camera, mesh and default scene) """
         QuantumCore.init()
@@ -48,6 +48,9 @@ class Source:
         """ Load additional variable """
         self.mods.load()
         QuantumCore.scene.scene = self.test_scene.load()
+        # QuantumCore.graphic.camera.camera.attach_object = QuantumCore.scene.scene.objects_list[
+        #     QuantumCore.scene.scene.ids['котик']
+        # ] # comment this out to untie the camera from the object
         
         self.spec_keys: dict = {
             'L-Ctrl': False

@@ -18,7 +18,7 @@ from core.elements.entities import Cat, Cube, MovingCube, WoodenWatchTower, Eart
 class TestScene(Location):
     def __init__(self, app) -> None:
         super().__init__(app)
-        self.builder = Builder(rf'{__APPLICATION_FOLDER__}/{SAVES_path}/data.sav', scene_=self)
+        self.builder = Builder(rf'{__APPLICATION_FOLDER__}/{SAVES_path}/test_attach.sav', scene_=self)
 
     def add_vbos(self):
         CustomVBO_name['WoodenWatchTower'] = (
@@ -58,7 +58,7 @@ class TestScene(Location):
             obj(MovingCube(app, pos=(15, 10, 15), tex_id='test1', scale=(5, 5, 5)))
             obj(WoodenWatchTower(app, scale=[3, 3, 3], pos=[60, 0, 30]))
             obj(Earth(app, scale=[2, 2, 2], pos=[30, 10, 60]))
-            obj(Cat(app, pos=(7, 0, 44), rot=(0, 0, 125)))
+            self.ids['котик'] = obj(Cat(app, pos=(7, 0, 44), rot=(0, 0, 125)))
             obj(MovingCube(app, pos=(44, 10, 44), tex_id='empty', scale=(5, 5, 5)))
             
             QuantumCore.graphic.camera.camera.position = glm.vec3((-7, 7, -7))
@@ -73,6 +73,5 @@ class TestScene(Location):
     def __update__(self) -> None:
         super().__update__()
         
-        if len(self.lights_list[0]) >= 2:
-            self.lights_list[0][self.ids['фонарик']].position = QuantumCore.graphic.camera.camera.position
+        self.lights_list[0][self.ids['фонарик']].position = QuantumCore.graphic.camera.camera.position
         

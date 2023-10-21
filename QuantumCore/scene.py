@@ -29,6 +29,12 @@ class Location:
         
         self.time = 0
 
+    def add_vbos(self): ...
+    
+    def on_init(self):
+        self.add_vbos()
+        return self
+
     def _add_object(self, obj) -> int:
         """ add object in list """
         __id = id(obj)
