@@ -8,7 +8,8 @@
     "sensitivity": 0.05,
 
     "DISPLAY_num": 0,
-    "FOV": 70
+    "FOV": 70,
+    "FAR": 1000
   },
 
   "game": {

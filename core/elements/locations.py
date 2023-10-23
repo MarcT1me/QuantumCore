@@ -18,7 +18,7 @@ from core.elements.entities import Cat, Cube, MovingCube, WoodenWatchTower, Eart
 class TestScene(Location):
     def __init__(self, app) -> None:
         super().__init__(app)
-        self.builder = Builder(rf'{__APPLICATION_FOLDER__}/{SAVES_path}/test_attach.sav', scene_=self)
+        self.builder = Builder(rf'{__APPLICATION_FOLDER__}/{SAVES_path}/Abobacraft.sav', scene_=self)
 
     def add_vbos(self):
         CustomVBO_name['WoodenWatchTower'] = (
@@ -51,9 +51,9 @@ class TestScene(Location):
             light(Light(pos=(25, 25, 25), ambient=.2, diffuse=1.5, specular=.5))
             self.ids['фонарик'] = light(Light(size=15))
             
-            for x in range(40):
-                for z in range(40):
-                    obj(Cube(app, pos=(x*2, 0, z*2), tex_id='wall1'))
+            # for x in range(40):
+            #     for z in range(40):
+            obj(Cube(app, pos=(40, 0, 40), scale=(40, 1, 40), tex_id='wall1'))
 
             obj(MovingCube(app, pos=(15, 10, 15), tex_id='test1', scale=(5, 5, 5)))
             obj(WoodenWatchTower(app, scale=[3, 3, 3], pos=[60, 0, 30]))
@@ -68,7 +68,7 @@ class TestScene(Location):
             
             logger.debug('TestScene - build\n\n')
             
-            self.builder.write()
+            # self.builder.write()
     
     def __update__(self) -> None:
         super().__update__()
