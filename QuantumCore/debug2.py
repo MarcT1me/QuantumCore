@@ -116,14 +116,14 @@ class Debugging:
             if except_files is not None else None
 
         # directories that are excluded during the check
-        self.__except_dirs: set = {'.idea', '__pycache__', 'venv', '.git'}
+        self.__except_dirs: set = {'.idea', '__pycache__', 'venv', '.git', 'build', 'dist'}
         [self.__except_dirs.add(except_dir) for except_dir in except_dirs]\
             if except_dirs is not None else None
 
         # files with extensions that are skipped during verification
         self.__except_exts: set = {'jpg', 'png', 'mp3', 'ogg', 'obj', 'docx',  # various formats
                                    'rar', 'zip',
-                                   'pyc', 'pyz', 'pkg',
+                                   'pyc', 'pyz', 'pkg', 'sav',
                                    'ico', 'lnk', 'bin', 'exe', 'dll'}
         [self.__except_exts.add(except_ext) for except_ext in except_exts]\
             if except_exts is not None else None
@@ -146,7 +146,6 @@ class Debugging:
                 
 
 if __name__ == '__main__':
-    size = Debugging.PSize(Debugging(dir_name=r'F:/project/QuantumCore').get_proj_size(
-        except_dirs=["build", "dist"])).format_size
+    size = Debugging.PSize(Debugging(dir_name=r'F:/project/QuantumCore').get_proj_size()).format_size
     logger.info(f'\n\n{size}\n')
     input()  #mainloop
