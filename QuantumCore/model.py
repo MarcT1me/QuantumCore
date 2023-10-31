@@ -4,21 +4,29 @@ That your code work correct inheritance on ExtendedBaseModel
 
 from copy import copy
 import glm  # math
+from dataclasses import dataclass
 
 import QuantumCore.graphic
 # engine config import
 from QuantumCore.data.config import FAR, GAMMA
 
 
+@dataclass
+class Snap:
+
+    app: ...
+    
+    
 class BaseModel:
 
     # vectors, used in update, that calculate
     _vec_x = glm.vec3(1, 0, 0)
     _vec_y = glm.vec3(0, 1, 0)
     _vec_z = glm.vec3(0, 0, 1)
-
+    
     def __init__(self, app, vao_name: str, tex_id: str,
                  pos=(0, 0, 0), rot=(0, 0, 0), scale=(1, 1, 1), render_area=FAR) -> None:
+        # snap = Snap(...)self.app = app
         self.app = app
 
         # location in space
@@ -37,6 +45,8 @@ class BaseModel:
         self.vao = QuantumCore.graphic.mash.mesh.vao.VAOs[vao_name]
 
         self.shader_program = self.vao.program
+        
+        self.texture = None
 
     def __get_model_matrix__(self) -> glm.mat4:
         """ set and change model_matrix """
@@ -104,7 +114,6 @@ ATTENTION!!! ModelName to be match in all place ATTENTION!!!"""
         super().__init__(app, vao_name, tex_id, pos, rot, scale, render_area)
 
         # variable
-        self.texture = None
         self.lights = copy(QuantumCore.graphic.light.lights_list)
         self.glas = lambda: min(len(self.lights[0]), 200)
         self._on_init_()
@@ -205,7 +214,6 @@ class Cube(ExtendedBaseModel):
 
 
 # in development
-"""
 class SkyBox(BaseModel):
     def __init__(self, app, vao_name='skybox', tex_id='skybox',
                  pos=(0, 0, 0), rot=(0, 0, 0), scale=(1, 1, 1)):
@@ -213,16 +221,16 @@ class SkyBox(BaseModel):
         self.on_init()
 
     def update(self):
-        self.program['m_view'].write(glm.mat4(glm.mat3(self.camera.m_view)))
+        self.shader_program['m_view'].write(glm.mat4(glm.mat3(self.camera.m_view)))
 
     def on_init(self):
         # texture
-        self.texture = self.app.mesh.texture.textures[self.tex_id]
-        self.program['u_texture_skybox'] = 0
+        self.texture = QuantumCore.graphic.mash.mesh.texture.textures[self.tex_id]
+        self.shader_program['u_texture_skybox'] = 0
         self.texture.use(location=0)
         # mvp
-        self.program['m_proj'].write(self.camera.m_proj)
-        self.program['m_view'].write(glm.mat4(glm.mat3(self.camera.m_view)))
+        self.shader_program['m_proj'].write(self.camera.m_proj)
+        self.shader_program['m_view'].write(glm.mat4(glm.mat3(self.camera.m_view)))
 
 
 class AdvancedSkyBox(BaseModel):
@@ -233,11 +241,10 @@ class AdvancedSkyBox(BaseModel):
 
     def update(self):
         m_view = glm.mat4(glm.mat3(self.camera.m_view))
-        self.program['m_invProjView'].write(glm.inverse(self.camera.m_proj * m_view))
+        self.shader_program['m_invProjView'].write(glm.inverse(self.camera.m_proj * m_view))
 
     def on_init(self):
         # texture
-        self.texture = self.app.mesh.texture.textures[self.tex_id]
-        self.program['u_texture_skybox'] = 0
-        self.texture.use(location=0)
-"""
+        self.texture = QuantumCore.graphic.mash.mesh.texture.textures[self.tex_id]
+        self.shader_program['u_texture_skybox'] = 11
+        self.texture.use(location=11)

@@ -9,25 +9,30 @@ from QuantumCore.graphic.shaders.shader_program import ShaderProgram
 
 class VAO:
     def __init__(self, shader_name: tuple[str, str]) -> None:
-        self.ctx = QuantumCore.graphic.context
+        self.ctx = QuantumCore.window.context
 
         # VAO dependencies
         self.vbo = VBO()
         self.program = ShaderProgram()
-        self.program.add(shader_name[0], shader_name[1])
 
         # VAO array
-        self.VAOs: dict[str, QuantumCore.graphic.context.vertex_array] = {
+        self.VAOs: dict[str, QuantumCore.window.context.vertex_array] = {
             'Cube': self.__get_vao(
                 program=self.program.programs[shader_name[1]],
                 vbo=self.vbo.VBOs['Cube']
-            )
+            ),
             # 'skybox': self.get_vao(
             #     program=self.program.programs['skybox'],
-            #     vbo=self.vbo.VBOs['skybox']),
+            #     vbo=self.vbo.VBOs['skybox']
+            # ),
             # 'advanced_skybox': self.get_vao(
             #     program=self.program.programs['advanced_skybox'],
-            #     vbo=self.vbo.VBOs['advanced_skybox'])
+            #     vbo=self.vbo.VBOs['advanced_skybox']
+            # ),
+            # 'interface': self.__get_vao(
+            #     program=self.program.programs['interface'],
+            #     vbo=self.vbo.VBOs['interface']
+            # ),
         }
         self._load_vaos(shader_name)
     

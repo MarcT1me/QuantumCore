@@ -7,3 +7,4 @@ build
 
 *.spec
 test.py
+additional.py

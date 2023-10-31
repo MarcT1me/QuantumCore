@@ -14,6 +14,7 @@ from core.elements.locations import TestScene, Location  # load game scenes
 from core.skripts import Mods
 
 # engine elements imports
+import QuantumCore.time
 from QuantumCore.data import config
 
 
@@ -31,6 +32,7 @@ class Source:
 
         self.mods = Mods().search()
         self.test_scene: Location = TestScene(self).on_init()
+        self.clock = pygame.time.Clock()
         
         """ init Engine (create context, window, camera, mesh and default scene) """
         QuantumCore.init()
@@ -46,8 +48,8 @@ class Source:
         pygame.event.set_grab(True), pygame.mouse.set_visible(False)  # mouse
         
         """ Load additional variable """
-        self.mods.load()
         QuantumCore.scene.scene = self.test_scene.load()
+        self.mods.load()
         # QuantumCore.graphic.camera.camera.attach_object = QuantumCore.scene.scene.objects_list[
         #     QuantumCore.scene.scene.ids['котик']
         # ] # comment this out to untie the camera from the object
@@ -56,12 +58,11 @@ class Source:
             'L-Ctrl': False
         }
         
-        # pygame fonts (not work/use)
-        """
-        self.some_font = pygame.font.SysFont('Arial', 125, bold=True).render(f'Hello World!', True, (200, 250, 0))
-        self.application_version_font = pygame.font.SysFont('Arial', 15).render(
-            f'{settings.APPLICATION_VERSION}', True, 'white'
-        )"""
+        """ pygame fonts (not work/use) """
+        self.application_version_font = pygame.font.SysFont('Arial', 15, bold=True).render(
+            f'{settings.APPLICATION_VERSION}', False, 'cyan'
+        )
+        self.fps_font = pygame.font.SysFont('Arial', 15, bold=True)
         logger.debug('GAME ready\n\n')
 
     def events(self) -> None:
@@ -78,7 +79,7 @@ class Source:
                     self.spec_keys['L-Ctrl'] = True
 
                 elif self.spec_keys['L-Ctrl'] and event.key == pygame.K_1:
-                    QuantumCore.graphic.context.front_face = 'cw'
+                    QuantumCore.window.context.front_face = 'cw'
                 if self.spec_keys['L-Ctrl'] and event.key == pygame.K_2:
                     QuantumCore.graphic.front_face = 'ccw'
                 elif self.spec_keys['L-Ctrl'] and event.key == pygame.K_g:
@@ -86,7 +87,7 @@ class Source:
                     raise Exception("TEST RISE - USE 'raise - Exception' and call traceback")
                 elif self.spec_keys['L-Ctrl'] and event.key == pygame.K_r:
                     settings.rewrite_config()
-                    QuantumCore.graphic.resset()
+                    QuantumCore.window.resset()
                 
                 elif self.spec_keys['L-Ctrl'] and event.key == pygame.K_q:
                     QuantumCore.__quit__()
@@ -102,6 +103,7 @@ class Source:
     def render() -> None:
         """ render OpenGL context """
         QuantumCore.scene.scene.__render__()  # render scene
+        QuantumCore.window.interface.__render__()
 
     def get_time(self) -> None:
         """ updating game time """
@@ -117,8 +119,16 @@ class Source:
 
     def update_window(self) -> None:
         """ Rendering the application itself (GPU) """
+        
+        """ Interface render """
+        QuantumCore.window.interface.surface.fill((0, 0, 0))
+        QuantumCore.window.interface.surface.blit(self.application_version_font,
+                               (0, config.SCREEN_size[1]-self.application_version_font.get_height()))
+        QuantumCore.window.interface.surface.blit(self.fps_font.render(str(self.clock.get_fps()), False, 'cyan'),
+                               (0, 0))
 
         """ Main render 3D engine - updating OpenGL context """
         self.render()
-
         pygame.display.flip()
+        QuantumCore.window.interface.frame_tex.release()
+        QuantumCore.time.delta_time = self.clock.tick(config.fps)

@@ -1,39 +1,34 @@
 """" Main file
  """
-import pygame
-from threading import Thread
+
+import concurrent.futures
+import multiprocessing
+from QuantumCore.messages import err_screen
 # app imports
 from core.source import Source
-from QuantumCore.err_screen.err_screen import err_screen
-import QuantumCore.time
-from QuantumCore.data import config
+import QuantumCore.graphic.mash
 
 
-class MyApp:
+class QuantumGame:
     def __init__(self) -> None:
         self.__source__: Source = Source()
-        self.clock = pygame.time.Clock()
 
     def run(self) -> None:
         while True:
-            Thread(target=self.__source__.events()).run()
-            Thread(target=self.__source__.update_app()).run()
-            Thread(target=self.__source__.update_window()).run()
-            QuantumCore.time.delta_time = self.clock.tick(config.fps)
+            with concurrent.futures.ThreadPoolExecutor() as executor:
+                executor.submit(self.__source__.events())
+                executor.submit(self.__source__.update_app())
+                executor.submit(self.__source__.update_window())
 
 
 if __name__ == '__main__':
     """ Entry point """
+    multiprocessing.freeze_support()
     running: bool = True
     while running:
-        app: MyApp = None
         try:
-            app = MyApp()
-            app.run()
+            QuantumGame().run()
         except Exception as err:
-            try:
-                QuantumCore.graphic.mash.mesh.__destroy__()
-                pygame.quit()
-            except Exception as exc:
-                print(f'\n\n{exc}\n\n')
-            running = QuantumCore.err_screen.err_screen.err_screen(err)
+            try: QuantumCore.graphic.mash.mesh.__destroy__()
+            except Exception as exc: print(f'\n\n{exc}\n\n')
+            running = err_screen.showWindow(err)

@@ -67,7 +67,8 @@ class Location:
         
         add_obj = self._add_object
         add_light = self._add_light
-        
+
+        QuantumCore.window.set_mesh()
         self.build(app, add_obj, add_light)
         return self
         
@@ -75,11 +76,12 @@ class Location:
         QuantumCore.graphic.camera.camera.update()
         
     def __render__(self) -> None:
-        QuantumCore.graphic.context.clear(color=(0.08, 0.16, 0.18, 1.0))
+        QuantumCore.window.context.clear(color=(0.08, 0.16, 0.18, 1.0))
         [entity.__render__() for entity in self.objects_list.values()]
     
     
 scene: Location = None
+loading = None
 
 
 class Builder:

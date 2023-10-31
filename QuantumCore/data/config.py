@@ -17,7 +17,7 @@ DISPLAY_num: int = 0
 _, SCREEN_size = display_init(), get_desktop_sizes()[DISPLAY_num]
 
 """ Render settings """
-shader_name: tuple = 'automaton', 'unilight'
+shader_name: tuple = 'default', 'default'
 __CONTEXT_SIZE__: tuple = SCREEN_size
 vsync: bool = False
 

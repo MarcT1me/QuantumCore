@@ -10,14 +10,15 @@ from QuantumCore.data.config import SHADER_path
 
 class ShaderProgram:
     def __init__(self) -> None:
-        self.ctx = QuantumCore.graphic.context
+        self.ctx = QuantumCore.window.context
 
         # program array
         self.programs = {
-            'default': self.__get_shader_program__(shader_name='default', shader_path_name='default'),
+            'default': self.__get_shader_program__(shader_name='unilight', shader_path_name='automaton'),
             # 'skybox': self.get_shader_program('skybox'),
             # 'advanced_skybox': self.get_shader_program('advanced_skybox'),
             # 'shadow_map': self.get_shader_program('shadow_map')
+            # 'interface': self.__get_shader_program__(shader_name='interface', shader_path_name='')
         }
 
         logger.debug('Default shaders init/load - finished')
@@ -26,7 +27,7 @@ class ShaderProgram:
         """ Add shaders in list """
         self.programs[name] = self.__get_shader_program__(shader_name=name,
                                                           shader_path_name=path_name, shader_path=path)
-        logger.debug(f'third-party shader load - finished\n')
+        logger.debug(f'third-party shader load - success\n')
 
     def __get_shader_program__(self, *, shader_name, shader_path_name, shader_path=SHADER_path):
         """ set shader program (use GLSL files) """

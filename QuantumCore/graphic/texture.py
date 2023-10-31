@@ -36,7 +36,7 @@ class Texture:
           * !!! attention: add our textures before Mash class !!!
 
          """
-        self.ctx = QuantumCore.graphic.context
+        self.ctx = QuantumCore.window.context
 
         # textures array
         self.textures: dict[str: moderngl.Texture] = {
@@ -52,7 +52,7 @@ class Texture:
             'wall1': self.__get_texture__(
                 path=rf'{config.__APPLICATION_FOLDER__}/QuantumCore/data/textures/wall1.jpg'
             ),
-            # 'skybox': self.__get_texture_cube__(dir_path='textures/skybox1/'),
+            # 'skybox': self.__get_texture_cube__(dir_path='textures/skybox1/', ext='png'),
             'depth_texture': self.__get_depth_texture__(),
         }
 

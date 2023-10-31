@@ -1,3 +1,5 @@
+""" ErrorMessage for user
+ """
 # graphic
 import pygame
 
@@ -10,18 +12,21 @@ from loguru import logger
 # Engine elements
 from QuantumCore.data.config import __APPLICATION_FOLDER__
 from QuantumCore.data.config import APPLICATION_ICO_path, APPLICATION_ICO_name
+import QuantumCore.time
 
 
-def err_screen(err, *, flags=pygame.NOFRAME):
+def showWindow(err, *, flags=pygame.NOFRAME):
     """ processing error """
-    pygame.quit(), pygame.init()
+    pygame.quit()
+    pygame.init()
+    QuantumCore.time.loading = False
     
     # error texts
     caption, format_exc = f'ERROR: {traceback.extract_stack()[0]}', traceback.format_exc()
     logger.exception(f'ERROR: {err}')
 
     # background surface
-    background = pygame.image.load(rf'{__APPLICATION_FOLDER__}/QuantumCore/err_screen/err_background.png')
+    background = pygame.image.load(rf'{__APPLICATION_FOLDER__}/QuantumCore/messages/old_err.png')
     background_size = .9
     background = pygame.transform.scale_by(background, background_size)
     # text surface
@@ -114,9 +119,8 @@ def err_screen(err, *, flags=pygame.NOFRAME):
     while True:
         """events"""
         for event in pygame.event.get():
-            if event.type == pygame.quit:
-                pygame.quit()
-                sys.exit()
+            if event.type == pygame.QUIT:
+                return False
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     pygame.quit()
