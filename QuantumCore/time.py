@@ -1,5 +1,13 @@
 """ Engine time counter
  """
-import time
-delta_time: int = None
-start_time: float = time.time()
+from time import time
+delta: float = 0
+start: float = time()
+
+list_: dict = {
+    'cube animation': 0,
+    'earth animation': 0
+}
+dict_: dict = {
+    ...
+}

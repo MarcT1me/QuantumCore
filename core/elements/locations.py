@@ -45,7 +45,7 @@ class TestScene(Location):
                       "from QuantumCore.graphic.light import Light"
             )  # use builder, that easy constructing scene
                         
-            logger.debug('TestScene - construct .sav\n\n')
+            logger.success('TestScene - construct .sav\n\n')
         else:
             """ in other a build scene in code """
             light(Light(pos=(25, 25, 25), ambient=.2, diffuse=1.5, specular=.5))
@@ -66,7 +66,7 @@ class TestScene(Location):
             QuantumCore.graphic.camera.camera.pitch = -15
             QuantumCore.graphic.camera.camera.speed = 0.01
             
-            logger.debug('TestScene - build\n\n')
+            logger.warning('TestScene - build\n\n')
             
             # self.builder.write()
     

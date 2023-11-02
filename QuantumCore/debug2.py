@@ -146,6 +146,6 @@ class Debugging:
                 
 
 if __name__ == '__main__':
-    size = Debugging.PSize(Debugging(dir_name=r'F:/project/QuantumCore/GameData').get_proj_size()).format_size
+    size = Debugging.PSize(Debugging(dir_name=r'F:/project/QuantumCore').get_proj_size()).format_size
     logger.info(f'\n\n{size}\n')
     input()  #mainloop

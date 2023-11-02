@@ -5,6 +5,7 @@ import moderngl
 # other
 import glob
 from loguru import logger
+from copy import copy
 
 import QuantumCore.graphic
 # engine elements imports
@@ -36,7 +37,7 @@ class Texture:
           * !!! attention: add our textures before Mash class !!!
 
          """
-        self.ctx = QuantumCore.window.context
+        self.ctx = copy(QuantumCore.window.context)
 
         # textures array
         self.textures: dict[str: moderngl.Texture] = {

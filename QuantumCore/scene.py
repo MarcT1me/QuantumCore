@@ -136,7 +136,7 @@ class Builder:
                 'root': root,
                 'name': name,
             },
-            'time': sav.scene.app.time_list,
+            'time': QuantumCore.time.list_,
             'scene': {
                 'objects': objects_data,
                 'lights': light_data,
@@ -183,7 +183,7 @@ class Builder:
         
         sav = self.save['scene']
         scene_.ids = sav['ids']
-        scene_.app.time_list = self.save['time']
+        QuantumCore.time.list_ = self.save['time']
         
         def change_id() -> None:
             for key, old_id in scene_.ids.items():

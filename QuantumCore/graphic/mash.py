@@ -1,15 +1,14 @@
 
 # engine elements
+import QuantumCore.graphic
 from QuantumCore.graphic.vao import VAO
 from QuantumCore.graphic.texture import Texture
-from QuantumCore.data.config import shader_name
-import QuantumCore.graphic
 
 
 class Mesh:
-    def __init__(self, *, shader_name=shader_name) -> None:
+    def __init__(self) -> None:
         """ Engine graphics heart """
-        self.vao = VAO(shader_name)
+        self.vao = VAO()
         self.texture = Texture()
 
     def __destroy__(self) -> None:

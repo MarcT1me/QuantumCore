@@ -1,39 +1,24 @@
 # other
 from loguru import logger
+from copy import copy
 
 # engine elements imports
 import QuantumCore.graphic
 from QuantumCore.graphic.vbo import VBO
 from QuantumCore.graphic.shaders.shader_program import ShaderProgram
+from QuantumCore.data import config
 
 
 class VAO:
-    def __init__(self, shader_name: tuple[str, str]) -> None:
-        self.ctx = QuantumCore.window.context
+    def __init__(self, *, shader_name: tuple[str, str] = config.SHADER_NAME) -> None:
+        self.ctx = copy(QuantumCore.window.context)
 
         # VAO dependencies
         self.vbo = VBO()
         self.program = ShaderProgram()
 
         # VAO array
-        self.VAOs: dict[str, QuantumCore.window.context.vertex_array] = {
-            'Cube': self.__get_vao(
-                program=self.program.programs[shader_name[1]],
-                vbo=self.vbo.VBOs['Cube']
-            ),
-            # 'skybox': self.get_vao(
-            #     program=self.program.programs['skybox'],
-            #     vbo=self.vbo.VBOs['skybox']
-            # ),
-            # 'advanced_skybox': self.get_vao(
-            #     program=self.program.programs['advanced_skybox'],
-            #     vbo=self.vbo.VBOs['advanced_skybox']
-            # ),
-            # 'interface': self.__get_vao(
-            #     program=self.program.programs['interface'],
-            #     vbo=self.vbo.VBOs['interface']
-            # ),
-        }
+        self.VAOs = dict()
         self._load_vaos(shader_name)
     
     def _load_vaos(self, shader_name) -> None:
@@ -52,6 +37,11 @@ class VAO:
                 )  # initialize the shadow of the VAO model
             """
         
+        for name in self.vbo.service_VBOs.keys():
+            self.VAOs[name] = self.__get_vao(
+                program=self.program.programs[name],
+                vbo=self.vbo.service_VBOs[name]
+            )
         logger.debug('VAO - init\n\n')
 
     def __get_vao(self, program, vbo):

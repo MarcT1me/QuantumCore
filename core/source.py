@@ -3,7 +3,6 @@
 import pygame  # graphics
 
 # dependencies
-import time
 from loguru import logger
 
 import QuantumCore
@@ -11,7 +10,6 @@ from GameData import settings  # there is a rewrite
 
 # core elements
 from core.elements.locations import TestScene, Location  # load game scenes
-from core.skripts import Mods
 
 # engine elements imports
 import QuantumCore.time
@@ -19,20 +17,11 @@ from QuantumCore.data import config
 
 
 class Source:
+    fps_fonts_colors = ('red', 'orange', 'yellow', 'green', 'cyan')
+    
     def __init__(self) -> None:
         """ THE CORE OF THE GAME """
         pygame.init(), pygame.font.init(), settings.rewrite_config()  # Initializing game dependencies
-        
-        """ Init additional variable """
-        self.time_list: dict = {
-            'cube animation': 0,
-            'earth animation': 0,
-            'get Cam&cube pos': time.time()
-        }
-
-        self.mods = Mods().search()
-        self.test_scene: Location = TestScene(self).on_init()
-        self.clock = pygame.time.Clock()
         
         """ init Engine (create context, window, camera, mesh and default scene) """
         QuantumCore.init()
@@ -47,9 +36,12 @@ class Source:
         )
         pygame.event.set_grab(True), pygame.mouse.set_visible(False)  # mouse
         
+        """ Init additional variable """
+        self.clock = pygame.time.Clock()
+        self.test_scene: Location = TestScene(self).on_init()
+        
         """ Load additional variable """
         QuantumCore.scene.scene = self.test_scene.load()
-        self.mods.load()
         # QuantumCore.graphic.camera.camera.attach_object = QuantumCore.scene.scene.objects_list[
         #     QuantumCore.scene.scene.ids['котик']
         # ] # comment this out to untie the camera from the object
@@ -59,10 +51,10 @@ class Source:
         }
         
         """ pygame fonts (not work/use) """
-        self.application_version_font = pygame.font.SysFont('Arial', 15, bold=True).render(
-            f'{settings.APPLICATION_VERSION}', False, 'cyan'
+        self.application_version_font = pygame.font.SysFont('Arial', 25, bold=True).render(
+            f'{settings.APPLICATION_VERSION}', False, 'white'
         )
-        self.fps_font = pygame.font.SysFont('Arial', 15, bold=True)
+        self.fps_font = pygame.font.SysFont('Arial', 30, bold=True)
         logger.debug('GAME ready\n\n')
 
     def events(self) -> None:
@@ -100,15 +92,10 @@ class Source:
                 """ Detect MOUSE BUTTON DOWN """
     
     @staticmethod
-    def render() -> None:
-        """ render OpenGL context """
-        QuantumCore.scene.scene.__render__()  # render scene
-        QuantumCore.window.interface.__render__()
-
-    def get_time(self) -> None:
+    def get_time() -> None:
         """ updating game time """
-        self.time_list['cube animation'] = pygame.time.get_ticks() * 0.001
-        self.time_list['earth animation'] = pygame.time.get_ticks() * 0.0001
+        QuantumCore.time.list_['cube animation'] = pygame.time.get_ticks() * 0.001
+        QuantumCore.time.list_['earth animation'] = pygame.time.get_ticks() * 0.0001
 
     def update_app(self) -> None:
         """ updating the application itself (CPU) """
@@ -120,15 +107,22 @@ class Source:
     def update_window(self) -> None:
         """ Rendering the application itself (GPU) """
         
-        """ Interface render """
+        """ scene render """
+        QuantumCore.scene.scene.__render__()
+        
+        """ interface render """
         QuantumCore.window.interface.surface.fill((0, 0, 0))
-        QuantumCore.window.interface.surface.blit(self.application_version_font,
-                               (0, config.SCREEN_size[1]-self.application_version_font.get_height()))
-        QuantumCore.window.interface.surface.blit(self.fps_font.render(str(self.clock.get_fps()), False, 'cyan'),
-                               (0, 0))
+        QuantumCore.window.interface.surface.blit(
+            self.application_version_font,
+            (config.SCREEN_size[0]-self.application_version_font.get_width(),
+             config.SCREEN_size[1]-self.application_version_font.get_height()))
+        fps_count = int(self.clock.get_fps())
+        fin_font = self.fps_font.render(f'fps: {fps_count}', False, self.fps_fonts_colors[min(fps_count//15, 4)])
+        QuantumCore.window.interface.surface.blit(
+            fin_font,
+            (0, config.SCREEN_size[1]-fin_font.get_height()))
+        QuantumCore.window.interface.__render__()
 
-        """ Main render 3D engine - updating OpenGL context """
-        self.render()
+        # main pygame updating
         pygame.display.flip()
-        QuantumCore.window.interface.frame_tex.release()
-        QuantumCore.time.delta_time = self.clock.tick(config.fps)
+        QuantumCore.time.delta = self.clock.tick(config.fps)

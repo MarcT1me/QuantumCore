@@ -29,14 +29,14 @@ class __GRAPHIC:
         """ Init engine graphic
          """
         self.flags = flags
-        
+
         """ INIT PyGamse Window """
         if config.full_screen:
             config.SCREEN_SIZE = pygame.display.get_desktop_sizes()[config.DISPLAY_num]
         self.screen = \
             pygame.display.set_mode(
                 config.SCREEN_size,
-                display=config.DISPLAY_num, vsync=config.vsync,
+                display=config.DISPLAY_num, vsync=config.VSYNC,
                 flags=self.flags['pygame']
             )  # flags = pygame.OPENGL | pygame.DOUBLEBUF | pygame.HWSURFACE
         if (config.full_screen and not pygame.display.is_fullscreen()) and config.full_screen:
@@ -58,7 +58,7 @@ class __GRAPHIC:
         logger.info(f"Engine graphic - init\n"
                     f"screen: size = {config.SCREEN_size},"
                     f" is full screen - {pygame.display.is_fullscreen()},"
-                    f" VSync - {config.vsync}\n"
+                    f" VSync - {config.VSYNC}\n"
                     f"context: size = {self.context.screen.size},"
                     f" GPU = {self.context.info['GL_RENDERER']}\n"
                     f"mesh: "
@@ -68,7 +68,6 @@ class __GRAPHIC:
     
     def resset(self) -> None:
         """ Resset graphic, requires initialization of classes camera and scene """
-        self.context.release()
         self.__init__(self.flags)
         logger.info(f'screen size = {config.SCREEN_size},  context size= {self.context.screen.size}')
         

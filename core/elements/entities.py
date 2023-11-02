@@ -18,11 +18,11 @@ class MovingCube(Cube):
     def update(self) -> None:
 
         m_model = glm.rotate(self.__get_model_matrix__(),
-                             np.sin(self.app.time_list['cube animation'] * 0.5), glm.vec3(1, 0, 0))
+                             np.sin(QuantumCore.time.list_['cube animation'] * 0.5), glm.vec3(1, 0, 0))
         m_model = glm.rotate(m_model,
-                             np.cos(self.app.time_list['cube animation'] * 0.5), glm.vec3(0, -1, 0))
+                             np.cos(QuantumCore.time.list_['cube animation'] * 0.5), glm.vec3(0, -1, 0))
         self.m_model = glm.rotate(m_model,
-                                  np.sin(self.app.time_list['cube animation'] * 0.5), glm.vec3(0, 0, 1))
+                                  np.sin(QuantumCore.time.list_['cube animation'] * 0.5), glm.vec3(0, 0, 1))
 
         super().update()
 
@@ -42,7 +42,7 @@ class Cat(ExtendedBaseModel):
 
     def update(self) -> None:
 
-        velocity = self.speed * QuantumCore.time.delta_time
+        velocity = self.speed * QuantumCore.time.delta
         keys = pygame.key.get_pressed()
         if keys[pygame.K_KP8]:
             self.pos += velocity * self._vec_x
@@ -95,7 +95,7 @@ class Earth(ExtendedBaseModel):
     def update(self) -> None:
 
         self.m_model = glm.rotate(self.__get_model_matrix__(),
-                                  self.app.time_list['earth animation'] * 0.5, glm.vec3(0, 1, 0))
+                                  QuantumCore.time.list_['earth animation'] * 0.5, glm.vec3(0, 1, 0))
 
         super().update()
 

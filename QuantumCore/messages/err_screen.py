@@ -26,7 +26,7 @@ def showWindow(err, *, flags=pygame.NOFRAME):
     logger.exception(f'ERROR: {err}')
 
     # background surface
-    background = pygame.image.load(rf'{__APPLICATION_FOLDER__}/QuantumCore/messages/old_err.png')
+    background = pygame.image.load(rf'{__APPLICATION_FOLDER__}/QuantumCore/messages/debug_err.png')
     background_size = .9
     background = pygame.transform.scale_by(background, background_size)
     # text surface

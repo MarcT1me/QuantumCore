@@ -2,7 +2,7 @@
  """
 
 import concurrent.futures
-import multiprocessing
+# import multiprocessing
 from QuantumCore.messages import err_screen
 # app imports
 from core.source import Source
@@ -23,7 +23,7 @@ class QuantumGame:
 
 if __name__ == '__main__':
     """ Entry point """
-    multiprocessing.freeze_support()
+    # multiprocessing.freeze_support()
     running: bool = True
     while running:
         try:

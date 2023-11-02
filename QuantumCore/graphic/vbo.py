@@ -7,13 +7,13 @@ import numpy as np
 # other
 import pywavefront
 import glob
+from copy import copy
 from loguru import logger
 
 # engine elements imports
 import QuantumCore.graphic
-import config
 # engine config import
-from QuantumCore.data.config import __APPLICATION_FOLDER__
+from QuantumCore.data.config import __APPLICATION_FOLDER__, NEAR
 
 
 class VBO:
@@ -22,10 +22,12 @@ class VBO:
 
         # VBO array
         self.VBOs: dict[str: BaseVBO] = {
-            'Cube': CubeVBO(),
+            'Cube': CubeVBO()
+        }
+        self.service_VBOs: dict[str: BaseVBO] = {
             # 'skybox': SkyBoxVBO(),
             # 'advanced_skybox': AdvancedSkyBoxVBO(),
-            # 'interface': InterfaceVBO()
+            # 'interface': AdvancedInterfaceVBO()
         }
 
         # load custom VBO`s
@@ -38,7 +40,7 @@ class VBO:
 class BaseVBO:
     def __init__(self) -> None:
         """ Base VBO variable. """
-        self.ctx = QuantumCore.window.context
+        self.ctx = copy(QuantumCore.window.context)
 
         self.vbo = self.__get_vbo__()
 
@@ -158,9 +160,9 @@ class AdvancedSkyBoxVBO(BaseVBO):
         return vertex_data
 
 
-class InterfaceVBO(BaseVBO):
+class AdvancedInterfaceVBO(BaseVBO):
 
-    __z: int = config.NEAR+0.0001  # z cord in shader cords system
+    __z: int = NEAR+0.001  # z cord in shader cords system
 
     def __init__(self) -> None:
         super().__init__()
@@ -171,7 +173,7 @@ class InterfaceVBO(BaseVBO):
 
     def _get_vertex_data_(self) -> np.array:
         vertices = [(-1, -1, self.__z), (3, -1, self.__z), (-1, 3, self.__z)]
-        vertex_data = np.array(vertices, dtype='f4')
+        vertex_data = np.array(vertices, dtype='f2')
         return vertex_data
 
 

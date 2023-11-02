@@ -1,5 +1,6 @@
 from array import array
 from loguru import logger
+from copy import copy
 
 from pygame import Surface, image
 import moderngl
@@ -11,7 +12,7 @@ from QuantumCore.data.config import __APPLICATION_FOLDER__
 class __Interface:
     def __init__(self):
         self.surface = Surface(QuantumCore.data.config.SCREEN_size)
-        self.__ctx = QuantumCore.window.context
+        self.__ctx = copy(QuantumCore.window.context)
         
         with open(rf'{__APPLICATION_FOLDER__}/QuantumCore/graphic/shaders/interface.vert') as shader_file:
             vert_shader = shader_file.read()
@@ -20,6 +21,7 @@ class __Interface:
         del shader_file
         self.__shaders = self.__ctx.program(vertex_shader=vert_shader, fragment_shader=frag_shader)
         
+        self.surface.fill((0, 0, 0))
         self.set_color_key((0, 0, 0))
         self.frame_tex = self._surf_to_texture_()
         
@@ -47,6 +49,7 @@ class __Interface:
         self.frame_tex.use(1)
         self.__shaders['interface_texture'] = 1
         self.__vao.render(mode=moderngl.TRIANGLE_STRIP)
+        self.frame_tex.release()
     
     def __destroy__(self):
         self.__shaders.release()
@@ -62,8 +65,8 @@ class __AdvancedInterface(BaseModel):
     def __init__(self):
         super().__init__(None, 'interface', None, (0, 0, 0), (0, 0, 0), (1, 1, 1))
         self.surface = Surface(QuantumCore.data.config.SCREEN_size)
-        self.__ctx = QuantumCore.window.context
-        self.frame_te = None
+        self.__ctx = copy(QuantumCore.window.context)
+        self.frame_tex = None
         self.set_color_key((0, 0, 0))
         logger.success('Interface - init\n')
     
@@ -77,7 +80,7 @@ class __AdvancedInterface(BaseModel):
     
     def __render__(self):
         self.frame_tex = self._surf_to_texture_()
-        self.frame_tex.use(12)
-        self.shader_program['interface_texture'] = 12
-        self.vao.render(mode=moderngl.TRIANGLE_STRIP)
-        
+        self.frame_tex.use(1)
+        self.shader_program['interface_texture'] = 1
+        self.vao.render()
+        self.frame_tex.release()

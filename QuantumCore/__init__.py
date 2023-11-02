@@ -14,16 +14,17 @@ import sys
 import QuantumCore.graphic
 import QuantumCore.time
 import QuantumCore.scene
-from QuantumCore.graphic.shaders.interface import __Interface
+import QuantumCore.data.config
+from QuantumCore.graphic.interface import __Interface
 window: QuantumCore.graphic.__GRAPHIC = None
 
-__version = '0.10.3'
+__version = '0.10.5'
 name, short_name = 'QuantumCore', 'PyQC'
 
 __authors: dict = {
     'programmers': {
         'CoreTech programmers': 'Timur Shestakov',
-        'DevOps engineer': ('Nikita Usachyov', 'Emil Akhmetov'),
+        'DevOps engineer': ('Emil Akhmetov', 'Timur Shestakov'),
     },
     'Tester and QA engineers': 'Emil Akhmetov',
     '3d artists': None
@@ -42,7 +43,8 @@ def init(*,
         flags = {'pygame': OPENGL | DOUBLEBUF | HWSURFACE,
                  'glsl': DEPTH_TEST | BLEND}  # CULL_FACE
     window = QuantumCore.graphic.__GRAPHIC(flags)
-    QuantumCore.graphic.mash.mesh = QuantumCore.graphic.mash.Mesh()
+    if QuantumCore.data.config.PRE_INIT:
+        QuantumCore.graphic.mash.mesh = QuantumCore.graphic.mash.Mesh()
     window.interface = __Interface()
     QuantumCore.time.delta_time = 0
     logger.success('ENGINE ready\n\n')

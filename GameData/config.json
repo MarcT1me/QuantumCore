@@ -2,17 +2,15 @@
   "engine":
   {
     "fps": 0,
-    "full_screen": true,
+    "full_screen": false,
     "SCREEN_size": [1600, 900],
-    "vsync": true,
-    "sensitivity": 0.05,
+    "VSYNC": true,
 
     "DISPLAY_num": 0,
-    "FOV": 90,
-    "FAR": 1000
+    "FOV": 75
   },
 
   "game": {
-    "APPLICATION_VERSION": "0.4.3"
+    "APPLICATION_VERSION": "0.4.2"
   }
 }

@@ -63,7 +63,7 @@ class Camera:
 
     def move(self) -> None:
         """ move in space; if camera not attach """
-        velocity = self.speed * QuantumCore.time.delta_time
+        velocity = self.speed * QuantumCore.time.delta
         keys = pygame.key.get_pressed()
 
         # move

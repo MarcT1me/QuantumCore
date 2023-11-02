@@ -1,6 +1,7 @@
 
 # other
 from loguru import logger
+from copy import copy
 
 import QuantumCore.graphic
 # engine config imports
@@ -10,7 +11,7 @@ from QuantumCore.data.config import SHADER_path
 
 class ShaderProgram:
     def __init__(self) -> None:
-        self.ctx = QuantumCore.window.context
+        self.ctx = copy(QuantumCore.window.context)
 
         # program array
         self.programs = {
