@@ -6,8 +6,9 @@ from inspect import stack; from os.path import dirname, abspath
 """ Application settings """
 # path variable
 __APPLICATION_FOLDER__: str = dirname(abspath(stack()[1].filename)).removesuffix('\\PyInstaller\\loader')  # dynamic
-SHADER_path: str = r'QuantumCore/graphic/shaders'  # constant
-TEXTURE_path: str = r'QuantumCore/data/textures'   # constant
+__ENGINE_FOLDER__: str = dirname(abspath(__file__)).removesuffix('\\PyInstaller\\loader')[0:-5]  # dynamic
+SHADER_path: str = r'graphic/shaders'  # constant
+TEXTURE_path: str = r'data/textures'   # constant
 
 APPLICATION_ICO_path, APPLICATION_ICO_name = r'QuantumCore/data', 'standard.png'  # dynamic
 
@@ -37,9 +38,9 @@ NEAR: float   # constant  # .CONFIG
 AA_TYPE: int  # constant  # .CONFIG
 
 
-with open(rf'{__APPLICATION_FOLDER__}/QuantumCore/data/settings.config', 'r') as config:
+with open(rf'{__ENGINE_FOLDER__}/data/settings.config', 'r') as config:
     exec(config.read())
 
-with open(rf'{__APPLICATION_FOLDER__}/QuantumCore/data/graphic.config', 'r') as config:
+with open(rf'{__ENGINE_FOLDER__}/data/graphic.config', 'r') as config:
     exec(config.read())
     

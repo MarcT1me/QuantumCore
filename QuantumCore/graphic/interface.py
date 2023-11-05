@@ -6,7 +6,7 @@ from pygame import Surface, image
 import moderngl
 
 import QuantumCore.data.config
-from QuantumCore.data.config import __APPLICATION_FOLDER__
+from QuantumCore.data.config import __ENGINE_FOLDER__
 
 
 class __Interface:
@@ -14,9 +14,9 @@ class __Interface:
         self.surface = Surface(QuantumCore.data.config.SCREEN_size)
         self.__ctx = copy(QuantumCore.window.context)
         
-        with open(rf'{__APPLICATION_FOLDER__}/QuantumCore/graphic/shaders/interface.vert') as shader_file:
+        with open(rf'{__ENGINE_FOLDER__}/graphic/shaders/interface.vert') as shader_file:
             vert_shader = shader_file.read()
-        with open(rf'{__APPLICATION_FOLDER__}/QuantumCore/graphic/shaders/interface.frag') as shader_file:
+        with open(rf'{__ENGINE_FOLDER__}/graphic/shaders/interface.frag') as shader_file:
             frag_shader = shader_file.read()
         del shader_file
         self.__shaders = self.__ctx.program(vertex_shader=vert_shader, fragment_shader=frag_shader)

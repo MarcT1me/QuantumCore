@@ -3,7 +3,7 @@
 \
 ㅤ
 Game Engine in Python ( **[Pygame](https://pypi.org/project/pygame/), [OpenGL](https://www.opengl.org/)**, _[Bullet Physics](https://pybullet.org/wordpress/), [Cython](https://cython.org/)_ ) \
-ㅤㅤㅤ![main image](QuantumCore/data/Screenshots/main.png)
+ㅤㅤㅤ<img alt="main image" height="325" src="QuantumCore/data/Screenshots/main.png" width="600"/>
 \
 ㅤ
 ## Engine
@@ -14,7 +14,7 @@ For example:
 - `PyBullet` - **C++**;\
 - `PyGame` - **C**;\
 
-To calculate complex formulas in the engine, the `Cython` plugin and the **C** language are used the [error screen](QuantumCore/err_screen) is available to the user, which will appear if one occurs
+To calculate complex formulas in the engine, the `Cython` plugin and the **C** language are used the [error screen](QuantumCore/messages/err_screen.py) is available to the user, which will appear if one occurs
 
 ### requirements:
 - standard modules

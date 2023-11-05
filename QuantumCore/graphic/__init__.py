@@ -14,7 +14,6 @@ import QuantumCore.graphic.texture
 import QuantumCore.graphic.vbo
 # engine config import
 from QuantumCore.data import config
-# window, context, interface = None, None, None  # main graphics variables
 
 
 class __GRAPHIC:

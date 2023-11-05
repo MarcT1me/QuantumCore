@@ -5,7 +5,7 @@ from copy import copy
 
 import QuantumCore.graphic
 # engine config imports
-from QuantumCore.data.config import __APPLICATION_FOLDER__
+from QuantumCore.data.config import __ENGINE_FOLDER__
 from QuantumCore.data.config import SHADER_path
 
 
@@ -24,18 +24,19 @@ class ShaderProgram:
 
         logger.debug('Default shaders init/load - finished')
 
-    def add(self, path_name, name, *, path=SHADER_path) -> None:
+    def add(self, path_name, name, *, path=rf'{__ENGINE_FOLDER__}/{SHADER_path}') -> None:
         """ Add shaders in list """
         self.programs[name] = self.__get_shader_program__(shader_name=name,
                                                           shader_path_name=path_name, shader_path=path)
         logger.debug(f'third-party shader load - success\n')
 
-    def __get_shader_program__(self, *, shader_name, shader_path_name, shader_path=SHADER_path):
+    def __get_shader_program__(self, shader_name, shader_path_name, *,
+                               shader_path=rf'{__ENGINE_FOLDER__}/{SHADER_path}'):
         """ set shader program (use GLSL files) """
-        with open(rf'{__APPLICATION_FOLDER__}/{shader_path}/{shader_path_name}/{shader_name}.vert') as shader_file:
+        with open(rf'{shader_path}/{shader_path_name}/{shader_name}.vert') as shader_file:
             vertex_shader = shader_file.read()
 
-        with open(rf'{__APPLICATION_FOLDER__}/{shader_path}/{shader_path_name}/{shader_name}.frag') as shader_file:
+        with open(rf'{shader_path}/{shader_path_name}/{shader_name}.frag') as shader_file:
             fragment_shader = shader_file.read()
 
         program = self.ctx.program(vertex_shader=vertex_shader, fragment_shader=fragment_shader)

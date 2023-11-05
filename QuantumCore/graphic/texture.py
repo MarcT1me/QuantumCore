@@ -8,11 +8,12 @@ from loguru import logger
 from copy import copy
 
 import QuantumCore.graphic
+import config
 # engine elements imports
 from QuantumCore.graphic.vbo import CustomVBO_name
 
 # engine config import
-from QuantumCore.data import config
+# from QuantumCore.data import config
 
 
 class Texture:
@@ -42,16 +43,16 @@ class Texture:
         # textures array
         self.textures: dict[str: moderngl.Texture] = {
             'test1': self.__get_texture__(
-                path=rf'{config.__APPLICATION_FOLDER__}/QuantumCore/data/textures/test_texture.jpg'
+                path=rf'{config.__ENGINE_FOLDER__}/{config.TEXTURE_path}/test_texture.jpg'
             ),
             'empty': self.__get_texture__(
-                path=rf'{config.__APPLICATION_FOLDER__}/QuantumCore/data/textures/no_textures.jpg'
+                path=rf'{config.__ENGINE_FOLDER__}/{config.TEXTURE_path}/no_textures.jpg'
             ),
             'box1': self.__get_texture__(
-                path=rf'{config.__APPLICATION_FOLDER__}/QuantumCore/data/textures/box1.jpg'
+                path=rf'{config.__ENGINE_FOLDER__}/{config.TEXTURE_path}/box1.jpg'
             ),
             'wall1': self.__get_texture__(
-                path=rf'{config.__APPLICATION_FOLDER__}/QuantumCore/data/textures/wall1.jpg'
+                path=rf'{config.__ENGINE_FOLDER__}/{config.TEXTURE_path}/wall1.jpg'
             ),
             # 'skybox': self.__get_texture_cube__(dir_path='textures/skybox1/', ext='png'),
             'depth_texture': self.__get_depth_texture__(),
@@ -74,9 +75,9 @@ class Texture:
         """ get name texture custom model """
         logger.debug(rf'    search texture: {path}/*.{ext}')
         t_list = glob.glob(rf'{path}/*.{ext}')
-        t_list.append(rf'{config.__APPLICATION_FOLDER__}/QuantumCore/data/models/cat/20430_cat_diff_v1.jpg')
+        t_list.append(rf'{config.__ENGINE_FOLDER__}/data/models/cat/20430_cat_diff_v1.jpg')
         return t_list[0] if ext is not None \
-            else rf'{config.__APPLICATION_FOLDER__}/QuantumCore/data/textures/no_textures.jpg'
+            else rf'{config.__ENGINE_FOLDER__}/{config.TEXTURE_path}/no_textures.jpg'
 
     def __get_texture__(self, path) -> moderngl.Texture:
         """ load texture """

@@ -21,6 +21,7 @@ class Location:
         self.unload()
         if QuantumCore.graphic.mash.mesh is not None:
             QuantumCore.graphic.mash.mesh.__destroy__()
+        QuantumCore.window.set_mesh()
         
         self.render_area = config.FAR*1.2
         
