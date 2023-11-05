@@ -1,5 +1,6 @@
-"""" Main file
- """
+"""" This file have been CHANGE
+rewrite mainloop and hem arguments
+"""
 
 import concurrent.futures
 # import multiprocessing
@@ -21,9 +22,7 @@ class App:
                 executor.submit(self.update_window())
 
 
-def mainloop(QuantumGame, *, messages=None):
-    if messages is None:
-        messages = [err_screen]
+def mainloop(QuantumGame):
     running: bool = True
     while running or running is not None:
         try:
@@ -31,4 +30,4 @@ def mainloop(QuantumGame, *, messages=None):
         except Exception as err:
             try: QuantumCore.graphic.mash.mesh.__destroy__()
             except Exception as exc: print(f'\n\n{exc}\n\n')
-            running = err_screen.showTraceback(err) if err_screen in messages else None
+            running = err_screen.showTraceback(err)

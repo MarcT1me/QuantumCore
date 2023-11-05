@@ -81,6 +81,7 @@ class Button:
         self.bgcolor_on_press: tuple = bgcolor_on_press
         self.bgcolor_not_press: tuple = bgcolor_not_press
         self.surf_color: tuple = bgcolor_not_press
+        self.surf.set_colorkey(self.surf_color) if self.image is not None else Ellipsis
         
         """ FUNCTION """
         self.release_start = None
@@ -102,7 +103,8 @@ class Button:
         if event.type == pygame.MOUSEBUTTONDOWN:
             """ Нажатие """
             if pygame.rect.Rect(*self.pos, *self.size).collidepoint(pygame.mouse.get_pos()):
-                self.surf_color = self.bgcolor_on_press  # изменение цвета на активное
+                # изменение цвета на активное
+                self.surf_color = self.bgcolor_not_press if self.image is not None else self.bgcolor_on_press
                 
                 if self.release_start is None:  # ставлю значение нажатия
                     self.release_start = time.time()
@@ -142,6 +144,11 @@ class Button:
     def roster_render(win):
         for btn in Button.roster:
             btn.render(win)
+        
+    @staticmethod
+    def roster_relies():
+        for btn in Button.roster:
+            btn.relies()
 
 
 """class Main:

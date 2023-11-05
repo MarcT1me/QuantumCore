@@ -16,7 +16,7 @@ import QuantumCore.widgets
 import QuantumCore.time
 
 
-def showTraceback(err, *, flags=pygame.NOFRAME):
+def showTraceback(err, *, flags=pygame.NOFRAME) -> bool:
     """ processing error """
     pygame.quit()
     pygame.init()
@@ -158,13 +158,32 @@ def showTraceback(err, *, flags=pygame.NOFRAME):
         
         # default pygame methods
         pygame.display.flip(), clock.tick(30)
+        
+
+blit_list = [1, 1, 1, 1, 1, 1]
 
 
-def showWindow(err, *, flags=pygame.NOFRAME):
+def showWindow(err, *, caption='Error Message', custom_surf=None, flags=pygame.NOFRAME) -> bool:
     """ processing error """
     pygame.quit()
     pygame.init()
     QuantumCore.time.loading = False
+    if custom_surf == 'base':
+        custom_surf = pygame.Surface((270, 110))
+        custom_surf.fill((0, 255, 0))
+        custom_surf.blit(
+            pygame.font.SysFont('Verdana', 40, bold=True).render(
+                'Quantum', False, 'black'
+            ),
+            (7, 0)
+        )
+        custom_surf.blit(
+            pygame.font.SysFont('Verdana', 40, bold=True).render(
+                'Game', False, 'black'
+            ),
+            (112, 51)
+        )
+    custom_surf.set_colorkey((0, 255, 0)) if custom_surf is not None else Ellipsis
 
     """ Working with pygame """
     clock = pygame.time.Clock()
@@ -173,41 +192,79 @@ def showWindow(err, *, flags=pygame.NOFRAME):
     background = pygame.transform.scale_by(background, .75)
     # screen
     screen_size = background.get_size()
-    screen = pygame.display.set_mode(screen_size, flags=flags)
+    screen = pygame.display.set_mode(screen_size, display=1, flags=flags)
+    white_surf = pygame.Surface(screen_size); white_surf.fill('white')
     pygame.display.set_icon(pygame.image.load(rf'{__ENGINE_DATA__}/{APPLICATION_ICO_path}/{APPLICATION_ICO_name}'))
     # caption
-    caption = type(err)
     pygame.display.set_caption(str(caption))
     
-    """ fonts """
+    def exit_func(res):
+        nonlocal result, running
+        result, running = res, False
     
-    while True:
+    """ fonts and other graphic """
+    def restart_btn(): exit_func(True)
+    def exit_btn(): exit_func(False)
+    btn1 = QuantumCore.widgets.Button(size=(302, 40), pos=(10, screen_size[1]-50),
+                                      text='Restart', font='Unispace', text_size=45, text_bold=False,
+                                      bgcolor_on_press=(150, 150, 150),
+                                      text_pos=(151, 20), text_center=True,
+                                      on_press=restart_btn)
+    QuantumCore.widgets.Button(size=(302, 40), pos=(btn1.size[0]+30, btn1.pos[1]),
+                               text='Exit', font='Unispace', text_size=45, text_bold=False,
+                               bgcolor_not_press=(255, 50, 50), bgcolor_on_press=(255, 120, 120),
+                               text_center=True, text_pos=(151, 20),
+                               on_press=exit_btn)
+    font_color = (50, 50, 50)
+    err_text_font = pygame.font.SysFont('Unispace', 30).render(
+        str(err), True, font_color
+    )
+    err_type_font = pygame.font.SysFont('Unispace', 30).render(
+        f'type: {str(type(err))[8:-2]}', True, font_color
+    )
+    err_message_font = pygame.font.SysFont('Unispace', 30).render(
+        'message - in dev', True, font_color
+    )
+    err_description_font = pygame.font.SysFont('Unispace', 30).render(
+        'description - in dev', True, font_color
+    )
+    help_font = pygame.font.SysFont('Unispace', 30).render(
+        "press on 'BUTTON' or 'R' to restart and 'BUTTON', 'Esc' or 'QUIT'", True, (20, 20, 20)
+    )
+    
+    result: bool = False
+    running: bool = True
+    while running:
         """ events """
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                return False
-            if event.type == pygame.KEYDOWN:
+                exit_func(False)
+            elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
-                    pygame.quit()
-                    sys.exit()
+                    exit_func(False)
                 elif event.key == pygame.K_r:
-                    pygame.quit()
-                    return True
-            elif event.type == pygame.MOUSEBUTTONUP:
-                ...
+                    exit_func(True)
             QuantumCore.widgets.Button.roster_event(event)
-        
-        """ update """
-        ...
         
         """ render """
         screen.fill((0, 0, 0))
         screen.blit(background, (0, 0))
+        screen.blit(err_text_font, (screen_size[0]-err_text_font.get_width()-30, 20)) if blit_list[0] else Ellipsis
+        screen.blit(err_type_font, (130, 300)) if blit_list[1] else Ellipsis
+        screen.blit(err_message_font, (20, 345))  if blit_list[2] else Ellipsis
+        screen.blit(err_description_font, (20, 375))  if blit_list[3] else Ellipsis
+        screen.blit(custom_surf, (780, 345)) if custom_surf is not None and blit_list[4] else Ellipsis
+        screen.blit(help_font, (12, 420)) if custom_surf is not None and blit_list[5] else Ellipsis
         QuantumCore.widgets.Button.roster_render(screen)
         
         """ __PyGame__ """
         pygame.display.flip(), clock.tick(60)
+    pygame.quit()
+    QuantumCore.widgets.Button.roster_relies()
+    return result
 
 
 if __name__ == '__main__':
-    showWindow(None, flags=0)
+    try: raise UnicodeDecodeError('UTF-8', b'\\', 0, 0, 'err')
+    except Exception as exc: print(showWindow(exc, custom_surf='base'))
+        

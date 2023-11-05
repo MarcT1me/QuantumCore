@@ -13,7 +13,7 @@ from core.elements.locations import TestScene, Location  # load game scenes
 
 # engine elements imports
 import QuantumCore.time
-from QuantumCore.data import config
+from QuantumCore import config
 
 
 class Source:
