@@ -13,7 +13,7 @@ from loguru import logger
 # engine elements imports
 import QuantumCore.graphic
 # engine config import
-from QuantumCore.data.config import __ENGINE_FOLDER__, NEAR
+from QuantumCore.data.config import __ENGINE_DATA__, NEAR
 
 
 class VBO:
@@ -211,9 +211,9 @@ class CustomVBO(BaseVBO):
     @staticmethod
     def __get_obj_file_name__(path, ext) -> str:
         """ get name custom model """
-        logger.info(rf'    search model: {path}/*.{ext}')
+        # logger.info(rf'    search model: {path}/*.{ext}')
         f_list = glob.glob(rf'{path}/*.{ext}')
-        f_list.append(rf'{__ENGINE_FOLDER__}/data/models/cat/20430_Cat_v1_NEW.obj')
+        f_list.append(rf'{__ENGINE_DATA__}/models/ERROR/error.obj')
         return f_list[0]
 
     def _get_vertex_data_(self) -> np.array:

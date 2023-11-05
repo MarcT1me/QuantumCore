@@ -8,7 +8,7 @@ Game Engine in Python ( **[Pygame](https://pypi.org/project/pygame/), [OpenGL](h
 ㅤ
 ## Engine
 The main language of the engine is **Python**, it is used to initialize _[VBO](QuantumCore/graphic/vbo.py), [CAMERA](QuantumCore/graphic/camera.py), [LIGHT](QuantumCore/graphic/light.py)_ and transfer values to program shader\
-Second language is **OpenGL**, or just **GLSL**, he used in `.frag` and `.vert` shaders, example: [main.frag](QuantumCore/graphic/shaders/automaton/unilight.frag) and [main.vert](QuantumCore/graphic/shaders/automaton/unilight.vert) _(last versions)_. It`s help me use your GPU\
+Second language is **OpenGL**, or just **GLSL**, he used in `.frag` and `.vert` shaders, example: [main.frag](QuantumCore/data/shaders/automaton/unilight.frag) and [main.vert](QuantumCore/data/shaders/automaton/unilight.vert) _(last versions)_. It`s help me use your GPU\
 Other modules using languages are also initialized.\
 For example:
 - `PyBullet` - **C++**;\

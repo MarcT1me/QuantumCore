@@ -5,28 +5,29 @@ import pygame
 
 # other
 import time
-import traceback
 import sys
 from loguru import logger
+import traceback
 
 # Engine elements
-from QuantumCore.data.config import __APPLICATION_FOLDER__
+from QuantumCore.data.config import __ENGINE_DATA__
 from QuantumCore.data.config import APPLICATION_ICO_path, APPLICATION_ICO_name
+import QuantumCore.widgets
 import QuantumCore.time
 
 
-def showWindow(err, *, flags=pygame.NOFRAME):
+def showTraceback(err, *, flags=pygame.NOFRAME):
     """ processing error """
     pygame.quit()
     pygame.init()
     QuantumCore.time.loading = False
     
     # error texts
-    caption, format_exc = f'ERROR: {traceback.extract_stack()[0]}', traceback.format_exc()
+    caption, format_exc = f'ERROR: {err}', traceback.format_exc()
     logger.exception(f'ERROR: {err}')
 
     # background surface
-    background = pygame.image.load(rf'{__APPLICATION_FOLDER__}/QuantumCore/messages/debug_err.png')
+    background = pygame.image.load(rf'{__ENGINE_DATA__}/messages/debug_err.png')
     background_size = .9
     background = pygame.transform.scale_by(background, background_size)
     # text surface
@@ -43,7 +44,7 @@ def showWindow(err, *, flags=pygame.NOFRAME):
                                      flags=flags)
     pygame.display.set_caption(caption)
     pygame.display.set_icon(
-        pygame.image.load(rf'{__APPLICATION_FOLDER__}/{APPLICATION_ICO_path}/{APPLICATION_ICO_name}')
+        pygame.image.load(rf'{__ENGINE_DATA__}/{APPLICATION_ICO_path}/{APPLICATION_ICO_name}')
     )
 
     """traceback text variable"""
@@ -157,4 +158,56 @@ def showWindow(err, *, flags=pygame.NOFRAME):
         
         # default pygame methods
         pygame.display.flip(), clock.tick(30)
+
+
+def showWindow(err, *, flags=pygame.NOFRAME):
+    """ processing error """
+    pygame.quit()
+    pygame.init()
+    QuantumCore.time.loading = False
+
+    """ Working with pygame """
+    clock = pygame.time.Clock()
+    # process background
+    background = pygame.image.load(rf'{__ENGINE_DATA__}/messages/err_background.png')
+    background = pygame.transform.scale_by(background, .75)
+    # screen
+    screen_size = background.get_size()
+    screen = pygame.display.set_mode(screen_size, flags=flags)
+    pygame.display.set_icon(pygame.image.load(rf'{__ENGINE_DATA__}/{APPLICATION_ICO_path}/{APPLICATION_ICO_name}'))
+    # caption
+    caption = type(err)
+    pygame.display.set_caption(str(caption))
+    
+    """ fonts """
+    
+    while True:
+        """ events """
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                return False
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    pygame.quit()
+                    sys.exit()
+                elif event.key == pygame.K_r:
+                    pygame.quit()
+                    return True
+            elif event.type == pygame.MOUSEBUTTONUP:
+                ...
+            QuantumCore.widgets.Button.roster_event(event)
         
+        """ update """
+        ...
+        
+        """ render """
+        screen.fill((0, 0, 0))
+        screen.blit(background, (0, 0))
+        QuantumCore.widgets.Button.roster_render(screen)
+        
+        """ __PyGame__ """
+        pygame.display.flip(), clock.tick(60)
+
+
+if __name__ == '__main__':
+    showWindow(None, flags=0)

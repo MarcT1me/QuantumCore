@@ -5,7 +5,7 @@ from copy import copy
 # engine elements imports
 import QuantumCore.graphic
 from QuantumCore.graphic.vbo import VBO
-from QuantumCore.graphic.shaders.shader_program import ShaderProgram
+from QuantumCore.graphic.shader_program import ShaderProgram
 from QuantumCore.data import config
 
 

@@ -27,11 +27,11 @@ class Source:
         QuantumCore.init()
 
         """ working with pygame """
-        config.APPLICATION_ICO_name = 'QuantumCore.ico'
+        config.APPLICATION_ICO_name = 'QuantumCore.png'
         pygame.display.set_caption(f"{settings.APPLICATION_NAME}    v{settings.APPLICATION_VERSION}"
                                    f"      powered by {QuantumCore.name}({QuantumCore.short_name})")  # for IDE
         pygame.display.set_icon(pygame.image.load(  # for IDE
-                rf'{config.__APPLICATION_FOLDER__}/{config.APPLICATION_ICO_path}/{config.APPLICATION_ICO_name}'
+                rf'{config.__ENGINE_DATA__}/{config.APPLICATION_ICO_path}/{config.APPLICATION_ICO_name}'
             )
         )
         pygame.event.set_grab(True), pygame.mouse.set_visible(False)  # mouse

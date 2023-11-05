@@ -18,7 +18,7 @@ import QuantumCore.data.config as config
 from QuantumCore.graphic.interface import __Interface
 window: QuantumCore.graphic.__GRAPHIC = None
 
-__version = '0.10.6'
+__version = '0.10.7'
 name, short_name = 'QuantumCore', 'PyQC'
 
 __authors: dict = {

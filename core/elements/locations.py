@@ -3,7 +3,7 @@
 from loguru import logger
 import glm
 
-from QuantumCore.data.config import __APPLICATION_FOLDER__
+from QuantumCore.data.config import __APPLICATION_PATH__
 # engine elements import
 from QuantumCore.scene import Location, Builder
 import QuantumCore.graphic.light
@@ -18,21 +18,21 @@ from core.elements.entities import Cat, Cube, MovingCube, WoodenWatchTower, Eart
 class TestScene(Location):
     def __init__(self, app) -> None:
         super().__init__(app)
-        self.builder = Builder(rf'{__APPLICATION_FOLDER__}/{SAVES_path}/Abobacraft.sav', scene_=self)
+        self.builder = Builder(rf'{__APPLICATION_PATH__}/{SAVES_path}/Abobacraft.sav', scene_=self)
 
     def add_vbos(self):
         CustomVBO_name['WoodenWatchTower'] = (
             '2f 3f 3f',
             ['in_texcoord_0', 'in_normal', 'in_position'],
-            f'{__APPLICATION_FOLDER__}/{MODEL_path}/WoodenWatchTower', 'obj', 'jpg')
+            f'{__APPLICATION_PATH__}/{MODEL_path}/WoodenWatchTower', 'obj', 'jpg')
         CustomVBO_name['Cat'] = (
             '2f 3f 3f',
             ['in_texcoord_0', 'in_normal', 'in_position'],
-            rf'{__APPLICATION_FOLDER__}/{MODEL_path}/cat', 'obj', 'jpg')
+            rf'{__APPLICATION_PATH__}/{MODEL_path}/cat', 'obj', 'jpg')
         CustomVBO_name['Earth'] = (
             '2f 3f 3f',
             ['in_texcoord_0', 'in_normal', 'in_position'],
-            rf'{__APPLICATION_FOLDER__}/{MODEL_path}/earth', 'obj', 'png')
+            rf'{__APPLICATION_PATH__}/{MODEL_path}/earth', 'obj', 'png')
         return self
 
     def build(self, app, obj, light) -> None:

@@ -20,7 +20,7 @@ datafile = None
 
 def _read_datafile_():
     """ Read CONFIG files """
-    with open(rf"{config.__APPLICATION_FOLDER__}/GameData/config.json") as file:
+    with open(rf"{config.__APPLICATION_PATH__}/GameData/config.json") as file:
         return json.load(file)
 
 

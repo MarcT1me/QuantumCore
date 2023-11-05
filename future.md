@@ -9,5 +9,7 @@ In this branch, the work with graphics is changing, the API is simplified and th
 3. [x] adding the ability to create an [interface](QuantumCore/graphic/interface.py)
 4. [x] separation of service shaders and scene shaders
 5. [x] Simplification of the API for working with the base class of the engine
-6. [ ] separation of engine files
-7. [ ] adding an improved tool to add an interface
+6. [x] separation of engine files
+7. [ ] Error model and facilitating error detection
+8. [ ] adding an improved tool to add an interface
+9. [x] Engine widgets and Err screen

@@ -31,4 +31,4 @@ def mainloop(QuantumGame, *, messages=None):
         except Exception as err:
             try: QuantumCore.graphic.mash.mesh.__destroy__()
             except Exception as exc: print(f'\n\n{exc}\n\n')
-            running = err_screen.showWindow(err) if err_screen in messages else None
+            running = err_screen.showTraceback(err) if err_screen in messages else None

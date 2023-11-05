@@ -6,25 +6,25 @@ import sys
 from loguru import logger
 
 # Engine elements
-from QuantumCore.data.config import __APPLICATION_FOLDER__, DISPLAY_num
+from QuantumCore.data.config import __ENGINE_DATA__, DISPLAY_num
 from QuantumCore.data.config import APPLICATION_ICO_path, APPLICATION_ICO_name
 
 
-def showWindow(*, bg_img_path=r'QuantumCore/messages/default_loading_background.png',
+def showWindow(*, bg_img_path=r'messages/default_loading_background.png',
 			 bg_size=(800, 400), caption='QuantumGame - loading', flags=pygame.NOFRAME):
 	""" show that game loading in progress """
 	pygame.init()
 
 	screen_size = bg_size if bg_size[0] >= 200 and bg_size[1] >= 150 else (400, 300)
 	""" background surface """
-	background = pygame.transform.scale(pygame.image.load(rf'{__APPLICATION_FOLDER__}/{bg_img_path}'),
+	background = pygame.transform.scale(pygame.image.load(rf'{__ENGINE_DATA__}/{bg_img_path}'),
 										  screen_size)
 
 	""" set pygame screen """
 	window = pygame.display.set_mode(screen_size, display=DISPLAY_num, flags=flags)
 	pygame.display.set_caption(caption)
 	pygame.display.set_icon(
-		pygame.image.load(rf'{__APPLICATION_FOLDER__}/{APPLICATION_ICO_path}/{APPLICATION_ICO_name}')
+		pygame.image.load(rf'{__ENGINE_DATA__}/{APPLICATION_ICO_path}/{APPLICATION_ICO_name}')
 	)
 	
 	""" fonts """
