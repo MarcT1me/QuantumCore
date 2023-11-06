@@ -24,10 +24,11 @@ class App:
 
 def mainloop(QuantumGame):
     running: bool = True
-    while running or running is not None:
+    while running and (running is not None):
         try:
             QuantumGame().run()
         except Exception as err:
             try: QuantumCore.graphic.mash.mesh.__destroy__()
             except Exception as exc: print(f'\n\n{exc}\n\n')
-            running = err_screen.showTraceback(err)
+            running = err_screen.showWindow(err) if QuantumCore.config.IS_RELEASE \
+                else err_screen.showTraceback(err)

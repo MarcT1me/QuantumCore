@@ -168,9 +168,9 @@ def showWindow(err, *, caption='Error Message', custom_surf=None, flags=pygame.N
     pygame.quit()
     pygame.init()
     QuantumCore.time.loading = False
+    custom_surf = pygame.Surface((270, 110))
+    custom_surf.fill((0, 255, 0))
     if custom_surf == 'base':
-        custom_surf = pygame.Surface((270, 110))
-        custom_surf.fill((0, 255, 0))
         custom_surf.blit(
             pygame.font.SysFont('Verdana', 40, bold=True).render(
                 'Quantum', False, 'black'
@@ -183,6 +183,8 @@ def showWindow(err, *, caption='Error Message', custom_surf=None, flags=pygame.N
             ),
             (112, 51)
         )
+    elif custom_surf == 'fill':
+        custom_surf.fill((0, 200, 200))
     custom_surf.set_colorkey((0, 255, 0)) if custom_surf is not None else Ellipsis
 
     """ Working with pygame """
@@ -192,7 +194,7 @@ def showWindow(err, *, caption='Error Message', custom_surf=None, flags=pygame.N
     background = pygame.transform.scale_by(background, .75)
     # screen
     screen_size = background.get_size()
-    screen = pygame.display.set_mode(screen_size, display=1, flags=flags)
+    screen = pygame.display.set_mode(screen_size, flags=flags)
     white_surf = pygame.Surface(screen_size); white_surf.fill('white')
     pygame.display.set_icon(pygame.image.load(rf'{__ENGINE_DATA__}/{APPLICATION_ICO_path}/{APPLICATION_ICO_name}'))
     # caption
@@ -266,5 +268,5 @@ def showWindow(err, *, caption='Error Message', custom_surf=None, flags=pygame.N
 
 if __name__ == '__main__':
     try: raise UnicodeDecodeError('UTF-8', b'\\', 0, 0, 'err')
-    except Exception as exc: print(showWindow(exc, custom_surf='base'))
+    except Exception as exc: print(showWindow(exc, custom_surf='fill'))
         

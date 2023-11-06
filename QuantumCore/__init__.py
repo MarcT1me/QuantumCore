@@ -32,7 +32,7 @@ __authors: dict = {
 
 logger.info(f'\n\n{name}: {__version=}\n')
 logger.info(f'\n\n{pformat(__authors)}\n')
-logger.warning('This is LEARN project writen just student')
+logger.warning('This is an LEARN project written by an ordinary student')
 
 
 def init(*,

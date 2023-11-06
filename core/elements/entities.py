@@ -67,9 +67,6 @@ class Cat(ExtendedBaseModel):
             self.speed = 0.03
         else:
             self.speed = 0.01
-        
-        if keys[pygame.K_TAB]:
-            print(self.pos, self.rot)
 
         self.m_model = self.__get_model_matrix__()
         super().update()

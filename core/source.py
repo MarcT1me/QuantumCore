@@ -75,7 +75,7 @@ class Source:
                 if self.spec_keys['L-Ctrl'] and event.key == pygame.K_2:
                     QuantumCore.graphic.front_face = 'ccw'
                 elif self.spec_keys['L-Ctrl'] and event.key == pygame.K_g:
-                    logger.debug('GAME - TEST RISE\n\n')
+                    logger.warning('GAME - TEST RISE\n\n')
                     raise Exception("TEST RISE - USE 'raise - Exception' and call traceback")
                 elif self.spec_keys['L-Ctrl'] and event.key == pygame.K_r:
                     settings.rewrite_config()

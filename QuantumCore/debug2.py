@@ -132,20 +132,11 @@ class Debugging:
         self.__check_dir_size(self.directory)
 
         return self._proj_size
-
-    # def events(self, key):
-    #     """ Debug events """
-    #     if key == pygame.K_QUOTE:
-    #         current_time = time.time()
-    #         if current_time >= self.time_list['get PSize'] + 1:
-    #             size: Debugging.PSize = Debugging.PSize(self.get_proj_size(
-    #                 except_dirs=['build', 'dist']
-    #             ))
-    #             logger.info(f"\n\nQuantumCore project size = {size.format_size}\n")
-    #             self.time_list['get PSize'] = current_time
                 
 
 if __name__ == '__main__':
-    size = Debugging.PSize(Debugging(dir_name=r'F:/project/QuantumCore').get_proj_size()).format_size
+    size = Debugging.PSize(Debugging(
+        dir_name=r'C:/Program Files/Python311/Lib/site-packages/QuantumCore'
+    ).get_proj_size()).format_size
     logger.info(f'\n\n{size}\n')
     input()  #mainloop
