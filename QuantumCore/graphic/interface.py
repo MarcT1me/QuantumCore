@@ -18,7 +18,6 @@ class __Interface:
             vert_shader = shader_file.read()
         with open(rf'{__ENGINE_DATA__}/shaders/interface.frag') as shader_file:
             frag_shader = shader_file.read()
-        del shader_file
         self.__shaders = self.__ctx.program(vertex_shader=vert_shader, fragment_shader=frag_shader)
         
         self.surface.fill((0, 0, 0))

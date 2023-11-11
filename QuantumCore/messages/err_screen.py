@@ -168,9 +168,9 @@ def showWindow(err, *, caption='Error Message', custom_surf=None, flags=pygame.N
     pygame.quit()
     pygame.init()
     QuantumCore.time.loading = False
-    custom_surf = pygame.Surface((270, 110))
+    custom_surf, custom_surf_arg = pygame.Surface((270, 110)), custom_surf
     custom_surf.fill((0, 255, 0))
-    if custom_surf == 'base':
+    if custom_surf_arg == 'base':
         custom_surf.blit(
             pygame.font.SysFont('Verdana', 40, bold=True).render(
                 'Quantum', False, 'black'
@@ -183,9 +183,8 @@ def showWindow(err, *, caption='Error Message', custom_surf=None, flags=pygame.N
             ),
             (112, 51)
         )
-    elif custom_surf == 'fill':
-        custom_surf.fill((0, 200, 200))
-    custom_surf.set_colorkey((0, 255, 0)) if custom_surf is not None else Ellipsis
+    if custom_surf_arg != 'fill':
+        custom_surf.set_colorkey((0, 255, 0)) if custom_surf is not None else Ellipsis
 
     """ Working with pygame """
     clock = pygame.time.Clock()
@@ -237,6 +236,8 @@ def showWindow(err, *, caption='Error Message', custom_surf=None, flags=pygame.N
     result: bool = False
     running: bool = True
     while running:
+        """err while"""
+        
         """ events """
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -268,5 +269,5 @@ def showWindow(err, *, caption='Error Message', custom_surf=None, flags=pygame.N
 
 if __name__ == '__main__':
     try: raise UnicodeDecodeError('UTF-8', b'\\', 0, 0, 'err')
-    except Exception as exc: print(showWindow(exc, custom_surf='fill'))
+    except Exception as exc: print(showWindow(exc, custom_surf='base'))
         

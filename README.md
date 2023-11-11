@@ -29,9 +29,7 @@ To calculate complex formulas in the engine, the `Cython` plugin and the **C** l
   * ModernGL;
   * Numpy;
   * PyGlm;
-  * Bullet Physics;
-  * PyWaveFront;
-  * PyAssimp; \
+  * PyWaveFront; \
 
 
 ## COMPILE:
@@ -43,7 +41,7 @@ After compile - copy all data in directory (textures, models, game data and othe
 ### Project language structure:
 
 > main&IO ( Python ) -> | CPU ( C ) - Cython\
-> ㅤ\/ ㅤㅤㅤㅤㅤㅤㅤㅤ | modules ( C++ )\
+> ㅤ\/ ㅤㅤㅤㅤㅤㅤㅤㅤ    | modules ( C++ )\
 >  GPU ( Open GL )
 
 ### Project structure:

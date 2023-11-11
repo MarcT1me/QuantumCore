@@ -50,3 +50,7 @@ def showWindow(*, bg_img_path=r'messages/default_loading_background.png',
 		window.blit(powered_by_font, powered_by_font_pos)
 		window.blit(PyQC_font, PyQC_font_pos)
 		pygame.display.flip()
+
+
+if __name__ == '__main__':
+	showWindow(flags=0)

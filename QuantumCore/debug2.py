@@ -132,11 +132,11 @@ class Debugging:
         self.__check_dir_size(self.directory)
 
         return self._proj_size
-                
+
 
 if __name__ == '__main__':
     size = Debugging.PSize(Debugging(
-        dir_name=r'C:/Program Files/Python311/Lib/site-packages/QuantumCore'
+        dir_name=rf'F:/project/QuantumCore'
     ).get_proj_size()).format_size
     logger.info(f'\n\n{size}\n')
     input()  #mainloop

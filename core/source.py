@@ -63,7 +63,7 @@ class Source:
 
             """ Exit of App to button "close" """
             if event.type == pygame.QUIT:
-                QuantumCore.__quit__()
+                QuantumCore.close()
 
             elif event.type == pygame.KEYDOWN:
                 """ Detect KEY DOWN """
@@ -82,7 +82,7 @@ class Source:
                     QuantumCore.window.resset()
                 
                 elif self.spec_keys['L-Ctrl'] and event.key == pygame.K_q:
-                    QuantumCore.__quit__()
+                    QuantumCore.close()
 
             elif event.type == pygame.KEYUP:
                 if event.key == pygame.K_LCTRL:

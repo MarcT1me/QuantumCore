@@ -7,7 +7,6 @@ from moderngl import DEPTH_TEST, BLEND  # CULL_FACE
 
 # other
 from loguru import logger
-from pprint import pformat
 import sys
 
 # engine elements imports
@@ -18,20 +17,10 @@ import QuantumCore.data.config as config
 from QuantumCore.graphic.interface import __Interface
 window: QuantumCore.graphic.__GRAPHIC = None
 
-__version = '0.10.7'
+__version = '0.10.10'
 name, short_name = 'QuantumCore', 'PyQC'
 
-__authors: dict = {
-    'programmers': {
-        'CoreTech programmers': 'Timur Shestakov',
-        'DevOps engineer': ('Emil Akhmetov', 'Timur Shestakov'),
-    },
-    'Tester and QA engineers': 'Emil Akhmetov',
-    '3d artists': None
-}
-
 logger.info(f'\n\n{name}: {__version=}\n')
-logger.info(f'\n\n{pformat(__authors)}\n')
 logger.warning('This is an LEARN project written by an ordinary student')
 
 
@@ -50,7 +39,7 @@ def init(*,
     logger.success('ENGINE ready\n\n')
 
 
-def __quit__() -> None:
+def close() -> None:
     """ Correct engine QUIT """
     logger.success('Engine - QUIT')
     quit()
