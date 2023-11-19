@@ -22,7 +22,7 @@ class __GRAPHIC:
     pygame.display.gl_set_attribute(pygame.GL_CONTEXT_MINOR_VERSION, 3)
     pygame.display.gl_set_attribute(pygame.GL_CONTEXT_PROFILE_MASK, pygame.GL_CONTEXT_PROFILE_CORE)
     
-    interface = None
+    interface = None  # type: QuantumCore.__Interface
     
     def __init__(self, flags):
         """ Init engine graphic
@@ -71,8 +71,9 @@ class __GRAPHIC:
         logger.info(f'screen size = {config.SCREEN_size},  context size= {self.context.screen.size}')
         
         """ REWRITE Engine variables """
-        QuantumCore.graphic.camera.camera._aspect_ratio = config.SCREEN_size[0] / config.SCREEN_size[1]
-        QuantumCore.graphic.camera.camera.m_proj = QuantumCore.graphic.camera.camera._get_projection_matrix_
+        if QuantumCore.graphic.camera.camera is not None:
+            QuantumCore.graphic.camera.camera._aspect_ratio = config.SCREEN_size[0] / config.SCREEN_size[1]
+            QuantumCore.graphic.camera.camera.m_proj = QuantumCore.graphic.camera.camera._get_projection_matrix_
     
         logger.debug(f'graphics - restart\n\n')
     

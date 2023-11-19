@@ -14,3 +14,4 @@ class QuantumGame(App):
 if __name__ == '__main__':
     """ Entry point """
     mainloop(QuantumGame)
+    

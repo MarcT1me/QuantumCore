@@ -38,9 +38,9 @@ NEAR: float   # constant  # .CONFIG
 AA_TYPE: int  # constant  # .CONFIG
 
 
-with open(rf'{__ENGINE_DATA__}/settings.config', 'r') as config:
-    exec(config.read())
+with open(rf'{__ENGINE_DATA__}/settings.config', 'r') as config_file:
+    exec(config_file.read())
 
-with open(rf'{__ENGINE_DATA__}/graphic.config', 'r') as config:
-    exec(config.read())
+with open(rf'{__ENGINE_DATA__}/graphic.config', 'r') as config_file:
+    exec(config_file.read())
     

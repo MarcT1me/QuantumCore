@@ -25,6 +25,11 @@ class Source:
         
         """ init Engine (create context, window, camera, mesh and default scene) """
         QuantumCore.init()
+        
+        QuantumCore.window.interface.surface.blit(pygame.transform.scale(pygame.image.load(
+            rf'{config.__APPLICATION_PATH__}/{settings.TEXTURE_path}/loading_image.jpg'
+        ), config.SCREEN_size), (0, 0))
+        QuantumCore.window.interface.nonscene_render()
 
         """ working with pygame """
         config.APPLICATION_ICO_name = 'QuantumCore.png'
@@ -64,6 +69,7 @@ class Source:
             """ Exit of App to button "close" """
             if event.type == pygame.QUIT:
                 QuantumCore.close()
+                exit()
 
             elif event.type == pygame.KEYDOWN:
                 """ Detect KEY DOWN """
@@ -83,6 +89,7 @@ class Source:
                 
                 elif self.spec_keys['L-Ctrl'] and event.key == pygame.K_q:
                     QuantumCore.close()
+                    exit()
 
             elif event.type == pygame.KEYUP:
                 if event.key == pygame.K_LCTRL:

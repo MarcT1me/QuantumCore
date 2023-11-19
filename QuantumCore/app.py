@@ -28,7 +28,6 @@ def mainloop(QuantumGame):
         try:
             QuantumGame().run()
         except Exception as err:
-            try: QuantumCore.graphic.mash.mesh.__destroy__()
-            except Exception as exc: print(f'\n\n{exc}\n\n')
+            QuantumCore.close()
             running = err_screen.showWindow(err) if QuantumCore.config.IS_RELEASE \
                 else err_screen.showTraceback(err)

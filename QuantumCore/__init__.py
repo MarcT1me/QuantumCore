@@ -7,17 +7,18 @@ from moderngl import DEPTH_TEST, BLEND  # CULL_FACE
 
 # other
 from loguru import logger
-import sys
 
 # engine elements imports
 import QuantumCore.graphic
 import QuantumCore.time
 import QuantumCore.scene
-import QuantumCore.data.config as config
+import QuantumCore.data.config as config  # type: pass
+import QuantumCore.widgets
 from QuantumCore.graphic.interface import __Interface
-window: QuantumCore.graphic.__GRAPHIC = None
+import QuantumCore.UI
+window = None  # type: QuantumCore.graphic.__GRAPHIC
 
-__version = '0.10.10'
+__version = '0.10.11'
 name, short_name = 'QuantumCore', 'PyQC'
 
 logger.info(f'\n\n{name}: {__version=}\n')
@@ -41,8 +42,11 @@ def init(*,
 
 def close() -> None:
     """ Correct engine QUIT """
-    logger.success('Engine - QUIT')
     quit()
-    QuantumCore.graphic.mash.mesh.__destroy__()
+    try:
+        QuantumCore.graphic.mash.mesh.__destroy__()
+    except Exception as exc:
+        print(f'\n\n{exc}\n\n')
     QuantumCore.window.context.release()
-    sys.exit('success game exit')
+    
+    logger.success('Engine - QUIT')

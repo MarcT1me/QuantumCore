@@ -1,4 +1,6 @@
 from array import array
+
+import pygame
 from loguru import logger
 from copy import copy
 
@@ -11,7 +13,7 @@ from QuantumCore.data.config import __ENGINE_DATA__
 
 class __Interface:
     def __init__(self):
-        self.surface = Surface(QuantumCore.data.config.SCREEN_size)
+        self.surface: pygame.Surface = Surface(QuantumCore.data.config.SCREEN_size)
         self.__ctx = copy(QuantumCore.window.context)
         
         with open(rf'{__ENGINE_DATA__}/shaders/interface.vert') as shader_file:
@@ -55,6 +57,11 @@ class __Interface:
         self.frame_tex.release()
         self.__vbo.release()
         self.__vao.release()
+    
+    def nonscene_render(self):
+        QuantumCore.window.context.clear(color=(0.08, 0.16, 0.18, 1.0))
+        self.__render__()
+        pygame.display.flip()
 
 
 from QuantumCore.model import BaseModel
