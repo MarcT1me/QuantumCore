@@ -22,14 +22,11 @@ class Source:
     def __init__(self) -> None:
         """ THE CORE OF THE GAME """
         pygame.init(), pygame.font.init(), settings.rewrite_config()  # Initializing game dependencies
+        self.loading = QuantumCore.UI.InterfaceUI(['core', 'UI'], 'loading')
         
         """ init Engine (create context, window, camera, mesh and default scene) """
         QuantumCore.init()
-        
-        QuantumCore.window.interface.surface.blit(pygame.transform.scale(pygame.image.load(
-            rf'{config.__APPLICATION_PATH__}/{settings.TEXTURE_path}/loading_image.jpg'
-        ), config.SCREEN_size), (0, 0))
-        QuantumCore.window.interface.nonscene_render()
+        self.loading.itrf.step(8, 'init Engine')
 
         """ working with pygame """
         config.APPLICATION_ICO_name = 'QuantumCore.png'
@@ -43,9 +40,11 @@ class Source:
         
         """ Init additional variable """
         self.clock = pygame.time.Clock()
+        self.loading.itrf.step(51, 'load game scene')
         self.test_scene: Location = TestScene(self).on_init()
         
         """ Load additional variable """
+        self.loading.itrf.step(78, 'read game scene')
         QuantumCore.scene.scene = self.test_scene.load()
         # QuantumCore.graphic.camera.camera.attach_object = QuantumCore.scene.scene.objects_list[
         #     QuantumCore.scene.scene.ids['котик']

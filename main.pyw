@@ -1,5 +1,6 @@
 """" Main file
  """
+import QuantumCore
 from core.source import Source
 from QuantumCore.app import App, mainloop
 

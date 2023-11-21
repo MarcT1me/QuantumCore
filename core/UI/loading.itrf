@@ -1,0 +1,25 @@
+
+#noinspection PyUnresolvedReferences
+class Itrf(Head):  #type: core.UI.loading.Head  # not change
+    def step(self, value, stage):
+        from QuantumCore.data.config import SCREEN_size
+        
+        QuantumCore.window.interface.surface.blit(*self.background)
+        QuantumCore.window.interface.surface.blit(*self.loading_font)
+        
+        fin_font = self.percent_font.render(f'{value} %', True, 'white')
+        QuantumCore.window.interface.surface.blit(
+            fin_font, (SCREEN_size[0]-fin_font.get_width()-20, SCREEN_size[1]-fin_font.get_height()-50)
+        )
+        fin_font = self.stage_font.render(f'{stage}', True, 'white')
+        QuantumCore.window.interface.surface.blit(
+            fin_font, (50, SCREEN_size[1]-fin_font.get_height()-95)
+        )
+        pygame.draw.rect(QuantumCore.window.interface.surface, 'white', self.get_line_rect(value))
+        QuantumCore.window.interface.nonscene_render()
+    
+    def go(self, value=100, stage='test'):
+        self.step(value, stage)
+
+#noinspection PyUnresolvedReferences
+QuantumCore.UI._creator = Itrf
