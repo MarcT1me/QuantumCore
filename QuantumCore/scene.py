@@ -173,7 +173,9 @@ class Builder:
             print('not found file')
             return False
     
-    def read(self, scene_, import_code_) -> bool:
+    def read(self, scene_, import_code_,
+             light_iteration_code='', object_iteration_code='', camera_body_code='',
+             **kwargs) -> bool:
         """ easy constructing your scene """
         if self.scene is None:
             print('I can`t read save')
@@ -193,19 +195,42 @@ class Builder:
         
         # lights sources
         for i in sav['lights']:
-            exec(f"""self.new_id = scene_._add_light(Light(color={i['color']}, pos={i['pos']}, ambient={i['Ia']}, diffuse={i['Id']}, specular={i['Is']}, size={i['size']}))""")
-            change_id()
+            exec(f"""
+self.new_id = scene_._add_light(
+    Light(
+        color={i['color']},
+        pos={i['pos']},
+        ambient={i['Ia']},
+        diffuse={i['Id']},
+        specular={i['Is']},
+        size={i['size']}
+    )
+)"""); change_id()  # light sources initialisation
+            exec(light_iteration_code)
         
         # scene objects
         for i in sav['objects']:
-            exec(f"""self.new_id = scene_._add_object({i['name']}(scene_.app, pos={i['pos']}, rot={i['rot']}, render_area={i['r_area']}, scale={i['scale']}, tex_id="{i['tex_id']}", vao_name="{i['vao']}", sav=True))""")
-            change_id()
+            exec(f"""
+self.new_id = scene_._add_object(
+    {kwargs[i['name']] if len(kwargs) is not 0 else i['name']}(
+        scene_.app,
+        pos={i['pos']},
+        rot={i['rot']},
+        render_area={i['r_area']},
+        scale={i['scale']},
+        tex_id="{i['tex_id']}",
+        vao_name="{i['vao']}",
+        sav=True
+    )
+)"""); change_id()  # objects initialisation
+            exec(object_iteration_code)
         
         if sav['camera'] is not None:
             QuantumCore.graphic.camera.camera.position = glm.vec3(sav['camera']['pos'])
             QuantumCore.graphic.camera.camera.yaw = sav['camera']['yaw']
             QuantumCore.graphic.camera.camera.pitch = sav['camera']['pitch']
             QuantumCore.graphic.camera.camera.speed = sav['camera']['speed']
+            exec(camera_body_code)
         
         return True
     

@@ -70,18 +70,19 @@ class InterfaceUI:
             exec(interface_code)
 
         self.itrf = _creator(*init_args, **init_kwargs)
-        self.go = lambda: self.itrf.go(*go_args, **go_kwargs)
+        self.go = lambda *go_args, **go_kwargs: self.itrf.go(*go_args, **go_kwargs)
     
     @staticmethod
     def set_default_files(path):
         """ Create default interface files (Head and Itrf) """
         
         with open(rf'{path}.py', 'w') as file:
-            file.write("""# Your file imports
+            file.write("""
 
 #noinspection PyUnresolvedReferences
 class Head:
-    #Callable: creator imports
+    # Your file imports
+    # be sure to create an abbreviation for the import
     
     def __init__(self):
         #Callable: print('creator code')  # real comment
@@ -93,7 +94,6 @@ class Head:
             file.write("""
 #noinspection PyUnresolvedReferences
 class Itrf(Head):  #type: core.UI.loading.Head
-    #Callable: creator imports
     
     def go(*args, **kwargs):     # Your methods
         #Callable: print('creator code')  # real comment

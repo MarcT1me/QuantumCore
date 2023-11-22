@@ -18,9 +18,11 @@ from core.elements.entities import Cat, Cube, MovingCube, WoodenWatchTower, Eart
 class TestScene(Location):
     def __init__(self, app) -> None:
         super().__init__(app)
+        app.loading.itrf.step(15, stage='Init game Scene', status='builder')
         self.builder = Builder(rf'{__APPLICATION_PATH__}/{SAVES_path}/Abobacraft.sav', scene_=self)
 
     def add_vbos(self):
+        self.app.loading.itrf.step(16, status='models path')
         CustomVBO_name['WoodenWatchTower'] = (
             '2f 3f 3f',
             ['in_texcoord_0', 'in_normal', 'in_position'],
@@ -33,6 +35,7 @@ class TestScene(Location):
             '2f 3f 3f',
             ['in_texcoord_0', 'in_normal', 'in_position'],
             rf'{__APPLICATION_PATH__}/{MODEL_path}/earth', 'obj', 'png')
+        self.app.loading.itrf.step(45, status='Game Canvas')
         return self
 
     def build(self, app, obj, light) -> None:
@@ -42,11 +45,24 @@ class TestScene(Location):
             
             self.builder.read(
                 self, "from core.elements.entities import Cat, Cube, MovingCube, WoodenWatchTower, Earth; "
-                      "from QuantumCore.graphic.light import Light"
+                      "from QuantumCore.graphic.light import Light",
+                light_iteration_code="""
+p = 65 + (87-66) * sav['lights'].index(i) / (len(sav['lights']) - 1)
+scene_.app.loading.itrf.step(p, stage='Load game scene', status='sav - lighting')
+""",
+                object_iteration_code="""
+p = 87 + (96-87) * sav['objects'].index(i) / (len(sav['objects']) - 1)
+scene_.app.loading.itrf.step(p, stage='Load game scene', status='sav - objects')
+""",
+                camera_body_code="""
+scene_.app.loading.itrf.step(97, stage='Load game scene', status='sav - camera')
+"""
             )  # use builder, that easy constructing scene
                         
             logger.success('TestScene - construct .sav\n\n')
         else:
+            self.app.loading.itrf.step(65, stage='Load game scene', status='Scene - build')
+            
             """ in other a build scene in code """
             light(Light(pos=(25, 25, 25), ambient=.2, diffuse=1.5, specular=.5))
             self.ids['фонарик'] = light(Light(size=15))
@@ -67,8 +83,6 @@ class TestScene(Location):
             QuantumCore.graphic.camera.camera.speed = 0.01
             
             logger.warning('TestScene - build\n\n')
-            
-            # self.builder.write()
     
     def __update__(self) -> None:
         super().__update__()

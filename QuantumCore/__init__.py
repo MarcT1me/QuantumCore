@@ -12,13 +12,13 @@ from loguru import logger
 import QuantumCore.graphic
 import QuantumCore.time
 import QuantumCore.scene
-import QuantumCore.data.config as config  # type: pass
+import QuantumCore.data.config as config
 import QuantumCore.widgets
 from QuantumCore.graphic.interface import __Interface
 import QuantumCore.UI
 window = None  # type: QuantumCore.graphic.__GRAPHIC
 
-__version = '0.10.12'
+__version = '0.10.13'
 name, short_name = 'QuantumCore', 'PyQC'
 
 logger.info(f'\n\n{name}: {__version=}\n')
@@ -45,8 +45,8 @@ def close() -> None:
     quit()
     try:
         QuantumCore.graphic.mash.mesh.__destroy__()
+        QuantumCore.window.context.release()
     except Exception as exc:
         print(f'\n\n{exc}\n\n')
-    QuantumCore.window.context.release()
     
     logger.success('Engine - QUIT')

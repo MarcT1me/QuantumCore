@@ -1,7 +1,7 @@
 
 # noinspection PyUnresolvedReferences
 class Itrf(Head):
-    def go(self):
+    def go(self, fps_count):
 
         QuantumCore.window.interface.surface.fill((0, 0, 0))
 
@@ -11,12 +11,13 @@ class Itrf(Head):
              QuantumCore.config.SCREEN_size[1] - self.application_version_font.get_height())
         )
 
-        fin_font = self.fps_font.render(f'fps: {15}', False, 'green')
+        fin_font = self.fps_font.render(f'fps: {fps_count}', False,  self.fps_fonts_colors[min(fps_count//15, 4)])
 
         QuantumCore.window.interface.surface.blit(
             fin_font,
             (5, QuantumCore.config.SCREEN_size[1] - fin_font.get_height()-3)
         )
+        QuantumCore.window.interface.__render__()
 
 # noinspection PyUnresolvedReferences
 QuantumCore.UI._creator = Itrf

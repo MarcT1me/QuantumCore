@@ -10,5 +10,5 @@ In this branch, the work with graphics is changing, the API is simplified and th
 4. [x] separation of service shaders and scene shaders
 5. [x] Simplification of the API for working with the base class of the engine
 6. [x] separation of engine files
-8. [ ] adding an improved tool to add an interface
+8. [x] adding an improved tool to add an interface
 9. [x] Engine widgets and Err screen
