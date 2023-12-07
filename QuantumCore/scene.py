@@ -32,11 +32,11 @@ class Location:
     def add_vbos(self): ...
     
     def on_init(self):
+        """ on init our scene """
         self.add_vbos()
         return self
 
     def _add_object(self, obj) -> int:
-        """ add object in list """
         __id = id(obj)
         self.objects_list[__id] = obj
         return __id
@@ -97,14 +97,14 @@ class Builder:
         self.size: bin = lambda: os.path.getsize(self.path) if os.path.isfile(path=self.path) else None
         
         """ builder variable """
-        self.save = self._format_sav_(self)
+        self.save = self._format_sav_(self) if scene_ is not None else Ellipsis
         self.new_id = None  # from changing id
     
     @staticmethod
-    def _format_sav_(sav) -> dict[str: Location]:
+    def _format_sav_(bld) -> dict[str: Location]:
         """ format save for load in file, or get satisfaction format """
-        root: str = sav.root()
-        name: str = sav.name()
+        root: str = bld.root()
+        name: str = bld.name()
         objects_data = [{'id': id_,
                          'name': obj.name(),
                          'pos': tuple(obj.pos),
@@ -113,7 +113,7 @@ class Builder:
                          'scale': tuple(obj.scale),
                          'tex_id': obj.tex_id,
                          'vao': obj.vao_name}
-                        for id_, obj in sav.scene.objects_list.items()]
+                        for id_, obj in bld.scene.objects_list.items()]
         light_data = [{'id': id_,
                        'color': tuple(light.color),
                        'pos': tuple(light.position),
@@ -121,7 +121,7 @@ class Builder:
                        'Id': tuple(light.Id),
                        'Is': tuple(light.Is),
                        'size': light.size}
-                      for id_, light in sav.scene.lights_list[0].items()]
+                      for id_, light in bld.scene.lights_list[0].items()]
         camera = QuantumCore.graphic.camera.camera
         camera_data = None
         if camera is not None:
@@ -140,7 +140,7 @@ class Builder:
             'scene': {
                 'objects': objects_data,
                 'lights': light_data,
-                'ids': sav.scene.ids,
+                'ids': bld.scene.ids,
                 'camera': camera_data
             }
         }
@@ -151,7 +151,7 @@ class Builder:
             with open(self.path, 'wb') as file:
                 pickle.dump(save, file)
     
-    def load(self) -> dict[str: Location]:
+    def read(self) -> dict[str: Location]:
         """ load save.sav """
         if os.path.isfile(path=self.path):
             with open(self.path, 'rb') as file:
@@ -173,7 +173,7 @@ class Builder:
             print('not found file')
             return False
     
-    def read(self, scene_, import_code_,
+    def load(self, scene_: Location, import_code_: str,
              light_iteration_code='', object_iteration_code='', camera_body_code='',
              **kwargs) -> bool:
         """ easy constructing your scene """

@@ -23,6 +23,7 @@ class __GRAPHIC:
     pygame.display.gl_set_attribute(pygame.GL_CONTEXT_PROFILE_MASK, pygame.GL_CONTEXT_PROFILE_CORE)
     
     interface = None  # type: QuantumCore.__Interface
+    context = None  # type: moderngl.Context
     
     def __init__(self, flags):
         """ Init engine graphic
@@ -76,4 +77,8 @@ class __GRAPHIC:
             QuantumCore.graphic.camera.camera.m_proj = QuantumCore.graphic.camera.camera._get_projection_matrix_
     
         logger.debug(f'graphics - restart\n\n')
+    
+    def close(self):
+        self.context.release()
+        self.interface.__destroy__()
     

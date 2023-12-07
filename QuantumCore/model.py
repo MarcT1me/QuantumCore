@@ -4,17 +4,36 @@ That your code work correct inheritance on ExtendedBaseModel
 
 from copy import copy
 import glm  # math
-from dataclasses import dataclass
+from dataclasses import dataclass, field
+from uuid import uuid4
 
 import QuantumCore.graphic
 # engine config import
 from QuantumCore.data.config import FAR, GAMMA
 
 
-@dataclass
-class Snap:
+@dataclass(kw_only=True)
+class MetaData:
+    """ model data """
+    ID: str = field(init=False, default_factory=uuid4)  # unique object id
+    object_id: str
+    
+    """ orientation in space """
+    pos: tuple[float, float, float] | glm.vec3
+    rot: tuple[float, float, float] | glm.vec3
+    scale: tuple[float, float, float] | glm.vec3
 
-    app: ...
+    """ render """
+    tex_id: str
+    vao_id: str
+
+    """ other """
+    time_list: dict = field(init=True, default_factory=dict)
+
+    def __post_init__(self):
+        self.pos = glm.vec3(self.pos)
+        self.rot = glm.vec3([glm.radians(cord) for cord in self.rot])
+        self.scale = glm.vec3(self.scale)
     
     
 class BaseModel:
@@ -26,7 +45,6 @@ class BaseModel:
     
     def __init__(self, app, vao_name: str, tex_id: str,
                  pos=(0, 0, 0), rot=(0, 0, 0), scale=(1, 1, 1), render_area=FAR) -> None:
-        # snap = Snap(...)self.app = app
         self.app = app
 
         # location in space

@@ -18,7 +18,7 @@ from QuantumCore.graphic.interface import __Interface
 import QuantumCore.UI
 window = None  # type: QuantumCore.graphic.__GRAPHIC
 
-__version = '0.10.13'
+__version = '0.11.3'
 name, short_name = 'QuantumCore', 'PyQC'
 
 logger.info(f'\n\n{name}: {__version=}\n')
@@ -44,8 +44,8 @@ def close() -> None:
     """ Correct engine QUIT """
     quit()
     try:
+        window.close()
         QuantumCore.graphic.mash.mesh.__destroy__()
-        QuantumCore.window.context.release()
     except Exception as exc:
         print(f'\n\n{exc}\n\n')
     

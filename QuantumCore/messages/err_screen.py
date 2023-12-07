@@ -24,7 +24,7 @@ def showTraceback(err, *, flags=pygame.NOFRAME) -> bool:
     
     # error texts
     caption, format_exc = f'ERROR: {err}', traceback.format_exc()
-    logger.exception(f'ERROR: {err}')
+    logger.exception(f'ERROR: {err}') if "TEST RISE" not in str(err) else Ellipsis
 
     # background surface
     background = pygame.image.load(rf'{__ENGINE_DATA__}/messages/debug_err.png')
@@ -168,6 +168,8 @@ def showWindow(err, *, caption='Error Message', custom_surf=None, flags=pygame.N
     pygame.quit()
     pygame.init()
     QuantumCore.time.loading = False
+    logger.exception(f'ERROR: {err}') if "TEST RISE" not in str(err) else Ellipsis
+    
     custom_surf, custom_surf_arg = pygame.Surface((270, 110)), custom_surf
     custom_surf.fill((0, 255, 0))
     if custom_surf_arg == 'base':

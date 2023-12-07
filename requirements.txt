@@ -1,8 +1,6 @@
-QuantumCore:
-
-PyGame
-ModernGL
-PyGlm
-Numpy
-PyWaveFront
-Loguru
+pygame
+moderngl
+pyglm
+numpy
+pywavefront
+loguru
