@@ -73,7 +73,7 @@ scene_.app.loading.itrf.step(93, stage='Load game scene', status='sav - camera')
             for x in range(-5, 5):
                 for y in range(-5, 5):
                     for z in range(-5, 5):
-                        obj(Earth(app=self.app, pos=(10*x, 10*y, 10*z)))
+                        obj(Earth(pos=(10*x, 10*y, 10*z)))
             
             QuantumCore.graphic.camera.camera.position = glm.vec3((-7, 7, -7))
             QuantumCore.graphic.camera.camera.yaw = 45

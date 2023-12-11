@@ -107,7 +107,7 @@ class TestGame(App):
         
         QuantumCore.scene.scene.__render__()
         
-        self.ingame_interface.go(int(self.clock.get_fps()))
+        self.ingame_interface.itrf.go(int(self.clock.get_fps()))
 
         # main pygame updating
         pygame.display.flip()

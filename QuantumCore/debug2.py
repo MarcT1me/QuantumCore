@@ -55,14 +55,14 @@ class Debugging:
                 path = os.path.join(root, file)
 
                 if file not in self.__verified_files:
-                    # print(f"{' '*self.str_len} '{file}'")
+                    print(f"{' '*self.__str_len} '{file}'")
 
                     if file_ext[1:] not in self.__except_exts:
 
                         try:
                             with open(path, mode='r', encoding='utf8') as f:
                                 f_len = len(f.readlines())
-                                # print(f"   length = {f_len}", end=' ,')
+                                print(f"   length = {f_len}", end=' ,')
                                 self._proj_size['lines'] += f_len
 
                         except UnicodeDecodeError:
@@ -71,7 +71,7 @@ class Debugging:
                                          f" LineCalculateError: try change 'except_dirs' or 'except_exts'")
 
                     f_size = os.path.getsize(path)
-                    # print(f"   size = {f_size}")
+                    print(f"   size = {f_size}")
                     self._proj_size['bytes'] += f_size
 
                 self.__verified_files.add(file)
@@ -82,7 +82,7 @@ class Debugging:
 
             # recursive directory check call
             for directory in dirs:
-                # print(f"\n{' '*self.str_len}----- {directory} -----")
+                print(f"\n{' '*self.__str_len}----- {directory} -----")
                 self.__str_len += 3
 
                 abs_directory = os.path.abspath(os.path.join(root, directory))

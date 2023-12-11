@@ -213,13 +213,12 @@ self.new_id = scene_._add_light(
             exec(f"""
 self.new_id = scene_._add_object(
     {kwargs[i['name']] if len(kwargs) is not 0 else i['name']}(
-        scene_.app,
         pos={i['pos']},
         rot={i['rot']},
         render_area={i['r_area']},
         scale={i['scale']},
         tex_id="{i['tex_id']}",
-        vao_name="{i['vao']}",
+        vao_id="{i['vao']}",
         sav=True
     )
 )"""); change_id()  # objects initialisation

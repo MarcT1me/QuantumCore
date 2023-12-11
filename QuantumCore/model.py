@@ -16,7 +16,6 @@ from QuantumCore.data.config import FAR, GAMMA
 class MetaData:
     """ model data """
     ID: str = field(init=False, default_factory=uuid4)  # unique object id
-    object_id: str
     
     """ orientation in space """
     pos: tuple[float, float, float] | glm.vec3
@@ -24,8 +23,9 @@ class MetaData:
     scale: tuple[float, float, float] | glm.vec3
 
     """ render """
-    tex_id: str
+    object_id: str
     vao_id: str
+    tex_id: str
 
     """ other """
     time_list: dict = field(init=True, default_factory=dict)
@@ -43,41 +43,30 @@ class BaseModel:
     _vec_y = glm.vec3(0, 1, 0)
     _vec_z = glm.vec3(0, 0, 1)
     
-    def __init__(self, app, vao_name: str, tex_id: str,
-                 pos=(0, 0, 0), rot=(0, 0, 0), scale=(1, 1, 1), render_area=FAR) -> None:
-        self.app = app
+    def __init__(self, metadata: MetaData, *, render_area: int = FAR) -> None:
+        
+        self.metadata = metadata
 
-        # location in space
-        self.pos = glm.vec3(pos)
-        self.rot = glm.vec3([glm.radians(cord) for cord in rot])
-        self.render_area: int = render_area
-        # model scale - debug
-        self.scale = glm.vec3(scale)
-
-        # required variables
         self.m_model: glm.mat4 = self.__get_model_matrix__()
-        self.tex_id: str = tex_id
         self.camera = QuantumCore.graphic.camera.camera
-
-        self.vao_name: str = vao_name
-        self.vao = QuantumCore.graphic.mash.mesh.vao.VAOs[vao_name]
-
+        self.vao = QuantumCore.graphic.mash.mesh.vao.VAOs[metadata.vao_id]
         self.shader_program = self.vao.program
         
         self.texture = None
+        self.render_area: int = render_area
 
     def __get_model_matrix__(self) -> glm.mat4:
         """ set and change model_matrix """
         m_model = glm.mat4()
         
         # translate
-        m_model = glm.translate(m_model, self.pos)
+        m_model = glm.translate(m_model, self.metadata.pos)
         # rotate
-        m_model = glm.rotate(m_model, self.rot.x, self._vec_x)
-        m_model = glm.rotate(m_model, self.rot.y, self._vec_y)
-        m_model = glm.rotate(m_model, self.rot.z, self._vec_z)
+        m_model = glm.rotate(m_model, self.metadata.rot.x, self._vec_x)
+        m_model = glm.rotate(m_model, self.metadata.rot.y, self._vec_y)
+        m_model = glm.rotate(m_model, self.metadata.rot.z, self._vec_z)
         # scale
-        m_model = glm.scale(m_model, self.scale)
+        m_model = glm.scale(m_model, self.metadata.scale)
         return m_model
 
     def update(self) -> None: ...
@@ -93,17 +82,17 @@ class BaseModel:
         """ the method that decides which rendering method to use """
         render_area = self.render_area if render_area is None else render_area
         
-        if (abs(self.pos[0] - self.camera.position[0]) <= render_area*1.2) \
-                and abs(self.pos[1] - self.camera.position[1]) <= render_area*1.2 \
-                and abs(self.pos[2] - self.camera.position[2]) <= render_area*1.2:
+        if all((abs(self.metadata.pos[0] - self.camera.position[0]) <= render_area*1.2,
+                abs(self.metadata.pos[1] - self.camera.position[1]) <= render_area*1.2,
+                abs(self.metadata.pos[2] - self.camera.position[2]) <= render_area*1.2)):
             return True
         return False
     
     @classmethod
-    def name(cls): return cls.__name__
+    def name(cls) -> str: return cls.__name__
 
     @staticmethod
-    def combine_vector(vec1: tuple, vec2: tuple, *, sav: bool):
+    def combine_vector(vec1: tuple, vec2: tuple, *, sav: bool) -> glm.vec3:
         return glm.vec3(glm.vec3(vec1) + glm.vec3(vec2)) if not sav else vec1
 
 
@@ -114,7 +103,7 @@ class ExtendedBaseModel(BaseModel):
         1) inherit to this class
         2) use super in init and rewrite methods"""
 
-    def __init__(self, app, vao_name, tex_id, pos, rot, scale, render_area) -> None:
+    def __init__(self, metadata: MetaData, *, render_area: int = FAR):
         """ init your model.
 
 to do so:
@@ -129,10 +118,10 @@ class ModelName(ExtendedBaseModel):
 ATTENTION!!! ModelName to be match in all place ATTENTION!!!"""
 
         # inheritance
-        super().__init__(app, vao_name, tex_id, pos, rot, scale, render_area)
+        super().__init__(metadata, render_area=render_area)
 
-        # variable
         self.lights = copy(QuantumCore.graphic.light.lights_list)
+        
         self.glas = lambda: min(len(self.lights[0]), 200)
         self._on_init_()
 
@@ -186,7 +175,7 @@ ATTENTION!!! ModelName to be match in all place ATTENTION!!!"""
         self.shader_program['gamma'] = GAMMA
 
         # texture
-        self.texture = QuantumCore.graphic.mash.mesh.texture.textures[self.tex_id]
+        self.texture = QuantumCore.graphic.mash.mesh.texture.textures[self.metadata.tex_id]
         self.shader_program['u_texture_0'] = 0
         self.texture.use(0)
         
@@ -224,18 +213,19 @@ ATTENTION!!! ModelName to be match in all place ATTENTION!!!"""
 
 
 class Cube(ExtendedBaseModel):
-    def __init__(self, app, vao_name='Cube', tex_id='empty',
-                 pos=(0, 0, 0), rot=(0, 0, 0), scale=(1, 1, 1), render_area=FAR, sav=False) -> None:
-        super().__init__(app, vao_name, tex_id,
-                         self.combine_vector(pos, (0, 0, 0), sav=sav),
-                         rot, scale, render_area)
+    def __init__(self, tex_id='empty',
+                 pos=(0, 0, 0), rot=(0, 0, 0), scale=(1, 1, 1)):
+        
+        super().__init__(MetaData(pos=pos, rot=rot, scale=scale,
+                                  object_id=self.name(), vao_id='Cube', tex_id=tex_id))
 
 
 # in development
 class SkyBox(BaseModel):
-    def __init__(self, app, vao_name='skybox', tex_id='skybox',
-                 pos=(0, 0, 0), rot=(0, 0, 0), scale=(1, 1, 1)):
-        super().__init__(app, vao_name, tex_id, pos, rot, scale)
+    def __init__(self, pos=(0, 0, 0), rot=(0, 0, 0), scale=(1, 1, 1)):
+        
+        super().__init__(MetaData(pos=pos, rot=rot, scale=scale,
+                                  object_id=self.name(), vao_id='skybox',  tex_id='skybox'))
         self.on_init()
 
     def update(self):
@@ -243,7 +233,7 @@ class SkyBox(BaseModel):
 
     def on_init(self):
         # texture
-        self.texture = QuantumCore.graphic.mash.mesh.texture.textures[self.tex_id]
+        self.texture = QuantumCore.graphic.mash.mesh.texture.textures[self.metadata.tex_id]
         self.shader_program['u_texture_skybox'] = 0
         self.texture.use(location=0)
         # mvp
@@ -252,9 +242,10 @@ class SkyBox(BaseModel):
 
 
 class AdvancedSkyBox(BaseModel):
-    def __init__(self, app, vao_name='advanced_skybox', tex_id='skybox',
-                 pos=(0, 0, 0), rot=(0, 0, 0), scale=(1, 1, 1)):
-        super().__init__(app, vao_name, tex_id, pos, rot, scale)
+    def __init__(self, pos=(0, 0, 0), rot=(0, 0, 0), scale=(1, 1, 1)):
+        
+        super().__init__(MetaData(pos=pos, rot=rot, scale=scale,
+                                  object_id=self.name(), vao_id='advanced_skybox',  tex_id='skybox'))
         self.on_init()
 
     def update(self):
@@ -263,6 +254,6 @@ class AdvancedSkyBox(BaseModel):
 
     def on_init(self):
         # texture
-        self.texture = QuantumCore.graphic.mash.mesh.texture.textures[self.tex_id]
+        self.texture = QuantumCore.graphic.mash.mesh.texture.textures[self.metadata.tex_id]
         self.shader_program['u_texture_skybox'] = 11
         self.texture.use(location=11)

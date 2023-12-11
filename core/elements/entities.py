@@ -7,7 +7,7 @@ import numpy as np
 
 # engine elements imports
 from QuantumCore.data.config import FAR
-from QuantumCore.model import ExtendedBaseModel, Cube
+from QuantumCore.model import ExtendedBaseModel, Cube, MetaData
 import QuantumCore.time
 
 
@@ -30,13 +30,19 @@ class MovingCube(Cube):
 
 
 class Cat(ExtendedBaseModel):
-    def __init__(self, app, vao_name='Cat', tex_id='Cat', *,
+    def __init__(self, metadata: MetaData = None, *, vao_id='Cat', tex_id='Cat',
                  pos=(0, 0, 0), rot=(0, 0, 0), scale=(1, 1, 1), render_area=FAR, sav=False) -> None:
-
-        super().__init__(app, vao_name, tex_id,
-                         self.combine_vector(pos, (0, 1, 0), sav=sav),
-                         self.combine_vector(rot, (-90, 0, 0), sav=sav),
-                         scale, render_area)
+        
+        super().__init__(metadata if metadata is not None else\
+                             MetaData(
+                                 pos=self.combine_vector(pos, (0, 1, 0), sav=sav),
+                                  rot=self.combine_vector(rot, (-90, 0, 0), sav=sav),
+                                  scale=scale,
+                                  object_id=self.name(),
+                                  vao_id=vao_id,
+                                  tex_id=tex_id
+                             ),
+                         render_area=render_area)
         
         self.speed: float = .05
 
@@ -45,23 +51,23 @@ class Cat(ExtendedBaseModel):
         velocity = self.speed * QuantumCore.time.delta
         keys = pygame.key.get_pressed()
         if keys[pygame.K_KP8]:
-            self.pos += velocity * self._vec_x
+            self.metadata.pos += velocity * self._vec_x
         if keys[pygame.K_KP5]:
-            self.pos -= velocity * self._vec_x
+            self.metadata.pos -= velocity * self._vec_x
         if keys[pygame.K_KP6]:
-            self.pos += velocity * self._vec_z
+            self.metadata.pos += velocity * self._vec_z
         if keys[pygame.K_KP_4]:
-            self.pos -= velocity * self._vec_z
+            self.metadata.pos -= velocity * self._vec_z
         if keys[pygame.K_KP_PLUS]:
-            self.pos += velocity * self._vec_y
+            self.metadata.pos += velocity * self._vec_y
         if keys[pygame.K_KP_MINUS]:
-            self.pos -= velocity * self._vec_y
+            self.metadata.pos -= velocity * self._vec_y
 
         velocity /= 5
         if keys[pygame.K_KP7]:
-            self.rot -= velocity * self._vec_z
+            self.metadata.rot -= velocity * self._vec_z
         if keys[pygame.K_KP9]:
-            self.rot += velocity * self._vec_z
+            self.metadata.rot += velocity * self._vec_z
 
         if keys[pygame.K_RCTRL] or keys[pygame.K_LCTRL]:
             self.speed = 0.03
@@ -75,19 +81,35 @@ class Cat(ExtendedBaseModel):
 
 
 class WoodenWatchTower(ExtendedBaseModel):
-    def __init__(self, app, vao_name='WoodenWatchTower', tex_id='WoodenWatchTower', *,
+    def __init__(self, metadata: MetaData, *, vao_id='WoodenWatchTower', tex_id='WoodenWatchTower',
                  pos=(0, 0, 0), rot=(0, 0, 0), scale=(1, 1, 1), render_area=FAR, sav=False) -> None:
-
-        super().__init__(app, vao_name, tex_id,
-                         self.combine_vector(pos, (0, -1, 0), sav=sav),
-                         rot, scale, render_area)
+        
+        super().__init__(metadata if metadata is not None else\
+                             MetaData(
+                                 pos=self.combine_vector(pos, (0, -1, 0), sav=sav),
+                                  rot=rot,
+                                  scale=scale,
+                                  object_id=self.name(),
+                                  vao_id=vao_id,
+                                  tex_id=tex_id
+                             ),
+                         render_area=render_area)
 
 
 class Earth(ExtendedBaseModel):
-    def __init__(self, app, vao_name='Earth', tex_id='Earth', *,
+    def __init__(self, metadata: MetaData, *, vao_id='Earth', tex_id='Earth',
                  pos=(0, 0, 0), rot=(0, 0, 0), scale=(1, 1, 1), render_area=FAR, sav=False) -> None:
-
-        super().__init__(app, vao_name, tex_id, pos, rot, scale, render_area)
+        
+        super().__init__(metadata if metadata is not None else\
+                             MetaData(
+                                 pos=pos,
+                                  rot=rot,
+                                  scale=scale,
+                                  object_id=self.name(),
+                                  vao_id=vao_id,
+                                  tex_id=tex_id
+                             ),
+                         render_area=render_area)
 
     def update(self) -> None:
 
