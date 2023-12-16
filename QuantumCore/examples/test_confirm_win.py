@@ -2,7 +2,11 @@ import pygame
 import glm
 
 # import Engine
-import QuantumCore
+try:
+    import QuantumCore
+except Exception as err:
+    import traceback; traceback.print_exception(err)
+    input()
 
 pygame.init()
 
@@ -15,15 +19,17 @@ if __name__ == '__main__':
     # Окно игры: размер, позиция
     win = pygame.display.set_mode((200, 200))
     cwin = []
-    cwin.append(
-        QuantumCore.widgets.ConfirmWin(
-            size=surf.get_size()*glm.vec2(0.5),
-            opacity=0.5,
-            pos=(-surf.get_width()*0.5//2, 1080//2-100)
-        ).set(
-            surf
+    def add():
+        cwin.append(
+            QuantumCore.widgets.ConfirmWin(
+                size=surf.get_size()*glm.vec2(0.5),
+                opacity=0.5,
+                pos=(-surf.get_width()*0.5//2, 1080//2-100)
+            ).set(
+                surf
+            )
         )
-    )
+        cwin[-1].win.resizable = True
     
     clock = pygame.time.Clock()
     
@@ -33,18 +39,12 @@ if __name__ == '__main__':
     k = [0, 0, 0, 0]
     
     QuantumCore.widgets.Button(
-        on_press= lambda : cwin.append(
-            QuantumCore.widgets.ConfirmWin(
-                size=surf.get_size()*glm.vec2(0.5),
-                opacity=0.5,
-                pos=(-surf.get_width()*0.5//2, 1080//2-100)
-            ).set(
-                surf
-            )
-        ),
+        on_press= add,
         pos=(0, 50),
         size=(200, 150)
     )
+    
+    add()
     event_window = cwin[0]
     
     running = True

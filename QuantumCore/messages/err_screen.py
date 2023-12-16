@@ -270,6 +270,10 @@ def showWindow(err, *, caption='Error Message', custom_surf=None, flags=pygame.N
 
 
 if __name__ == '__main__':
-    try: raise UnicodeDecodeError('UTF-8', b'\\', 0, 0, 'err')
-    except Exception as exc: print(showWindow(exc, custom_surf='base'))
+    try:
+        try: raise UnicodeDecodeError('UTF-8', b'\\', 0, 0, 'err')
+        except Exception as exc: print(showWindow(exc, custom_surf='base'))
+    except Exception as err:
+        import traceback; traceback.print_exception(err)
+        input()
         
