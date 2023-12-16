@@ -121,7 +121,7 @@ if __name__ == '__main__':
             pass
         
         """ render """
-        win.fill((0, 0, 0))
+        win.fill('sea green')
         try:
             win.blit(f1.render(f'opacity = {round(event_window.opacity, 2)}, position = {event_window.position}', True, 'white'), (0, 0))
         except:
