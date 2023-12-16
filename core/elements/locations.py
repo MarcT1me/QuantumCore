@@ -23,14 +23,14 @@ class TestScene(Location):
 
     def add_vbos(self):
         self.app.loading.itrf.step(16, status='models path')
-        CustomVBO_name['WoodenWatchTower'] = (
-            '2f 3f 3f',
-            ['in_texcoord_0', 'in_normal', 'in_position'],
-            f'{__APPLICATION_PATH__}/{MODEL_path}/WoodenWatchTower', 'obj', 'jpg')
-        CustomVBO_name['Cat'] = (
-            '2f 3f 3f',
-            ['in_texcoord_0', 'in_normal', 'in_position'],
-            rf'{__APPLICATION_PATH__}/{MODEL_path}/cat', 'obj', 'jpg')
+        # CustomVBO_name['WoodenWatchTower'] = (
+        #     '2f 3f 3f',
+        #     ['in_texcoord_0', 'in_normal', 'in_position'],
+        #     f'{__APPLICATION_PATH__}/{MODEL_path}/WoodenWatchTower', 'obj', 'jpg')
+        # CustomVBO_name['Cat'] = (
+        #     '2f 3f 3f',
+        #     ['in_texcoord_0', 'in_normal', 'in_position'],
+        #     rf'{__APPLICATION_PATH__}/{MODEL_path}/cat', 'obj', 'jpg')
         CustomVBO_name['Earth'] = (
             '2f 3f 3f',
             ['in_texcoord_0', 'in_normal', 'in_position'],
@@ -68,7 +68,7 @@ scene_.app.loading.itrf.step(93, stage='Load game scene', status='sav - camera')
             
             """ in other a build scene in code """
             light(Light(pos=(25, 25, 25), ambient=.2, diffuse=1.5, specular=.5))
-            self.ids['фонарик'] = light(Light(size=15))
+            light(Light(size=15))
             
             for x in range(-5, 5):
                 for y in range(-5, 5):
@@ -87,5 +87,5 @@ scene_.app.loading.itrf.step(93, stage='Load game scene', status='sav - camera')
     def __update__(self) -> None:
         super().__update__()
         
-        self.lights_list[0][self.ids['фонарик']].position = QuantumCore.graphic.camera.camera.position
+        # self.lights_list[0][self.ids['фонарик']].position = QuantumCore.graphic.camera.camera.position
         

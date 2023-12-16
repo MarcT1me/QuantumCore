@@ -15,26 +15,25 @@ from QuantumCore.data.config import FAR, GAMMA
 @dataclass(kw_only=True)
 class MetaData:
     """ model data """
-    ID: str = field(init=False, default_factory=uuid4)  # unique object id
-    
-    """ orientation in space """
     pos: tuple[float, float, float] | glm.vec3
     rot: tuple[float, float, float] | glm.vec3
     scale: tuple[float, float, float] | glm.vec3
 
-    """ render """
     object_id: str
     vao_id: str
     tex_id: str
 
-    """ other """
     time_list: dict = field(init=True, default_factory=dict)
+    ID: str = field(init=True, default_factory=uuid4)  # unique object id
 
     def __post_init__(self):
         self.pos = glm.vec3(self.pos)
         self.rot = glm.vec3([glm.radians(cord) for cord in self.rot])
         self.scale = glm.vec3(self.scale)
     
+d = MetaData(object_id='1', pos=(0, 0, 0), rot=(0, 0, 0), scale=(1, 1, 1), tex_id='1', vao_id='1')
+print(d)
+
     
 class BaseModel:
 

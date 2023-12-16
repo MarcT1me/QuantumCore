@@ -3,11 +3,13 @@
 from copy import copy
 import pickle
 import os.path
-import glm
+from uuid import UUID
+from glm import vec3 # math
 
 import QuantumCore.graphic
 # engine elements imports
 from QuantumCore.data import config
+from QuantumCore.model import MetaData
 
 
 class Location:
@@ -105,23 +107,28 @@ class Builder:
         """ format save for load in file, or get satisfaction format """
         root: str = bld.root()
         name: str = bld.name()
-        objects_data = [{'id': id_,
-                         'name': obj.name(),
-                         'pos': tuple(obj.pos),
-                         'rot': [glm.degrees(cord) for cord in obj.rot],
-                         'r_area': obj.render_area,
-                         'scale': tuple(obj.scale),
-                         'tex_id': obj.tex_id,
-                         'vao': obj.vao_name}
-                        for id_, obj in bld.scene.objects_list.items()]
-        light_data = [{'id': id_,
-                       'color': tuple(light.color),
-                       'pos': tuple(light.position),
-                       'Ia': tuple(light.Ia),
-                       'Id': tuple(light.Id),
-                       'Is': tuple(light.Is),
-                       'size': light.size}
-                      for id_, light in bld.scene.lights_list[0].items()]
+        # light_data = [{'id': id_,
+        #                'color': tuple(light.color),
+        #                'pos': tuple(light.position),
+        #                'Ia': tuple(light.Ia),
+        #                'Id': tuple(light.Id),
+        #                'Is': tuple(light.Is),
+        #                'size': light.size}
+        #               for id_, light in bld.scene.lights_list[0].items()]
+        light_data = bld.scene.lights_list[0]
+        # objects_data = [{'id': id_,
+        #                  'name': obj.name(),
+        #                  'pos': tuple(obj.pos),
+        #                  'rot': [glm.degrees(cord) for cord in obj.rot],
+        #                  'r_area': obj.render_area,
+        #                  'scale': tuple(obj.scale),
+        #                  'tex_id': obj.tex_id,
+        #                  'vao': obj.vao_name}
+        #                 for id_, obj in bld.scene.objects_list.items()]
+        objects_data = {}
+        print(bld.scene.objects_list)
+        for _, value in bld.scene.objects_list.items():
+            objects_data[value.metadata.ID] = value.metadata
         camera = QuantumCore.graphic.camera.camera
         camera_data = None
         if camera is not None:
@@ -140,7 +147,6 @@ class Builder:
             'scene': {
                 'objects': objects_data,
                 'lights': light_data,
-                'ids': bld.scene.ids,
                 'camera': camera_data
             }
         }
@@ -174,8 +180,7 @@ class Builder:
             return False
     
     def load(self, scene_: Location, import_code_: str,
-             light_iteration_code='', object_iteration_code='', camera_body_code='',
-             **kwargs) -> bool:
+             light_iteration_code='', object_iteration_code='', camera_body_code='') -> bool:
         """ easy constructing your scene """
         if self.scene is None:
             print('I can`t read save')
@@ -184,48 +189,42 @@ class Builder:
         exec(import_code_)
         
         sav = self.save['scene']
-        scene_.ids = sav['ids']
+        # scene_.ids = sav['ids']
         QuantumCore.time.list_ = self.save['time']
         
-        def change_id() -> None:
-            for key, old_id in scene_.ids.items():
-                if old_id == i['id']:
-                    scene_.ids[key] = self.new_id
-                    break
+        # def change_id() -> None:
+        #     for key, old_id in scene_.ids.items():
+        #         if old_id == i['id']:
+        #             scene_.ids[key] = self.new_id
+        #             break
         
         # lights sources
-        for i in sav['lights']:
-            exec(f"""
-self.new_id = scene_._add_light(
-    Light(
-        color={i['color']},
-        pos={i['pos']},
-        ambient={i['Ia']},
-        diffuse={i['Id']},
-        specular={i['Is']},
-        size={i['size']}
-    )
-)"""); change_id()  # light sources initialisation
-            exec(light_iteration_code)
+#         for i in sav['lights']:
+#             exec(f"""
+# self.new_id = scene_._add_light(
+#     Light(
+#         color={i['color']},
+#         pos={i['pos']},
+#         ambient={i['Ia']},
+#         diffuse={i['Id']},
+#         specular={i['Is']},
+#         size={i['size']}
+#     )
+# )"""); change_id()  # light sources initialisation
+#             exec(light_iteration_code)
+        self.scene.lights_list[0] = sav['lights']
+        # change_id()  # light sources initialisation
+        exec(light_iteration_code)
         
         # scene objects
-        for i in sav['objects']:
-            exec(f"""
-self.new_id = scene_._add_object(
-    {kwargs[i['name']] if len(kwargs) is not 0 else i['name']}(
-        pos={i['pos']},
-        rot={i['rot']},
-        render_area={i['r_area']},
-        scale={i['scale']},
-        tex_id="{i['tex_id']}",
-        vao_id="{i['vao']}",
-        sav=True
-    )
-)"""); change_id()  # objects initialisation
+        for key, value in sav['objects'].items():
+            print(f"""self.scene.objects_list[key] = {value.object_id}(metadata={value}, sav=True)""")
+            exec(f"""self.scene.objects_list[key] = {value.object_id}(metadata={value}, sav=True)""")
+        # change_id()  # objects initialisation
             exec(object_iteration_code)
         
         if sav['camera'] is not None:
-            QuantumCore.graphic.camera.camera.position = glm.vec3(sav['camera']['pos'])
+            QuantumCore.graphic.camera.camera.position = vec3(sav['camera']['pos'])
             QuantumCore.graphic.camera.camera.yaw = sav['camera']['yaw']
             QuantumCore.graphic.camera.camera.pitch = sav['camera']['pitch']
             QuantumCore.graphic.camera.camera.speed = sav['camera']['speed']

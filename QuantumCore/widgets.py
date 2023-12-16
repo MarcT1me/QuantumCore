@@ -1,34 +1,53 @@
 import time
+from typing import Callable
 
 import pygame
 from pygame._sdl2 import Window, Renderer, Texture
 
 
+def event_window(event: pygame.event.Event):
+    return getattr(event, 'window', None)
+
+
 class ConfirmWin:
-    def __init__(self, *, caption=None, size=(300, 200), opacity=0.75) -> None:
+    def __init__(self, *,
+                 size=(300, 200),
+                 caption='confirmation window',
+                 opacity=1,
+                 pos: tuple[int, int] = None) -> None:
         """ init confirm window class """
+        self.surf: pygame.Surface = pygame.Surface(size=size)
+        
+        """ setting window """
         self.win: Window = Window(str(caption), size=size)
         self.win.opacity = opacity
-        self.rend: Renderer = Renderer(self.win)
-        self.surf: pygame.Surface = pygame.Surface(size=size)
+        if pos is not None:
+            self.win.position = pos
+        
+        """ other window and render variables """
+        self.__rend: Renderer = Renderer(self.win)
         self.__rend_surf: Texture = None
     
-    def on_init(self) -> None:
-        self.update()
-        self.render()
+    def set(self, surf: pygame.Surface = None) -> __init__:
+        try:
+            self.surf = surf if surf is not None else self.surf
+        except AttributeError:
+            self.__init__()
+            self.surf = surf if surf is not None else self.surf
         
-    def event(self, event: pygame.event.Event) -> None:
-        if getattr(event, 'window', None) == self.win:
-            if event.type == pygame.WINDOWCLOSE:
-                self.win.destroy()
+        """ setting methods """
+        self.__update()
+        self.__render()
+        
+        return self
     
-    def update(self) -> None:
-        self.__rend_surf = Texture.from_surface(self.rend, self.surf)
+    def __update(self) -> None:
+        self.__rend_surf = Texture.from_surface(self.__rend, self.surf)
     
-    def render(self) -> None:
-        self.rend.clear()
+    def __render(self) -> None:
+        self.__rend.clear()
         self.__rend_surf.draw()
-        self.rend.present()
+        self.__rend.present()
 
 
 class Button:
