@@ -12,7 +12,7 @@ from QuantumCore.graphic.vbo import CustomVBO_name
 
 # core elements
 from GameData.settings import SAVES_path, MODEL_path
-from core.elements.entities import Earth
+from core.elements.entities import Earth, Cat, Cube, MovingCube, WoodenWatchTower
 
 
 class TestScene(Location):
@@ -21,7 +21,7 @@ class TestScene(Location):
         app.loading.itrf.step(15, stage='Init game Scene', status='builder')
         self.builder = Builder(rf'{__APPLICATION_PATH__}/{SAVES_path}/bugfix2.sav', scene_=self)
 
-    def add_vbos(self):
+    def on_init(self):
         self.app.loading.itrf.step(16, status='models path')
         # CustomVBO_name['WoodenWatchTower'] = (
         #     '2f 3f 3f',
@@ -40,26 +40,29 @@ class TestScene(Location):
 
     def build(self, app, obj, light) -> None:
         
-        if self.builder.read() is not None:
+        if None is not None:
             """ if scene.sav load successful """
-            
+
             self.builder.load(
-                self, "from core.elements.entities import Cat, Cube, MovingCube, WoodenWatchTower, Earth; "
-                      "from QuantumCore.graphic.light import Light;"
-                      "lp = 1",
-                light_iteration_code="""
-if lp == 1:
-    lp = 2
-    scene_.app.loading.itrf.step(45, stage='Load game scene', status='sav - lighting')
-""",
-                object_iteration_code="""
-if lp == 2:
-    lp = 3
-    scene_.app.loading.itrf.step(67, stage='Load game scene', status='sav - objects')
-""",
-                camera_body_code="""
-scene_.app.loading.itrf.step(93, stage='Load game scene', status='sav - camera')
-"""
+                {
+                    'Earth': Earth,
+                    'Cat': Cat,
+                    'Cube':Cube,
+                    'MovingCube': MovingCube,
+                    'WoodenWatchTower': WoodenWatchTower
+                },
+                light_code="""
+self.scene.app.loading.itrf.step(45, stage='Load game scene', status='sav - lighting')
+            """,
+                object_iter_code="""
+lp = 0
+if lp:
+    self.scene.app.loading.itrf.step(67, stage='Load game scene', status='sav - objects')
+    lp = 1
+            """,
+                camera_code="""
+self.scene.app.loading.itrf.step(93, stage='Load game scene', status='sav - camera')
+            """
             )  # use builder, that easy constructing scene
                         
             logger.success('TestScene - construct .sav\n\n')
@@ -75,12 +78,12 @@ scene_.app.loading.itrf.step(93, stage='Load game scene', status='sav - camera')
                     for z in range(-5, 5):
                         obj(Earth(pos=(10*x, 10*y, 10*z)))
             
-            QuantumCore.graphic.camera.camera.position = glm.vec3((-7, 7, -7))
-            QuantumCore.graphic.camera.camera.yaw = 45
-            QuantumCore.graphic.camera.camera.pitch = -15
-            QuantumCore.graphic.camera.camera.speed = 0.01
+            QuantumCore.graphic.camera.camera.data.position = glm.vec3((-7, 7, -7))
+            QuantumCore.graphic.camera.camera.data.yaw = 45
+            QuantumCore.graphic.camera.camera.data.pitch = -15
+            QuantumCore.graphic.camera.camera.data.speed = 0.01
             
-            self.builder.write()
+            # self.builder.write()
             
             logger.warning('TestScene - build\n\n')
     

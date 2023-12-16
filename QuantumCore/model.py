@@ -12,7 +12,7 @@ import QuantumCore.graphic
 from QuantumCore.data.config import FAR, GAMMA
 
 
-@dataclass(kw_only=True)
+@dataclass
 class MetaData:
     """ model data """
     pos: tuple[float, float, float] | glm.vec3
@@ -31,8 +31,9 @@ class MetaData:
         self.rot = glm.vec3([glm.radians(cord) for cord in self.rot])
         self.scale = glm.vec3(self.scale)
     
-d = MetaData(object_id='1', pos=(0, 0, 0), rot=(0, 0, 0), scale=(1, 1, 1), tex_id='1', vao_id='1')
-print(d)
+    
+# d = MetaData(object_id='1', pos=(0, 0, 0), rot=(0, 0, 0), scale=(1, 1, 1), tex_id='1', vao_id='1')
+# print(d)
 
     
 class BaseModel:
@@ -81,9 +82,9 @@ class BaseModel:
         """ the method that decides which rendering method to use """
         render_area = self.render_area if render_area is None else render_area
         
-        if all((abs(self.metadata.pos[0] - self.camera.position[0]) <= render_area*1.2,
-                abs(self.metadata.pos[1] - self.camera.position[1]) <= render_area*1.2,
-                abs(self.metadata.pos[2] - self.camera.position[2]) <= render_area*1.2)):
+        if all((abs(self.metadata.pos[0] - self.camera.data.pos[0]) <= render_area*1.2,
+                abs(self.metadata.pos[1] - self.camera.data.pos[1]) <= render_area*1.2,
+                abs(self.metadata.pos[2] - self.camera.data.pos[2]) <= render_area*1.2)):
             return True
         return False
     
@@ -191,7 +192,7 @@ ATTENTION!!! ModelName to be match in all place ATTENTION!!!"""
         self.texture.use(0)
 
         # rewrite GLSL variable
-        self.shader_program['camPos'].write(self.camera.position)
+        self.shader_program['camPos'].write(self.camera.data.pos)
         self.shader_program['m_view'].write(self.camera.m_view)
         self.shader_program['m_model'].write(self.m_model)
 

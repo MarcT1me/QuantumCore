@@ -10,7 +10,7 @@ from QuantumCore.data import config
 import QuantumCore.time
 
 
-class Camera:
+class OldCamera:
 
     __up = glm.vec3(0, 1, 0)
     __right = glm.vec3(1, 0, 0)
@@ -99,7 +99,7 @@ class Camera:
                                                                           self._aspect_ratio, config.NEAR, config.FAR)
 
 
-class NewCamera:
+class Camera:
 
     __up = glm.vec3(0, 1, 0)
     __right = glm.vec3(1, 0, 0)
@@ -108,23 +108,22 @@ class NewCamera:
     
     @dataclass
     class Snap:
-        pos: tuple[float, float, float]
-        position: glm.vec3 = field(init=False)
+        pos: tuple[float, float, float] = field(init=True)
         
         yaw: float
         pitch: float
-        speed: float
         
-        attach_object_id: int = field(init=False)
+        attach_object_id: int = field(init=True, default=None)
         
         def __post_init__(self):
-            self.position = glm.vec3(self.pos)
+            self.pos = glm.vec3(self.pos)
     
-    def __init__(self, data) -> None:
+    def __init__(self, data: Snap = Snap(pos=(0, 0, 4), yaw = 0, pitch= 0), speed=0.01) -> None:
         """ Camera init """
         self._aspect_ratio: float = config.SCREEN_size[0] / config.SCREEN_size[1]
 
-        self.data: NewCamera.Snap = data
+        self.data: Camera.Snap = data
+        self.speed: float = speed
         
         """ Graphic matrices """
         self.m_view: glm.mat4 = self.__get_view_matrix
@@ -162,22 +161,22 @@ class NewCamera:
 
     def move(self) -> None:
         """ move in space; if camera not attach """
-        velocity = self.data.speed * QuantumCore.time.delta
+        velocity = self.speed * QuantumCore.time.delta
         keys = pygame.key.get_pressed()
 
         # move
         if keys[pygame.K_w]:
-            self.data.position += self.__forward * velocity
+            self.data.pos += self.__forward * velocity
         if keys[pygame.K_s]:
-            self.data.position -= self.__forward * velocity
+            self.data.pos -= self.__forward * velocity
         if keys[pygame.K_a]:
-            self.data.position -= self.__right * velocity
+            self.data.pos -= self.__right * velocity
         if keys[pygame.K_d]:
-            self.data.position += self.__right * velocity
+            self.data.pos += self.__right * velocity
         if keys[pygame.K_SPACE]:
-            self.data.position += self.__up * velocity
+            self.data.pos += self.__up * velocity
         if keys[pygame.K_c]:
-            self.data.position -= self.__up * velocity
+            self.data.pos -= self.__up * velocity
 
         # run (speed up)
         if keys[pygame.K_LCTRL]:
@@ -187,7 +186,7 @@ class NewCamera:
 
     @property
     def __get_view_matrix(self) -> glm.mat4:
-        return glm.lookAt(self.data.position, self.data.position + self.__forward, self.__up)
+        return glm.lookAt(self.data.pos, self.data.pos + self.__forward, self.__up)
 
     @property
     def _get_projection_matrix_(self) -> glm.mat4:

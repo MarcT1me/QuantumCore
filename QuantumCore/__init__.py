@@ -12,13 +12,13 @@ from loguru import logger
 import QuantumCore.graphic
 import QuantumCore.time
 import QuantumCore.scene
-import QuantumCore.data.config as config
+from QuantumCore.data import config
 import QuantumCore.widgets
 from QuantumCore.graphic.interface import __Interface
 import QuantumCore.UI
 window = None  # type: QuantumCore.graphic.__GRAPHIC
 
-__version = '0.11.4:2'
+__version = '0.11.5'
 name, short_name = 'QuantumCore', 'PyQC'
 
 logger.info(f'\n\n{name}: {__version=}\n')
