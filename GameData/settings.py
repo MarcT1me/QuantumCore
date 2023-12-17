@@ -24,9 +24,6 @@ def read_datafile_():
     with open(rf"{config.__APPLICATION_PATH__}/GameData/config.json", mode='r') as file:
         return json.load(file)
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
 def change_datafile(changes):
     """ Change data in datafile variable """
     for field, data in changes.items():
@@ -39,22 +36,6 @@ def write_datafile(changes: dict[str: dict] =None):
     
     with open(rf"{config.__APPLICATION_PATH__}/GameData/config.json", mode='w') as file:
         json.dump(datafile, file, indent=2)
-
->>>>>>> 60d7484 (0.5.2:r2)
-=======
-def change_datafile(changes):
-    """ Change data in datafile variable """
-    for key, value in changes:
-        datafile[key] = value
-
-def write_datafile(changes=None):
-    """ Write CONFIG files """
-    change_datafile(changes) if changes is not None else Ellipsis
-    
-    with open(rf"{config.__APPLICATION_PATH__}/GameData/config.json") as file:
-        json.dump(datafile, file)
-
->>>>>>> origin/master
 
 def rewrite_config():
     """ Rewrite CONFIG data """

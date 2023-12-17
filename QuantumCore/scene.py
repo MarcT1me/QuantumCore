@@ -1,11 +1,3 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
-
-=======
->>>>>>> 60d7484 (0.5.2:r2)
-=======
-import time
->>>>>>> origin/master
 # other
 from copy import copy
 import pickle
@@ -155,15 +147,7 @@ class Builder:
     def _dump_(self, save) -> None:
         """ dump save in fail.sav """
         if self.scene is not None:
-<<<<<<< HEAD
-<<<<<<< HEAD
             with open(self.path, 'wb') as file:
-=======
-            with open(f'{self.path}', 'wb') as file:
->>>>>>> 60d7484 (0.5.2:r2)
-=======
-            with open(f'{self.path[:-4]}', 'wb') as file:
->>>>>>> origin/master
                 pickle.dump(save, file)
     
     def load(self) -> dict[str: Location]:
