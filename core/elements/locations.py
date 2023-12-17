@@ -11,7 +11,7 @@ from QuantumCore.graphic.light import Light
 from QuantumCore.graphic.vbo import CustomVBO_name
 
 # core elements
-from GameData.settings import SAVES_path, MODEL_path
+from GameData import settings
 from core.elements.entities import Cat, Cube, MovingCube, WoodenWatchTower, Earth
 
 
@@ -19,22 +19,22 @@ class TestScene(Location):
     def __init__(self, app) -> None:
         super().__init__(app)
         app.loading.itrf.step(15, stage='Init game Scene', status='builder')
-        self.builder = Builder(rf'{__APPLICATION_PATH__}/{SAVES_path}/Abobacraft.sav', scene_=self)
+        self.builder = Builder(rf'{__APPLICATION_PATH__}/{settings.SAVES_path}/{settings.save_name}.sav', scene_=self)
 
     def add_vbos(self):
         self.app.loading.itrf.step(16, status='models path')
         CustomVBO_name['WoodenWatchTower'] = (
             '2f 3f 3f',
             ['in_texcoord_0', 'in_normal', 'in_position'],
-            f'{__APPLICATION_PATH__}/{MODEL_path}/WoodenWatchTower', 'obj', 'jpg')
+            f'{__APPLICATION_PATH__}/{settings.MODEL_path}/WoodenWatchTower', 'obj', 'jpg')
         CustomVBO_name['Cat'] = (
             '2f 3f 3f',
             ['in_texcoord_0', 'in_normal', 'in_position'],
-            rf'{__APPLICATION_PATH__}/{MODEL_path}/cat', 'obj', 'jpg')
+            rf'{__APPLICATION_PATH__}/{settings.MODEL_path}/cat', 'obj', 'jpg')
         CustomVBO_name['Earth'] = (
             '2f 3f 3f',
             ['in_texcoord_0', 'in_normal', 'in_position'],
-            rf'{__APPLICATION_PATH__}/{MODEL_path}/earth', 'obj', 'png')
+            rf'{__APPLICATION_PATH__}/{settings.MODEL_path}/earth', 'obj', 'png')
         self.app.loading.itrf.step(45, status='Game Canvas')
         return self
 

@@ -1,4 +1,4 @@
-
+import time
 # other
 from copy import copy
 import pickle
@@ -148,7 +148,7 @@ class Builder:
     def _dump_(self, save) -> None:
         """ dump save in fail.sav """
         if self.scene is not None:
-            with open(self.path, 'wb') as file:
+            with open(f'{self.path[:-4]}', 'wb') as file:
                 pickle.dump(save, file)
     
     def load(self) -> dict[str: Location]:
