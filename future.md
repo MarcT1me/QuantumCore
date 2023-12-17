@@ -1,7 +1,7 @@
 # This FUTURE file reports a side branch for project code changes.
 
 ## BRANCH ASSIGNMENT
->>>>>>>  # Future Branch
+>>>>>>>  ## Future Branch
 >>>>>>>  ##### game version: 0.5.5
 >>>>>>>  ##### Engine version: 0.11.5
 

@@ -40,7 +40,7 @@ class TestScene(Location):
 
     def build(self, app, obj, light) -> None:
         
-        if None is not None:
+        if self.builder.read() is not None:
             """ if scene.sav load successful """
 
             self.builder.load(
