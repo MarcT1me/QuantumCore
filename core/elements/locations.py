@@ -11,42 +11,18 @@ from QuantumCore.graphic.light import Light
 from QuantumCore.graphic.vbo import CustomVBO_name
 
 # core elements
-<<<<<<< HEAD
-from GameData.settings import SAVES_path, MODEL_path
-from core.elements.entities import Earth, Cat, Cube, MovingCube, WoodenWatchTower
-=======
 from GameData import settings
 from core.elements.entities import Cat, Cube, MovingCube, WoodenWatchTower, Earth
->>>>>>> master
 
 
 class TestScene(Location):
     def __init__(self, app) -> None:
         super().__init__(app)
         app.loading.itrf.step(15, stage='Init game Scene', status='builder')
-<<<<<<< HEAD
-        self.builder = Builder(rf'{__APPLICATION_PATH__}/{SAVES_path}/bugfix2.sav', scene_=self)
-=======
         self.builder = Builder(rf'{__APPLICATION_PATH__}/{settings.SAVES_path}/{settings.save_name}.sav', scene_=self)
->>>>>>> master
 
     def on_init(self):
         self.app.loading.itrf.step(16, status='models path')
-<<<<<<< HEAD
-        # CustomVBO_name['WoodenWatchTower'] = (
-        #     '2f 3f 3f',
-        #     ['in_texcoord_0', 'in_normal', 'in_position'],
-        #     f'{__APPLICATION_PATH__}/{MODEL_path}/WoodenWatchTower', 'obj', 'jpg')
-        # CustomVBO_name['Cat'] = (
-        #     '2f 3f 3f',
-        #     ['in_texcoord_0', 'in_normal', 'in_position'],
-        #     rf'{__APPLICATION_PATH__}/{MODEL_path}/cat', 'obj', 'jpg')
-        CustomVBO_name['Earth'] = (
-            '2f 3f 3f',
-            ['in_texcoord_0', 'in_normal', 'in_position'],
-            rf'{__APPLICATION_PATH__}/{MODEL_path}/earth', 'obj', 'png')
-        self.app.loading.itrf.step(25, status='Game Canvas')
-=======
         CustomVBO_name['WoodenWatchTower'] = (
             '2f 3f 3f',
             ['in_texcoord_0', 'in_normal', 'in_position'],
@@ -60,7 +36,6 @@ class TestScene(Location):
             ['in_texcoord_0', 'in_normal', 'in_position'],
             rf'{__APPLICATION_PATH__}/{settings.MODEL_path}/earth', 'obj', 'png')
         self.app.loading.itrf.step(45, status='Game Canvas')
->>>>>>> master
         return self
 
     def build(self, app, obj, light) -> None:

@@ -65,9 +65,6 @@ class TestGame(App):
 
             """ Exit of App to button "close" """
             if event.type == pygame.QUIT:
-<<<<<<< HEAD
-                App.running = False
-=======
                 
                 new_name = self.test_scene.builder.name().split('_autosave')[0]+f'_autosave'
                 settings.write_datafile({
@@ -76,34 +73,23 @@ class TestGame(App):
                     }
                 })
                 self.test_scene.builder.write(new_name)
-                
-                QuantumCore.close()
-                exit()
->>>>>>> master
+
+                App.running = False
 
             elif event.type == pygame.KEYDOWN:
                 """ Detect KEY DOWN """
                 if event.key == pygame.K_LCTRL:
                     self.spec_keys['L-Ctrl'] = True
                     
-<<<<<<< HEAD
-=======
-                elif self.spec_keys['L-Ctrl'] and event.key == pygame.K_g:
-                    logger.warning('GAME - TEST RISE\n\n')
-                    raise Exception("TEST RISE - USE 'raise - Exception' and call traceback")
->>>>>>> master
                 elif self.spec_keys['L-Ctrl'] and event.key == pygame.K_r:
                     settings.rewrite_config()
                     QuantumCore.window.resset()
-
-                elif self.spec_keys['L-Ctrl'] and event.key == pygame.K_q:
-<<<<<<< HEAD
-                    App.running = False
+                    
                 elif self.spec_keys['L-Ctrl'] and event.key == pygame.K_g:
                     logger.warning('GAME - TEST RISE\n\n')
                     raise Exception("TEST RISE - USE 'raise - Exception' and call traceback")
-=======
-                    
+
+                elif self.spec_keys['L-Ctrl'] and event.key == pygame.K_q:
                     new_name = self.test_scene.builder.name().split('_autosave')[0]+f'_autosave'
                     settings.write_datafile({
                         'game': {
@@ -112,9 +98,7 @@ class TestGame(App):
                     })
                     self.test_scene.builder.write(new_name)
                     
-                    QuantumCore.close()
-                    exit()
->>>>>>> master
+                    App.running = False
 
             elif event.type == pygame.KEYUP:
                 if event.key == pygame.K_LCTRL:

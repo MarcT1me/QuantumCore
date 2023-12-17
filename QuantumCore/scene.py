@@ -1,7 +1,5 @@
-<<<<<<< HEAD
+
 import uuid
-=======
->>>>>>> master
 # other
 from copy import copy
 import pickle
@@ -143,14 +141,10 @@ class Builder:
     
     def write(self, name=None) -> None:
         """ write save before format method """
-<<<<<<< HEAD
-        self._dump(self._format_sav_(self))
-=======
         if name is not None:
             self.path = self.root()+'/'+str(name)+'.sav'
         
-        self._dump_(self._format_sav_(self))
->>>>>>> master
+        self._dump(self._format_sav_(self))
     
     def dell(self) -> bool:
         """ dell save.sav file """
