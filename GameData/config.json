@@ -1,16 +1,16 @@
 {
-  "engine":
-  {
+  "engine": {
     "fps": 0,
     "full_screen": false,
-    "SCREEN_size": [1600, 900],
+    "SCREEN_size": [
+      1600,
+      900
+    ],
     "VSYNC": true,
-
     "DISPLAY_num": 0,
     "FOV": 75
   },
-
   "game": {
-    "save_name": "'Abobacraft'"
+    "save_name": "Abobacraft_autosave"
   }
 }

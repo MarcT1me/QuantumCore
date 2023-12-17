@@ -21,20 +21,21 @@ datafile: dict = None
 
 def read_datafile_():
     """ Read CONFIG files """
-    with open(rf"{config.__APPLICATION_PATH__}/GameData/config.json") as file:
+    with open(rf"{config.__APPLICATION_PATH__}/GameData/config.json", mode='r') as file:
         return json.load(file)
 
 def change_datafile(changes):
     """ Change data in datafile variable """
-    for key, value in changes:
-        datafile[key] = value
+    for field, data in changes.items():
+        for key, value in data.items():
+            datafile[field][key] = value
 
-def write_datafile(changes=None):
+def write_datafile(changes: dict[str: dict] =None):
     """ Write CONFIG files """
     change_datafile(changes) if changes is not None else Ellipsis
     
-    with open(rf"{config.__APPLICATION_PATH__}/GameData/config.json") as file:
-        json.dump(datafile, file)
+    with open(rf"{config.__APPLICATION_PATH__}/GameData/config.json", mode='w') as file:
+        json.dump(datafile, file, indent=2)
 
 
 def rewrite_config():

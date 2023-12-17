@@ -1,4 +1,3 @@
-import time
 # other
 from copy import copy
 import pickle
@@ -93,7 +92,7 @@ class Builder:
         
         """ file info """
         self.root: str = lambda: os.path.dirname(self.path)
-        self.name: str = lambda: os.path.basename(self.path)
+        self.name: str = lambda: os.path.basename(self.path)[:-4]
         self.size: bin = lambda: os.path.getsize(self.path) if os.path.isfile(path=self.path) else None
         
         """ builder variable """
@@ -148,20 +147,24 @@ class Builder:
     def _dump_(self, save) -> None:
         """ dump save in fail.sav """
         if self.scene is not None:
-            with open(f'{self.path[:-4]}', 'wb') as file:
+            with open(f'{self.path}', 'wb') as file:
                 pickle.dump(save, file)
     
     def load(self) -> dict[str: Location]:
         """ load save.sav """
         if os.path.isfile(path=self.path):
             with open(self.path, 'rb') as file:
+                print(self.path)
                 self.save = pickle.load(file)
                 return self.save
         else:
             print('not found file')
     
-    def write(self) -> None:
+    def write(self, name=None) -> None:
         """ write save before format method """
+        if name is not None:
+            self.path = self.root()+'/'+str(name)+'.sav'
+        
         self._dump_(self._format_sav_(self))
     
     def dell(self) -> bool:

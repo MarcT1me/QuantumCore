@@ -64,8 +64,14 @@ class TestGame(App):
 
             """ Exit of App to button "close" """
             if event.type == pygame.QUIT:
-                self.test_scene.builder.write()
-                settings.write_datafile({'save_name': self.test_scene.builder.name()})
+                
+                new_name = self.test_scene.builder.name().split('_autosave')[0]+f'_autosave'
+                settings.write_datafile({
+                    'game': {
+                        'save_name': new_name
+                    }
+                })
+                self.test_scene.builder.write(new_name)
                 
                 QuantumCore.close()
                 exit()
@@ -83,8 +89,14 @@ class TestGame(App):
                     QuantumCore.window.resset()
                 
                 elif self.spec_keys['L-Ctrl'] and event.key == pygame.K_q:
-                    self.test_scene.builder.write()
-                    settings.write_datafile({'save_name': self.test_scene.builder.name()})
+                    
+                    new_name = self.test_scene.builder.name().split('_autosave')[0]+f'_autosave'
+                    settings.write_datafile({
+                        'game': {
+                            'save_name': new_name
+                        }
+                    })
+                    self.test_scene.builder.write(new_name)
                     
                     QuantumCore.close()
                     exit()

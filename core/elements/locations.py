@@ -20,6 +20,7 @@ class TestScene(Location):
         super().__init__(app)
         app.loading.itrf.step(15, stage='Init game Scene', status='builder')
         self.builder = Builder(rf'{__APPLICATION_PATH__}/{settings.SAVES_path}/{settings.save_name}.sav', scene_=self)
+        print(self.builder.path)
 
     def add_vbos(self):
         self.app.loading.itrf.step(16, status='models path')
