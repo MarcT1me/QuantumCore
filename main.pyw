@@ -65,6 +65,7 @@ class TestGame(App):
             """ Exit of App to button "close" """
             if event.type == pygame.QUIT:
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
                 
                 new_name = self.test_scene.builder.name().split('_autosave')[0]+f'_autosave'
@@ -76,6 +77,11 @@ class TestGame(App):
                 self.test_scene.builder.write(new_name)
                 
 >>>>>>> 60d7484 (0.5.2:r2)
+=======
+                self.test_scene.builder.write()
+                settings.write_datafile({'save_name': self.test_scene.builder.name()})
+                
+>>>>>>> origin/master
                 QuantumCore.close()
                 exit()
 
@@ -83,11 +89,7 @@ class TestGame(App):
                 """ Detect KEY DOWN """
                 if event.key == pygame.K_LCTRL:
                     self.spec_keys['L-Ctrl'] = True
-
-                elif self.spec_keys['L-Ctrl'] and event.key == pygame.K_1:
-                    QuantumCore.window.context.front_face = 'cw'
-                if self.spec_keys['L-Ctrl'] and event.key == pygame.K_2:
-                    QuantumCore.graphic.front_face = 'ccw'
+                    
                 elif self.spec_keys['L-Ctrl'] and event.key == pygame.K_g:
                     logger.warning('GAME - TEST RISE\n\n')
                     raise Exception("TEST RISE - USE 'raise - Exception' and call traceback")
@@ -96,6 +98,7 @@ class TestGame(App):
                     QuantumCore.window.resset()
                 
                 elif self.spec_keys['L-Ctrl'] and event.key == pygame.K_q:
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
                     
@@ -108,6 +111,11 @@ class TestGame(App):
                     self.test_scene.builder.write(new_name)
                     
 >>>>>>> 60d7484 (0.5.2:r2)
+=======
+                    self.test_scene.builder.write()
+                    settings.write_datafile({'save_name': self.test_scene.builder.name()})
+                    
+>>>>>>> origin/master
                     QuantumCore.close()
                     exit()
 
