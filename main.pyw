@@ -45,6 +45,7 @@ class TestGame(App):
         """ Additional variables """
         self.clock = pygame.time.Clock()
         
+        QuantumCore.graphic.light.lights_list[0].clear()
         self.test_scene: Location = TestScene(self).on_init()
         QuantumCore.scene.scene = self.test_scene.load()
         
@@ -58,6 +59,17 @@ class TestGame(App):
         logger.debug('GAME ready\n\n')
         
         pygame.event.set_grab(True), pygame.mouse.set_visible(False)  # mouse - set static
+    
+    def autosave(self):
+        if settings.autosave:
+            new_name = self.test_scene.builder.name().split('_autosave')[0]+f'_autosave'
+            settings.write_datafile({
+                'game': {
+                    'save_name': new_name
+                }
+            })
+            self.test_scene.builder.write(new_name)
+    
 
     def events(self) -> None:
         """ Event handling """
@@ -65,15 +77,7 @@ class TestGame(App):
 
             """ Exit of App to button "close" """
             if event.type == pygame.QUIT:
-                
-                new_name = self.test_scene.builder.name().split('_autosave')[0]+f'_autosave'
-                settings.write_datafile({
-                    'game': {
-                        'save_name': new_name
-                    }
-                })
-                self.test_scene.builder.write(new_name)
-
+                self.autosave()
                 App.running = False
 
             elif event.type == pygame.KEYDOWN:
@@ -90,14 +94,7 @@ class TestGame(App):
                     raise Exception("TEST RISE - USE 'raise - Exception' and call traceback")
 
                 elif self.spec_keys['L-Ctrl'] and event.key == pygame.K_q:
-                    new_name = self.test_scene.builder.name().split('_autosave')[0]+f'_autosave'
-                    settings.write_datafile({
-                        'game': {
-                            'save_name': new_name
-                        }
-                    })
-                    self.test_scene.builder.write(new_name)
-                    
+                    self.autosave()
                     App.running = False
 
             elif event.type == pygame.KEYUP:

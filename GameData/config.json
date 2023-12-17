@@ -11,6 +11,7 @@
     "FOV": 75
   },
   "game": {
-    "save_name": "bugfix2"
+    "save_name": "bugfix2",
+    "autosave": false
   }
 }

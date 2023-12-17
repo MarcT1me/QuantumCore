@@ -32,7 +32,7 @@ class Location:
         self.progress_list = {}
         self.events_list = {}
 
-    def _add_object(self, obj: BaseModel, abbr: str = None) -> str:
+    def obj(self, obj: BaseModel, abbr: str = None) -> str:
         if abbr is not None:
             if abbr in self.objects_list.keys():
                 raise ValueError(f"Object with abbreviation '{abbr}' already exists")
@@ -41,7 +41,7 @@ class Location:
         self.objects_list[obj.metadata.ID] = obj
         return obj.metadata.ID
     
-    def _add_light(self, light, abbr: str = None) -> str:
+    def light(self, light, abbr: str = None) -> str:
         if abbr is not None:
             if abbr in self.objects_list.keys():
                 raise ValueError(f"Light with abbreviation '{abbr}' already exists")
@@ -52,7 +52,7 @@ class Location:
         return _id
 
     @staticmethod
-    def build(app, obj, light) -> None:
+    def build(app) -> None:
         """ Write all the objects of the scene to this method """
         ...
     
@@ -68,13 +68,10 @@ class Location:
     def load(self):
         """ Load game scene """
         app = self.app
-        
-        add_obj = self._add_object
-        add_light = self._add_light
 
         QuantumCore.window.set_mesh()
         
-        self.build(app, add_obj, add_light)
+        self.build(app)
         logger.debug('Scene load\n')
         return self
         
@@ -163,21 +160,23 @@ class Builder:
         assert self.save is not None, " `save` variable should not be None"
         assert objects_dictionary is not None, "The `objects_dictionary` must be filled in"
         
-        space = self.save['scene']
+        space = self.save['data']
         QuantumCore.time.list_ = self.save['time']
         
-        self.scene.lights_list[0] = space['lights']
+        self.scene.lights_list[0] = space['scene']['lights']
         exec(light_code)
         
         # scene objects
-        for key, value in space['objects'].items():
+        for key, value in space['scene']['objects'].items():
             obj_class = objects_dictionary[value.object_id]
             if issubclass(BaseModel, obj_class):
                 self.scene.objects_list[key] = obj_class(metadata=value, sav=True)
             exec(object_iter_code)
         
-        QuantumCore.graphic.camera.camera.data = space['camera'] if space['camera'] is not None \
-            else QuantumCore.graphic.camera.Camera()
+        if space['camera'] is not None:
+            QuantumCore.graphic.camera.camera.data = space['camera']
+        else:
+            QuantumCore.graphic.camera.camera = QuantumCore.graphic.camera.Camera()
         exec(camera_code)
         
         return True

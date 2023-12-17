@@ -23,14 +23,14 @@ class TestScene(Location):
 
     def on_init(self):
         self.app.loading.itrf.step(16, status='models path')
-        CustomVBO_name['WoodenWatchTower'] = (
-            '2f 3f 3f',
-            ['in_texcoord_0', 'in_normal', 'in_position'],
-            f'{__APPLICATION_PATH__}/{settings.MODEL_path}/WoodenWatchTower', 'obj', 'jpg')
-        CustomVBO_name['Cat'] = (
-            '2f 3f 3f',
-            ['in_texcoord_0', 'in_normal', 'in_position'],
-            rf'{__APPLICATION_PATH__}/{settings.MODEL_path}/cat', 'obj', 'jpg')
+        # CustomVBO_name['WoodenWatchTower'] = (
+        #     '2f 3f 3f',
+        #     ['in_texcoord_0', 'in_normal', 'in_position'],
+        #     f'{__APPLICATION_PATH__}/{settings.MODEL_path}/WoodenWatchTower', 'obj', 'jpg')
+        # CustomVBO_name['Cat'] = (
+        #     '2f 3f 3f',
+        #     ['in_texcoord_0', 'in_normal', 'in_position'],
+        #     rf'{__APPLICATION_PATH__}/{settings.MODEL_path}/cat', 'obj', 'jpg')
         CustomVBO_name['Earth'] = (
             '2f 3f 3f',
             ['in_texcoord_0', 'in_normal', 'in_position'],
@@ -38,11 +38,11 @@ class TestScene(Location):
         self.app.loading.itrf.step(45, status='Game Canvas')
         return self
 
-    def build(self, app, obj, light) -> None:
+    def build(self, app) -> None:
         
         if self.builder.read() is not None:
             """ if scene.sav load successful """
-
+            
             self.builder.load(
                 {
                     'Earth': Earth,
@@ -70,25 +70,24 @@ self.scene.app.loading.itrf.step(93, stage='Load game scene', status='sav - came
             self.app.loading.itrf.step(65, stage='Load game scene', status='Scene - build')
             
             """ in other a build scene in code """
-            light(Light(pos=(25, 25, 25), ambient=.2, diffuse=1.5, specular=.5))
-            light(Light(size=15))
+            self.light(Light(pos=(25, 25, 25), ambient=.2, diffuse=1.5, specular=.5))
+            self.light(Light(size=15), 'lighter')
             
             for x in range(-5, 5):
                 for y in range(-5, 5):
                     for z in range(-5, 5):
-                        obj(Earth(pos=(10*x, 10*y, 10*z)))
+                        self.obj(Earth(pos=(10*x, 10*y, 10*z)))
             
-            QuantumCore.graphic.camera.camera.data.position = glm.vec3((-7, 7, -7))
-            QuantumCore.graphic.camera.camera.data.yaw = 45
-            QuantumCore.graphic.camera.camera.data.pitch = -15
-            QuantumCore.graphic.camera.camera.data.speed = 0.01
+            QuantumCore.graphic.camera.camera.data.pos = glm.vec3(32, 33, -87)
+            QuantumCore.graphic.camera.camera.data.yaw = 122
+            QuantumCore.graphic.camera.camera.data.pitch = -21
             
-            # self.builder.write()
+            self.builder.write()
             
             logger.warning('TestScene - build\n\n')
     
     def __update__(self) -> None:
         super().__update__()
         
-        # self.lights_list[0][self.ids['фонарик']].position = QuantumCore.graphic.camera.camera.position
+        self.lights_list[0]['lighter'].position = QuantumCore.graphic.camera.camera.data.pos
         

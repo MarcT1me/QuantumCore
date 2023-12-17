@@ -18,7 +18,7 @@ from QuantumCore.graphic.interface import __Interface
 import QuantumCore.UI
 window = None  # type: QuantumCore.graphic.__GRAPHIC
 
-__version = '0.11.5'
+__version = '0.11'
 name, short_name = 'QuantumCore', 'PyQC'
 
 logger.info(f'\n\n{name}: {__version=}\n')

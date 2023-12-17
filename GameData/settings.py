@@ -12,11 +12,13 @@ MODEL_path: str = r'core/models'
 TEXTURE_path: str = r'core/textures'
 MODS_path: str = r'GameData/mods'
 SAVES_path: str = r'GameData/saves'
+# data in file
+datafile: dict
+
+""" other """
 save_name: str
+autosave: bool = False
 
-
-""" Settings functional """
-datafile: dict = None
 
 
 def read_datafile_():
