@@ -37,13 +37,16 @@ class MetaData:
 
     
 class BaseModel:
+    
+    increment = 0
 
     # vectors, used in update, that calculate
     _vec_x = glm.vec3(1, 0, 0)
     _vec_y = glm.vec3(0, 1, 0)
     _vec_z = glm.vec3(0, 0, 1)
     
-    def __init__(self, metadata: MetaData, *, render_area: int = FAR) -> None:
+    def __init__(self, metadata: MetaData, *, render_area: int = FAR, sav=False) -> None:
+        BaseModel.increment += sav
         
         self.metadata = metadata
 

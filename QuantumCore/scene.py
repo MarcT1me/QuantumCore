@@ -129,7 +129,6 @@ class Builder:
         """ load data from save.sav file """
         if os.path.isfile(path=self.path):
             with open(self.path, 'rb') as file:
-                print(self.path)
                 self.save = pickle.load(file)
                 return self.save
         else:
@@ -153,7 +152,7 @@ class Builder:
             return False
     
     def load(self, objects_dictionary: dict[str: BaseModel] = None, *,
-             light_code='', object_iter_code='', camera_code='') -> bool:
+             light_code='', object_code='', camera_code='') -> bool:
         """ easy constructing your scene """
         assert self.scene is not None, ' `scene` reference is `None`'
         assert self.save is not None, " `save` variable should not be None"
@@ -161,16 +160,17 @@ class Builder:
         
         space = self.save['data']
         QuantumCore.time.list_ = self.save['time']
-        
-        self.scene.lights_list[0] = space['scene']['lights']
-        exec(light_code)
+
+        for key, value in space['scene']['lights'].items():
+            self.scene.lights_list[0][key] = value
+            exec(light_code)
         
         # scene objects
         for key, value in space['scene']['objects'].items():
             obj_class = objects_dictionary[value.object_id]
-            if issubclass(BaseModel, obj_class):
+            if issubclass(obj_class, BaseModel):
                 self.scene.objects_list[key] = obj_class(metadata=value, sav=True)
-            exec(object_iter_code)
+            exec(object_code)
         
         if space['camera'] is not None:
             QuantumCore.graphic.camera.camera.data = space['camera']

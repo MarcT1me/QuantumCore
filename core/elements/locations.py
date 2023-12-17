@@ -54,7 +54,7 @@ class TestScene(Location):
                 light_code="""
 self.scene.app.loading.itrf.step(45, stage='Load game scene', status='sav - lighting')
             """,
-                object_iter_code="""
+                object_code="""
 lp = 0
 if lp:
     self.scene.app.loading.itrf.step(67, stage='Load game scene', status='sav - objects')
