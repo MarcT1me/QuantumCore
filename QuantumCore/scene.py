@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 import uuid
+=======
+>>>>>>> master
 # other
 from copy import copy
 import pickle
@@ -98,7 +101,7 @@ class Builder:
         
         """ file info """
         self.root: str = lambda: os.path.dirname(self.path)
-        self.name: str = lambda: os.path.basename(self.path)
+        self.name: str = lambda: os.path.basename(self.path)[:-4]
         self.size: bin = lambda: os.path.getsize(self.path) if os.path.isfile(path=self.path) else None
     
     @staticmethod
@@ -132,14 +135,22 @@ class Builder:
         """ load data from save.sav file """
         if os.path.isfile(path=self.path):
             with open(self.path, 'rb') as file:
+                print(self.path)
                 self.save = pickle.load(file)
                 return self.save
         else:
             raise FileNotFoundError(f'there is no save with the name {self.name()} in the directory {self.root()}')
     
-    def write(self) -> None:
+    def write(self, name=None) -> None:
         """ write save before format method """
+<<<<<<< HEAD
         self._dump(self._format_sav_(self))
+=======
+        if name is not None:
+            self.path = self.root()+'/'+str(name)+'.sav'
+        
+        self._dump_(self._format_sav_(self))
+>>>>>>> master
     
     def dell(self) -> bool:
         """ dell save.sav file """
