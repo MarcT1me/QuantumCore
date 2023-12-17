@@ -11,14 +11,6 @@
     "FOV": 75
   },
   "game": {
-<<<<<<< HEAD
-<<<<<<< HEAD
-    "APPLICATION_VERSION": "0.4.2"
-=======
     "save_name": "Abobacraft_autosave"
->>>>>>> 60d7484 (0.5.2:r2)
-=======
-    "save_name": "'Abobacraft'"
->>>>>>> origin/master
   }
 }
