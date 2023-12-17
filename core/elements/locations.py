@@ -19,7 +19,12 @@ class TestScene(Location):
     def __init__(self, app) -> None:
         super().__init__(app)
         app.loading.itrf.step(15, stage='Init game Scene', status='builder')
+<<<<<<< HEAD
         self.builder = Builder(rf'{__APPLICATION_PATH__}/{SAVES_path}/Abobacraft.sav', scene_=self)
+=======
+        self.builder = Builder(rf'{__APPLICATION_PATH__}/{settings.SAVES_path}/{settings.save_name}.sav', scene_=self)
+        print(self.builder.path)
+>>>>>>> 60d7484 (0.5.2:r2)
 
     def add_vbos(self):
         self.app.loading.itrf.step(16, status='models path')
