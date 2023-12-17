@@ -11,6 +11,7 @@
     "FOV": 75
   },
   "game": {
-    "save_name": "Abobacraft_autosave"
+    "save_name": "bugfix2",
+    "autosave": false
   }
 }

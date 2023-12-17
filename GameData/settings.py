@@ -12,18 +12,20 @@ MODEL_path: str = r'core/models'
 TEXTURE_path: str = r'core/textures'
 MODS_path: str = r'GameData/mods'
 SAVES_path: str = r'GameData/saves'
+# data in file
+datafile: dict
+
+""" other """
 save_name: str
+autosave: bool = False
 
-
-""" Settings functional """
-datafile: dict = None
 
 
 def read_datafile_():
     """ Read CONFIG files """
     with open(rf"{config.__APPLICATION_PATH__}/GameData/config.json", mode='r') as file:
         return json.load(file)
-
+    
 def change_datafile(changes):
     """ Change data in datafile variable """
     for field, data in changes.items():
@@ -36,6 +38,7 @@ def write_datafile(changes: dict[str: dict] =None):
     
     with open(rf"{config.__APPLICATION_PATH__}/GameData/config.json", mode='w') as file:
         json.dump(datafile, file, indent=2)
+
 
 def rewrite_config():
     """ Rewrite CONFIG data """

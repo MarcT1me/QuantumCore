@@ -6,7 +6,11 @@ import sys
 from loguru import logger
 
 # Engine elements
-from QuantumCore.data.config import __ENGINE_DATA__, DISPLAY_num
+try:
+	from QuantumCore.data.config import __ENGINE_DATA__, DISPLAY_num
+except Exception as err:
+	import traceback; traceback.print_exception(err)
+	input()
 from QuantumCore.data.config import APPLICATION_ICO_path, APPLICATION_ICO_name
 
 
@@ -53,4 +57,8 @@ def showWindow(*, bg_img_path=r'messages/default_loading_background.png',
 
 
 if __name__ == '__main__':
-	showWindow(flags=0)
+	try:
+		showWindow(flags=0)
+	except Exception as err:
+		import traceback; traceback.print_exception(err)
+		input()

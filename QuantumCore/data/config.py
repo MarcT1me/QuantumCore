@@ -12,8 +12,11 @@ TEXTURE_path: str = r'textures'   # constant
 
 APPLICATION_ICO_path, APPLICATION_ICO_name = r'', 'standard.png'  # dynamic
 
-PRE_INIT: bool    # constant  # .CONFIG
-IS_RELEASE: bool  # constant  # .CONFIG
+"""
+ # constant  # SETTINGS.CONFIG
+"""
+PRE_INIT: bool      # constant  # .CONFIG
+IS_RELEASE: bool    # constant  # .CONFIG
 
 """ Screen settings """
 fps: int = 0              # easy
@@ -34,6 +37,9 @@ FOV: float = 60     # heavy
 FAR: int = 1000     # heavy
 GAMMA: float = 2.2  # heavy
 
+"""
+  # constant  # GRAPHIC.CONFIG
+"""
 NEAR: float   # constant  # .CONFIG
 AA_TYPE: int  # constant  # .CONFIG
 

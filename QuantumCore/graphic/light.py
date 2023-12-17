@@ -15,4 +15,4 @@ class Light:
         self.size: int = size
 
 
-lights_list: dict[hash: Light] = [{0: Light()},]
+lights_list: dict[str: Light] = [{'0': Light()},]

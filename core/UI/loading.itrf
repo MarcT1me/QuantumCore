@@ -11,7 +11,7 @@ class Itrf(Head):  #type: core.UI.loading.Head  # not change
         
         """ fonts """
         # percents
-        fin_font = self.percent_font.render(f'{value} %', True, 'white')
+        fin_font = self.percent_font.render(f'{int(value)} %', True, 'white')
         QuantumCore.window.interface.surface.blit(
             fin_font, (self.sc_size[0]-fin_font.get_width()-20, self.sc_size[1]-fin_font.get_height()-50)
         )

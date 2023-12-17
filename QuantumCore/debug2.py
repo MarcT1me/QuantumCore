@@ -31,7 +31,7 @@ class Debugging:
         def format_size(self) -> str:
             return f"lines = {self.p_size['lines']}, bytes = {self.format_project_size(self.p_size['bytes'])}"
 
-    def __init__(self, *, dir_name=None) -> None:
+    def __init__(self, *, dir_name=None, see_lines= True) -> None:
         self.directory = dir_name if dir_name is not None else os.path.dirname(__file__)  # project directory
 
         # project size variable
@@ -43,6 +43,7 @@ class Debugging:
             'start': current_time,
             'get PSize': current_time,
         }
+        self.see_lines = see_lines
 
     def __check_dir_size(self, dir_name) -> None:
         """ Recursive function for checking the length of a directory """
@@ -55,14 +56,14 @@ class Debugging:
                 path = os.path.join(root, file)
 
                 if file not in self.__verified_files:
-                    # print(f"{' '*self.str_len} '{file}'")
+                    print(f"{' '*self.__str_len} '{file}'") if self.see_lines else Ellipsis
 
                     if file_ext[1:] not in self.__except_exts:
 
                         try:
                             with open(path, mode='r', encoding='utf8') as f:
                                 f_len = len(f.readlines())
-                                # print(f"   length = {f_len}", end=' ,')
+                                print(f"   length = {f_len}", end=' ,') if self.see_lines else Ellipsis
                                 self._proj_size['lines'] += f_len
 
                         except UnicodeDecodeError:
@@ -71,7 +72,7 @@ class Debugging:
                                          f" LineCalculateError: try change 'except_dirs' or 'except_exts'")
 
                     f_size = os.path.getsize(path)
-                    # print(f"   size = {f_size}")
+                    print(f"   size = {f_size}") if self.see_lines else Ellipsis
                     self._proj_size['bytes'] += f_size
 
                 self.__verified_files.add(file)
@@ -82,7 +83,7 @@ class Debugging:
 
             # recursive directory check call
             for directory in dirs:
-                # print(f"\n{' '*self.str_len}----- {directory} -----")
+                print(f"\n{' '*self.__str_len}----- {directory} -----") if self.see_lines else Ellipsis
                 self.__str_len += 3
 
                 abs_directory = os.path.abspath(os.path.join(root, directory))
@@ -136,7 +137,8 @@ class Debugging:
 
 if __name__ == '__main__':
     size = Debugging.PSize(Debugging(
-        dir_name=rf'F:/project/QuantumCore'
+        dir_name=rf'F:/project/QuantumCore',
+        see_lines=False
     ).get_proj_size()).format_size
     logger.info(f'\n\n{size}\n')
     input()  #mainloop

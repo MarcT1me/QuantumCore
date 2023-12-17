@@ -1,10 +1,12 @@
+import uuid
 # other
 from copy import copy
 import pickle
 import os.path
-import glm
+from loguru import logger
 
 import QuantumCore.graphic
+from QuantumCore.model import BaseModel
 # engine elements imports
 from QuantumCore.data import config
 
@@ -14,61 +16,62 @@ class Location:
         """ Base location """
         self.app = app
         
-        self.objects_list: dict[hash: object] = dict()
-        self.lights_list: dict[hash: object] = copy(QuantumCore.graphic.light.lights_list)
+        """ scene space """
+        self.objects_list: dict[str: object] = dict()
+        self.lights_list: dict[str: object] = copy(QuantumCore.graphic.light.lights_list)
         
-        self.unload()
+        """ other """
         if QuantumCore.graphic.mash.mesh is not None:
-            QuantumCore.graphic.mash.mesh.__destroy__()
+            QuantumCore.graphic.mash.mesh.__destroy__()  # unset mesh
+        
+        self.builder = None  # builder thad load scene from file
         
         self.render_area = config.FAR*1.2
-        
-        self.builder = None
-        self.ids: dict[str: hash] = dict()
-        
-        self.time = 0
+        self.time = {}
+        self.progress_list = {}
+        self.events_list = {}
 
-    def add_vbos(self): ...
+    def obj(self, obj: BaseModel, abbr: str = None) -> str:
+        if abbr is not None:
+            if abbr in self.objects_list.keys():
+                raise ValueError(f"Object with abbreviation '{abbr}' already exists")
+            self.objects_list[abbr] = obj
+            return abbr
+        self.objects_list[obj.metadata.ID] = obj
+        return obj.metadata.ID
     
-    def on_init(self):
-        self.add_vbos()
-        return self
-
-    def _add_object(self, obj) -> int:
-        """ add object in list """
-        __id = id(obj)
-        self.objects_list[__id] = obj
-        return __id
-    
-    def _add_light(self, light) -> int:
-        __id = id(light)
-        self.lights_list[0][__id] = light
-        return __id
+    def light(self, light, abbr: str = None) -> str:
+        if abbr is not None:
+            if abbr in self.objects_list.keys():
+                raise ValueError(f"Light with abbreviation '{abbr}' already exists")
+            self.lights_list[0][abbr] = light
+            return abbr
+        _id = uuid.uuid4()
+        self.lights_list[0][_id] = light
+        return _id
 
     @staticmethod
-    def build(app, obj, light) -> None:
+    def build(app) -> None:
         """ Write all the objects of the scene to this method """
         ...
     
     def unload(self) -> None:
         """ Unload scene """
 
-        """ work with scene itself """
-        self.objects_list.clear()
         """ clear all graphic lists """
         QuantumCore.graphic.vbo.CustomVBO_name.clear()
         QuantumCore.graphic.texture.CustomTexture_name.clear()
+        QuantumCore.widgets.Button.roster_relies()
         self.lights_list[0].clear()
 
     def load(self):
         """ Load game scene """
         app = self.app
-        
-        add_obj = self._add_object
-        add_light = self._add_light
 
         QuantumCore.window.set_mesh()
-        self.build(app, add_obj, add_light)
+        
+        self.build(app)
+        logger.debug('Scene load\n')
         return self
         
     def __update__(self) -> None:
@@ -80,160 +83,100 @@ class Location:
     
     
 scene: Location = None
-loading = None
+loading: int = True
 
 
 class Builder:
-    
     def __init__(self, target: str, *, scene_=None) -> None:
         """ Build in save.sav your scene """
         self.path: str = target
         self.scene: Location = scene_
+        self.save: dict = None
         
         """ file info """
         self.root: str = lambda: os.path.dirname(self.path)
         self.name: str = lambda: os.path.basename(self.path)[:-4]
         self.size: bin = lambda: os.path.getsize(self.path) if os.path.isfile(path=self.path) else None
-        
-        """ builder variable """
-        self.save = self._format_sav_(self)
-        self.new_id = None  # from changing id
     
     @staticmethod
-    def _format_sav_(sav) -> dict[str: Location]:
+    def _format_sav_(bld) -> dict:
         """ format save for load in file, or get satisfaction format """
-        root: str = sav.root()
-        name: str = sav.name()
-        objects_data = [{'id': id_,
-                         'name': obj.name(),
-                         'pos': tuple(obj.pos),
-                         'rot': [glm.degrees(cord) for cord in obj.rot],
-                         'r_area': obj.render_area,
-                         'scale': tuple(obj.scale),
-                         'tex_id': obj.tex_id,
-                         'vao': obj.vao_name}
-                        for id_, obj in sav.scene.objects_list.items()]
-        light_data = [{'id': id_,
-                       'color': tuple(light.color),
-                       'pos': tuple(light.position),
-                       'Ia': tuple(light.Ia),
-                       'Id': tuple(light.Id),
-                       'Is': tuple(light.Is),
-                       'size': light.size}
-                      for id_, light in sav.scene.lights_list[0].items()]
-        camera = QuantumCore.graphic.camera.camera
-        camera_data = None
-        if camera is not None:
-            camera_data = {
-                'pos': tuple(camera.position),
-                'yaw': camera.yaw,
-                'pitch': camera.pitch,
-                'speed': camera.speed
-            }
+        objects_data = {}
+        for _, value in bld.scene.objects_list.items():
+            objects_data[value.metadata.ID] = value.metadata
+            
         return {
-            'file': {
-                'root': root,
-                'name': name,
-            },
+            'progress': bld.scene.progress_list,
             'time': QuantumCore.time.list_,
-            'scene': {
-                'objects': objects_data,
-                'lights': light_data,
-                'ids': sav.scene.ids,
-                'camera': camera_data
-            }
+            'data': {
+                'camera': QuantumCore.graphic.camera.camera.data,
+                'scene': {
+                    'objects': objects_data,
+                    'lights': bld.scene.lights_list[0],
+                    'time': bld.scene.time
+                }
+            },
+            'events': bld.scene.events_list
         }
     
-    def _dump_(self, save) -> None:
-        """ dump save in fail.sav """
+    def _dump(self, save) -> None:
+        """ dump save in save.sav file """
         if self.scene is not None:
             with open(self.path, 'wb') as file:
                 pickle.dump(save, file)
     
-    def load(self) -> dict[str: Location]:
-        """ load save.sav """
+    def read(self) -> _format_sav_:
+        """ load data from save.sav file """
         if os.path.isfile(path=self.path):
             with open(self.path, 'rb') as file:
                 print(self.path)
                 self.save = pickle.load(file)
                 return self.save
         else:
-            print('not found file')
+            raise FileNotFoundError(f'there is no save with the name {self.name()} in the directory {self.root()}')
     
     def write(self, name=None) -> None:
         """ write save before format method """
         if name is not None:
             self.path = self.root()+'/'+str(name)+'.sav'
         
-        self._dump_(self._format_sav_(self))
+        self._dump(self._format_sav_(self))
     
     def dell(self) -> bool:
-        """ dell file.sav """
+        """ dell save.sav file """
         if os.path.isfile(path=self.path):
             os.remove(self.path)
             return True
         else:
-            print('not found file')
+            string = f'there is no save with the name {self.name()} in the directory {self.root()}'
+            logger.warning(string)
             return False
     
-    def read(self, scene_, import_code_,
-             light_iteration_code='', object_iteration_code='', camera_body_code='',
-             **kwargs) -> bool:
+    def load(self, objects_dictionary: dict[str: BaseModel] = None, *,
+             light_code='', object_iter_code='', camera_code='') -> bool:
         """ easy constructing your scene """
-        if self.scene is None:
-            print('I can`t read save')
-            return False
+        assert self.scene is not None, ' `scene` reference is `None`'
+        assert self.save is not None, " `save` variable should not be None"
+        assert objects_dictionary is not None, "The `objects_dictionary` must be filled in"
         
-        exec(import_code_)
-        
-        sav = self.save['scene']
-        scene_.ids = sav['ids']
+        space = self.save['data']
         QuantumCore.time.list_ = self.save['time']
         
-        def change_id() -> None:
-            for key, old_id in scene_.ids.items():
-                if old_id == i['id']:
-                    scene_.ids[key] = self.new_id
-                    break
-        
-        # lights sources
-        for i in sav['lights']:
-            exec(f"""
-self.new_id = scene_._add_light(
-    Light(
-        color={i['color']},
-        pos={i['pos']},
-        ambient={i['Ia']},
-        diffuse={i['Id']},
-        specular={i['Is']},
-        size={i['size']}
-    )
-)"""); change_id()  # light sources initialisation
-            exec(light_iteration_code)
+        self.scene.lights_list[0] = space['scene']['lights']
+        exec(light_code)
         
         # scene objects
-        for i in sav['objects']:
-            exec(f"""
-self.new_id = scene_._add_object(
-    {kwargs[i['name']] if len(kwargs) is not 0 else i['name']}(
-        scene_.app,
-        pos={i['pos']},
-        rot={i['rot']},
-        render_area={i['r_area']},
-        scale={i['scale']},
-        tex_id="{i['tex_id']}",
-        vao_name="{i['vao']}",
-        sav=True
-    )
-)"""); change_id()  # objects initialisation
-            exec(object_iteration_code)
+        for key, value in space['scene']['objects'].items():
+            obj_class = objects_dictionary[value.object_id]
+            if issubclass(BaseModel, obj_class):
+                self.scene.objects_list[key] = obj_class(metadata=value, sav=True)
+            exec(object_iter_code)
         
-        if sav['camera'] is not None:
-            QuantumCore.graphic.camera.camera.position = glm.vec3(sav['camera']['pos'])
-            QuantumCore.graphic.camera.camera.yaw = sav['camera']['yaw']
-            QuantumCore.graphic.camera.camera.pitch = sav['camera']['pitch']
-            QuantumCore.graphic.camera.camera.speed = sav['camera']['speed']
-            exec(camera_body_code)
+        if space['camera'] is not None:
+            QuantumCore.graphic.camera.camera.data = space['camera']
+        else:
+            QuantumCore.graphic.camera.camera = QuantumCore.graphic.camera.Camera()
+        exec(camera_code)
         
         return True
     

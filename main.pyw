@@ -11,6 +11,7 @@ from GameData import settings  # there is a rewrite
 
 # core elements
 from core.elements.locations import TestScene, Location  # load game scenes
+from core.skripts import Mods
 
 # engine elements imports
 import QuantumCore.time
@@ -32,7 +33,7 @@ class TestGame(App):
         
         self.loading.itrf.step(8, 'Init Engine', 'Game Window')
 
-        """ working with pygame """
+        """ working with pygame window """
         config.APPLICATION_ICO_name = 'QuantumCore.png'
         pygame.display.set_caption(f"{settings.APPLICATION_NAME}    v{settings.APPLICATION_VERSION}"
                                    f"      powered by {QuantumCore.name}({QuantumCore.short_name})")  # for IDE
@@ -40,23 +41,35 @@ class TestGame(App):
                 rf'{config.__ENGINE_DATA__}/{config.APPLICATION_ICO_path}/{config.APPLICATION_ICO_name}'
             )
         )
-        pygame.event.set_grab(True), pygame.mouse.set_visible(False)  # mouse
         
-        """ Init additional variable """
+        """ Additional variables """
         self.clock = pygame.time.Clock()
-        self.test_scene: Location = TestScene(self).on_init()
         
-        """ Load additional variable """
+        QuantumCore.graphic.light.lights_list[0].clear()
+        self.test_scene: Location = TestScene(self).on_init()
         QuantumCore.scene.scene = self.test_scene.load()
-        # QuantumCore.graphic.camera.camera.attach_object = QuantumCore.scene.scene.objects_list[
-        #     QuantumCore.scene.scene.ids['котик']
-        # ] # comment this out to untie the camera from the object
-
+        
+        self.mods = Mods().search()
+        self.mods.load()
+        
         self.loading.itrf.step(98, stage='Init Game', status='additional variables and game font')
         self.spec_keys: dict = {
             'L-Ctrl': False
         }
         logger.debug('GAME ready\n\n')
+        
+        pygame.event.set_grab(True), pygame.mouse.set_visible(False)  # mouse - set static
+    
+    def autosave(self):
+        if settings.autosave:
+            new_name = self.test_scene.builder.name().split('_autosave')[0]+f'_autosave'
+            settings.write_datafile({
+                'game': {
+                    'save_name': new_name
+                }
+            })
+            self.test_scene.builder.write(new_name)
+    
 
     def events(self) -> None:
         """ Event handling """
@@ -64,42 +77,25 @@ class TestGame(App):
 
             """ Exit of App to button "close" """
             if event.type == pygame.QUIT:
-                
-                new_name = self.test_scene.builder.name().split('_autosave')[0]+f'_autosave'
-                settings.write_datafile({
-                    'game': {
-                        'save_name': new_name
-                    }
-                })
-                self.test_scene.builder.write(new_name)
-                
-                QuantumCore.close()
-                exit()
+                self.autosave()
+                App.running = False
 
             elif event.type == pygame.KEYDOWN:
                 """ Detect KEY DOWN """
                 if event.key == pygame.K_LCTRL:
                     self.spec_keys['L-Ctrl'] = True
                     
-                elif self.spec_keys['L-Ctrl'] and event.key == pygame.K_g:
-                    logger.warning('GAME - TEST RISE\n\n')
-                    raise Exception("TEST RISE - USE 'raise - Exception' and call traceback")
                 elif self.spec_keys['L-Ctrl'] and event.key == pygame.K_r:
                     settings.rewrite_config()
                     QuantumCore.window.resset()
-                
+                    
+                elif self.spec_keys['L-Ctrl'] and event.key == pygame.K_g:
+                    logger.warning('GAME - TEST RISE\n\n')
+                    raise Exception("TEST RISE - USE 'raise - Exception' and call traceback")
+
                 elif self.spec_keys['L-Ctrl'] and event.key == pygame.K_q:
-                    
-                    new_name = self.test_scene.builder.name().split('_autosave')[0]+f'_autosave'
-                    settings.write_datafile({
-                        'game': {
-                            'save_name': new_name
-                        }
-                    })
-                    self.test_scene.builder.write(new_name)
-                    
-                    QuantumCore.close()
-                    exit()
+                    self.autosave()
+                    App.running = False
 
             elif event.type == pygame.KEYUP:
                 if event.key == pygame.K_LCTRL:
@@ -126,7 +122,7 @@ class TestGame(App):
         
         QuantumCore.scene.scene.__render__()
         
-        self.ingame_interface.go(int(self.clock.get_fps()))
+        self.ingame_interface.itrf.go(int(self.clock.get_fps()))
 
         # main pygame updating
         pygame.display.flip()

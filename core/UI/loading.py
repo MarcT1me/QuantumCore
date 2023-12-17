@@ -9,7 +9,7 @@ class Head:
     
     def __init__(self):
         self.background = (
-            pygame.transform.scale(pygame.image.load(
+                pygame.transform.scale(pygame.image.load(
                     f'{self.app_path}/core/textures/loading_image.jpg'
                 ), self.sc_size
             ), (0, 0)
