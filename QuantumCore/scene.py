@@ -12,6 +12,8 @@ from QuantumCore.data import config
 
 
 class Location:
+    increment = 1
+    
     def __init__(self, app) -> None:
         """ Base location """
         self.app = app
@@ -34,7 +36,10 @@ class Location:
     def obj(self, obj: BaseModel, abbr: str = None) -> str:
         if abbr is not None:
             if abbr in self.objects_list.keys():
-                raise ValueError(f"Object with abbreviation '{abbr}' already exists")
+                if config.SCENE_YSETB:
+                    raise ValueError(f"Object with abbreviation '{abbr}' already exists")
+                else:
+                    abbr = f'{abbr}{self.increment}'
             self.objects_list[abbr] = obj
             return abbr
         self.objects_list[obj.metadata.ID] = obj
@@ -42,8 +47,11 @@ class Location:
     
     def light(self, light, abbr: str = None) -> str:
         if abbr is not None:
-            if abbr in self.objects_list.keys():
-                raise ValueError(f"Light with abbreviation '{abbr}' already exists")
+            if abbr in self.objects_list.keys() and config.SCENE_YSETB:
+                if config.SCENE_YSETB:
+                    raise ValueError(f"Light with abbreviation '{abbr}' already exists")
+                else:
+                    abbr = f'{abbr}{self.increment}'
             self.lights_list[0][abbr] = light
             return abbr
         _id = uuid.uuid4()
@@ -51,7 +59,7 @@ class Location:
         return _id
 
     @staticmethod
-    def build(app) -> None:
+    def build() -> None:
         """ Write all the objects of the scene to this method """
         ...
     
@@ -66,11 +74,11 @@ class Location:
 
     def load(self):
         """ Load game scene """
-        app = self.app
 
         QuantumCore.window.set_mesh()
         
-        self.build(app)
+        self.build()
+        
         logger.debug('Scene load\n')
         return self
         
@@ -96,6 +104,7 @@ class Builder:
         """ file info """
         self.root: str = lambda: os.path.dirname(self.path)
         self.name: str = lambda: os.path.basename(self.path)[:-4]
+        self.exc: str = lambda: os.path.basename(self.path)[:-4]
         self.size: bin = lambda: os.path.getsize(self.path) if os.path.isfile(path=self.path) else None
     
     @staticmethod
@@ -132,7 +141,8 @@ class Builder:
                 self.save = pickle.load(file)
                 return self.save
         else:
-            raise FileNotFoundError(f'there is no save with the name {self.name()} in the directory {self.root()}')
+            if config.SCENE_YSETB:
+                raise FileNotFoundError(f'there is no save with the name {self.name()} in the directory {self.root()}')
     
     def write(self, name=None) -> None:
         """ write save before format method """
@@ -147,6 +157,8 @@ class Builder:
             os.remove(self.path)
             return True
         else:
+            if config.SCENE_YSETB:
+                raise FileNotFoundError(f'there is no save with the name {self.name()} in the directory {self.root()}')
             string = f'there is no save with the name {self.name()} in the directory {self.root()}'
             logger.warning(string)
             return False

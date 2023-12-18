@@ -81,7 +81,7 @@ class Cat(ExtendedBaseModel):
 
 
 class WoodenWatchTower(ExtendedBaseModel):
-    def __init__(self, metadata: MetaData, *, vao_id='WoodenWatchTower', tex_id='WoodenWatchTower',
+    def __init__(self, metadata: MetaData = None, *, vao_id='WoodenWatchTower', tex_id='WoodenWatchTower',
                  pos=(0, 0, 0), rot=(0, 0, 0), scale=(1, 1, 1), render_area=FAR, sav=False) -> None:
         
         super().__init__(metadata if metadata is not None else\

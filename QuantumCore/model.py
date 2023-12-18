@@ -30,23 +30,16 @@ class MetaData:
         self.pos = glm.vec3(self.pos)
         self.rot = glm.vec3([glm.radians(cord) for cord in self.rot])
         self.scale = glm.vec3(self.scale)
-    
-    
-# d = MetaData(object_id='1', pos=(0, 0, 0), rot=(0, 0, 0), scale=(1, 1, 1), tex_id='1', vao_id='1')
-# print(d)
 
     
 class BaseModel:
-    
-    increment = 0
 
     # vectors, used in update, that calculate
     _vec_x = glm.vec3(1, 0, 0)
     _vec_y = glm.vec3(0, 1, 0)
     _vec_z = glm.vec3(0, 0, 1)
     
-    def __init__(self, metadata: MetaData, *, render_area: int = FAR, sav=False) -> None:
-        BaseModel.increment += sav
+    def __init__(self, metadata: MetaData, *, render_area: int = FAR, sav=None) -> None:
         
         self.metadata = metadata
 
@@ -106,7 +99,7 @@ class ExtendedBaseModel(BaseModel):
         1) inherit to this class
         2) use super in init and rewrite methods"""
 
-    def __init__(self, metadata: MetaData, *, render_area: int = FAR):
+    def __init__(self, metadata: MetaData, *, render_area: int = FAR, sav=None):
         """ init your model.
 
 to do so:
@@ -216,14 +209,26 @@ ATTENTION!!! ModelName to be match in all place ATTENTION!!!"""
 
 
 class Cube(ExtendedBaseModel):
-    def __init__(self, tex_id='empty',
-                 pos=(0, 0, 0), rot=(0, 0, 0), scale=(1, 1, 1)):
+    def __init__(self, metadata: MetaData = None, *,
+                 tex_id='empty', pos=(0, 0, 0), rot=(0, 0, 0), scale=(1, 1, 1), render_area=FAR, sav=None):
         
-        super().__init__(MetaData(pos=pos, rot=rot, scale=scale,
-                                  object_id=self.name(), vao_id='Cube', tex_id=tex_id))
+        super().__init__(metadata if metadata is not None else\
+                             MetaData(
+                                 pos=pos,
+                                 rot=rot,
+                                 scale=scale,
+                                 object_id=self.name(),
+                                 vao_id='Cube',
+                                 tex_id=tex_id
+                             ),
+                         render_area=render_area,
+                         sav=sav
+                         )
 
 
-# in development
+"""
+ In development
+"""
 class SkyBox(BaseModel):
     def __init__(self, pos=(0, 0, 0), rot=(0, 0, 0), scale=(1, 1, 1)):
         

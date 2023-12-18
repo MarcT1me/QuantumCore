@@ -1,7 +1,6 @@
 
 # other
 from loguru import logger
-import glm
 
 from QuantumCore.data.config import __APPLICATION_PATH__
 # engine elements import
@@ -23,14 +22,14 @@ class TestScene(Location):
 
     def on_init(self):
         self.app.loading.itrf.step(16, status='models path')
-        # CustomVBO_name['WoodenWatchTower'] = (
-        #     '2f 3f 3f',
-        #     ['in_texcoord_0', 'in_normal', 'in_position'],
-        #     f'{__APPLICATION_PATH__}/{settings.MODEL_path}/WoodenWatchTower', 'obj', 'jpg')
-        # CustomVBO_name['Cat'] = (
-        #     '2f 3f 3f',
-        #     ['in_texcoord_0', 'in_normal', 'in_position'],
-        #     rf'{__APPLICATION_PATH__}/{settings.MODEL_path}/cat', 'obj', 'jpg')
+        CustomVBO_name['WoodenWatchTower'] = (
+            '2f 3f 3f',
+            ['in_texcoord_0', 'in_normal', 'in_position'],
+            f'{__APPLICATION_PATH__}/{settings.MODEL_path}/WoodenWatchTower', 'obj', 'jpg')
+        CustomVBO_name['Cat'] = (
+            '2f 3f 3f',
+            ['in_texcoord_0', 'in_normal', 'in_position'],
+            rf'{__APPLICATION_PATH__}/{settings.MODEL_path}/cat', 'obj', 'jpg')
         CustomVBO_name['Earth'] = (
             '2f 3f 3f',
             ['in_texcoord_0', 'in_normal', 'in_position'],
@@ -38,7 +37,7 @@ class TestScene(Location):
         self.app.loading.itrf.step(45, status='Game Canvas')
         return self
 
-    def build(self, app) -> None:
+    def build(self) -> None:
         
         if self.builder.read() is not None:
             """ if scene.sav load successful """
@@ -73,14 +72,15 @@ self.scene.app.loading.itrf.step(93, stage='Load game scene', status='sav - came
             self.light(Light(pos=(25, 25, 25), ambient=.2, diffuse=1.5, specular=.5))
             self.light(Light(size=15), 'lighter')
             
-            for x in range(-5, 5):
-                for y in range(-5, 5):
-                    for z in range(-5, 5):
-                        self.obj(Earth(pos=(10*x, 10*y, 10*z)))
+            self.obj(Cube(pos=(40, 0, 40), scale=(40, 1, 40), tex_id='wall1'))
+            self.obj(MovingCube(pos=(15, 10, 15), scale=(5, 5, 5), tex_id='test1'))
+            self.obj(WoodenWatchTower(pos=(60, -1, 30), scale=(3, 3, 3)))
+            self.obj(Earth(pos=(30, 10, 60), scale=(2, 2, 2)))
+            self.obj(MovingCube(pos=(44, 10, 44), scale=(5, 5, 5), tex_id='empty'))
             
-            QuantumCore.graphic.camera.camera.data.pos = glm.vec3(32, 33, -87)
-            QuantumCore.graphic.camera.camera.data.yaw = 122
-            QuantumCore.graphic.camera.camera.data.pitch = -21
+            QuantumCore.graphic.camera.camera.data = QuantumCore.graphic.camera.Camera.Snap(
+                pos=(-7, 7, -7), yaw=45, pitch=-15
+            )
             
             self.builder.write()
             

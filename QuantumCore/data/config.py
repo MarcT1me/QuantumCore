@@ -15,8 +15,9 @@ APPLICATION_ICO_path, APPLICATION_ICO_name = r'', 'standard.png'  # dynamic
 """
  # constant  # SETTINGS.CONFIG
 """
-PRE_INIT: bool      # constant  # .CONFIG
-IS_RELEASE: bool    # constant  # .CONFIG
+PRE_INIT: bool       # constant  # .CONFIG
+IS_RELEASE: bool     # constant  # .CONFIG
+SCENE_YSETB: bool    # constant  # .CONFIG
 
 """ Screen settings """
 fps: int = 0              # easy
