@@ -115,7 +115,7 @@ class Earth(ExtendedBaseModel):
 
         self.m_model = glm.rotate(self.__get_model_matrix__(),
                                   QuantumCore.time.list_['earth animation'] * 0.5, glm.vec3(0, 1, 0))
-
+        
         super().update()
 
     def light_update(self) -> None: super().update()

@@ -1,5 +1,4 @@
 import time
-from typing import Callable
 
 import pygame
 from pygame._sdl2 import Window, Renderer, Texture
@@ -14,7 +13,8 @@ class ConfirmWin:
                  size=(300, 200),
                  caption='confirmation window',
                  opacity=1,
-                 pos: tuple[int, int] = None) -> None:
+                 pos: tuple[int, int] = None
+                 ) -> None:
         """ init confirm window class """
         self.surf: pygame.Surface = pygame.Surface(size=size)
         
@@ -72,10 +72,11 @@ class Button:
                  bgcolor_not_press: tuple[int, int, int] = (120, 120, 120),
                  # FUNCTIONAL
                  on_press=lambda: None,
+                 on_clamping=lambda: None,
                  on_release=lambda: None,
                  release_long: float = 1
                  ) -> None:
-        """ Init Button class """
+        """ INIT a button class and assigning values. """
         
         """ RECT """
         self.pos: tuple = pos
@@ -92,7 +93,7 @@ class Button:
         self.font = pygame.font.SysFont(font, self.text_size, bold=text_bold).render(self.text, True, self.text_clor)
         self.font_size: tuple = self.font.get_size()
         self.text_pos: tuple = (
-            text_pos[0]-self.font.get_width()//2, text_pos[1]-self.font.get_height()//2
+            text_pos[0]-self.font.get_width() // 2, text_pos[1]-self.font.get_height() // 2
         ) if text_center else text_pos
         
         """ SURFACE """
@@ -107,18 +108,23 @@ class Button:
         self.release_long = release_long
         
         self.on_press = on_press
+        self.on_clamping = on_clamping
         self.on_release = on_release
         self.roster.append(self)
-        
+    
+    def on_init(self):
+        """ CREATING a button using data """
+    
     def event(self, event: pygame.event.Event) -> None:
         """ События кнопки, нажатие (короткое/долгое) и реализация функционала """
         if self.release_start is not None:
-            if self.release_start + self.release_long <= time.time():
+            if self.release_start+self.release_long <= time.time():
                 """ Долгое удержание """
-                self.on_release()  # долгое нажатие
+                self.on_clamping()  # долгое нажатие
                 
                 self.release_start = None  # сброс значений нажатия
-                
+                return
+        
         if event.type == pygame.MOUSEBUTTONDOWN:
             """ Нажатие """
             if pygame.rect.Rect(*self.pos, *self.size).collidepoint(pygame.mouse.get_pos()):
@@ -127,16 +133,16 @@ class Button:
                 
                 if self.release_start is None:  # ставлю значение нажатия
                     self.release_start = time.time()
-                    
+            
             else:
                 self.surf_color = self.bgcolor_not_press
-                
+        
         elif event.type == pygame.MOUSEBUTTONUP:
             """ Отжатие """
-            self.surf_color = self.bgcolor_not_press    # изменение цвета на не активное
+            self.surf_color = self.bgcolor_not_press  # изменение цвета на не активное
             
             if self.release_start is not None:
-                if self.release_start + self.release_long >= time.time():
+                if self.release_start+self.release_long >= time.time():
                     """ Недолгое удержание """
                     self.on_press()  # недолгое нажатие
                 
@@ -158,14 +164,13 @@ class Button:
     def roster_event(event):
         for btn in Button.roster:
             btn.event(event)
-
+    
     @staticmethod
     def roster_render(win):
         for btn in Button.roster:
             btn.render(win)
-        
+    
     @staticmethod
     def roster_relies():
         for btn in Button.roster:
             btn.relies()
-        

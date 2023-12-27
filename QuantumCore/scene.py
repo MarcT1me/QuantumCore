@@ -28,11 +28,11 @@ class Location:
         
         self.builder = None  # builder thad load scene from file
         
-        self.render_area = config.FAR*1.2
+        self.render_area = config.FAR * 1.2
         self.time = {}
         self.progress_list = {}
         self.events_list = {}
-
+    
     def obj(self, obj: BaseModel, abbr: str = None) -> str:
         if abbr is not None:
             if abbr in self.objects_list.keys():
@@ -47,7 +47,7 @@ class Location:
     
     def light(self, light, abbr: str = None) -> str:
         if abbr is not None:
-            if abbr in self.objects_list.keys() and config.SCENE_YSETB:
+            if abbr in self.objects_list.keys():
                 if config.SCENE_YSETB:
                     raise ValueError(f"Light with abbreviation '{abbr}' already exists")
                 else:
@@ -57,7 +57,7 @@ class Location:
         _id = uuid.uuid4()
         self.lights_list[0][_id] = light
         return _id
-
+    
     @staticmethod
     def build() -> None:
         """ Write all the objects of the scene to this method """
@@ -65,31 +65,31 @@ class Location:
     
     def unload(self) -> None:
         """ Unload scene """
-
+        
         """ clear all graphic lists """
         QuantumCore.graphic.vbo.CustomVBO_name.clear()
         QuantumCore.graphic.texture.CustomTexture_name.clear()
         QuantumCore.widgets.Button.roster_relies()
         self.lights_list[0].clear()
-
+    
     def load(self):
         """ Load game scene """
-
+        
         QuantumCore.window.set_mesh()
         
         self.build()
         
         logger.debug('Scene load\n')
         return self
-        
+    
     def __update__(self) -> None:
         QuantumCore.graphic.camera.camera.update()
-        
+    
     def __render__(self) -> None:
         QuantumCore.window.context.clear(color=(0.08, 0.16, 0.18, 1.0))
         [entity.__render__() for entity in self.objects_list.values()]
-    
-    
+
+
 scene: Location = None
 loading: int = True
 
@@ -113,19 +113,19 @@ class Builder:
         objects_data = {}
         for _, value in bld.scene.objects_list.items():
             objects_data[value.metadata.ID] = value.metadata
-            
+        
         return {
             'progress': bld.scene.progress_list,
-            'time': QuantumCore.time.list_,
-            'data': {
+            'time':     QuantumCore.time.list_,
+            'data':     {
                 'camera': QuantumCore.graphic.camera.camera.data,
-                'scene': {
+                'scene':  {
                     'objects': objects_data,
-                    'lights': bld.scene.lights_list[0],
-                    'time': bld.scene.time
+                    'lights':  bld.scene.lights_list[0],
+                    'time':    bld.scene.time
                 }
             },
-            'events': bld.scene.events_list
+            'events':   bld.scene.events_list
         }
     
     def _dump(self, save) -> None:
@@ -164,7 +164,8 @@ class Builder:
             return False
     
     def load(self, objects_dictionary: dict[str: BaseModel] = None, *,
-             light_code='', object_code='', camera_code='') -> bool:
+             light_code='', object_code='', camera_code=''
+             ) -> bool:
         """ easy constructing your scene """
         assert self.scene is not None, ' `scene` reference is `None`'
         assert self.save is not None, " `save` variable should not be None"
@@ -172,7 +173,7 @@ class Builder:
         
         space = self.save['data']
         QuantumCore.time.list_ = self.save['time']
-
+        
         for key, value in space['scene']['lights'].items():
             self.scene.lights_list[0][key] = value
             exec(light_code)
@@ -191,4 +192,3 @@ class Builder:
         exec(camera_code)
         
         return True
-    

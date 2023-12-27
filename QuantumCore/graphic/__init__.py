@@ -22,7 +22,7 @@ class __GRAPHIC:
     pygame.display.gl_set_attribute(pygame.GL_CONTEXT_MINOR_VERSION, 3)
     pygame.display.gl_set_attribute(pygame.GL_CONTEXT_PROFILE_MASK, pygame.GL_CONTEXT_PROFILE_CORE)
     
-    interface = None  # type: QuantumCore.__Interface
+    interface = None  # type: QuantumCore.__AdvancedInterface
     context = None  # type: moderngl.Context
     
     def __init__(self, flags):
@@ -42,13 +42,16 @@ class __GRAPHIC:
         if (config.full_screen and not pygame.display.is_fullscreen()) and config.full_screen:
             pygame.display.toggle_fullscreen()
         pygame.display.flip()
-        config.SCREEN_size = pygame.display.get_window_size()
+        
+        w_size = pygame.display.get_window_size()
+        config.SCREEN_size[0] = w_size[0]
+        config.SCREEN_size[1] = w_size[1]
 
         """ INIT GLSL context """
         self.context = moderngl.create_context()
         self.context.enable(flags=self.flags['glsl'])  # flags=moderngl.DEPTH_TEST | moderngl.CULL_FACE | moderngl.BLEND
         self.context.blend_func = moderngl.SRC_ALPHA, moderngl.ONE_MINUS_SRC_ALPHA
-        self.context.viewport = (0, 0, config.SCREEN_size[0], config.SCREEN_size[1])
+        self.context.viewport = (0, 0, *config.SCREEN_size)
     
     def set_mesh(self):
         """ INIT Engine core """

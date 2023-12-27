@@ -77,6 +77,7 @@ self.scene.app.loading.itrf.step(93, stage='Load game scene', status='sav - came
             self.obj(WoodenWatchTower(pos=(60, -1, 30), scale=(3, 3, 3)))
             self.obj(Earth(pos=(30, 10, 60), scale=(2, 2, 2)))
             self.obj(MovingCube(pos=(44, 10, 44), scale=(5, 5, 5), tex_id='empty'))
+            self.obj(Cat(pos=(7.0, 0.0, 44.0), rot=(0, 0, 125)))
             
             QuantumCore.graphic.camera.camera.data = QuantumCore.graphic.camera.Camera.Snap(
                 pos=(-7, 7, -7), yaw=45, pitch=-15

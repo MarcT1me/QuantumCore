@@ -15,7 +15,6 @@ class Mesh:
         """ delete data from GRAM """
         self.vao.__destroy__()
         self.texture.__destroy__()
-        QuantumCore.window.interface.frame_tex.release()
         QuantumCore.graphic.vbo.CustomVBO_name.clear()
 
 

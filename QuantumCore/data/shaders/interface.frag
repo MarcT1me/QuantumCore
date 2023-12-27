@@ -1,20 +1,19 @@
 #version 330 core
 
-uniform sampler2D interface_texture;
-uniform vec3 colorkey;
-
 in vec2 uvs;
 out vec4 f_color;
 
+uniform sampler2D interfaceTexture;
+uniform float globalAlpha = 1.0;
+uniform vec3 colorkey = vec3(0.0);
+uniform bool useColorkey = false;
+
 void main() {
-    vec2 sample_pos = uvs;
-    vec4 tex = texture(interface_texture, sample_pos);
+    vec4 tex = texture(interfaceTexture, uvs);
 
-    float alpha = tex.a-0.2;
-    vec3 tex_rgb = tex.rgb;
-
-    if (tex_rgb == vec3(colorkey)) {
-        alpha = 0.0;
-    };
-    f_color = vec4(tex_rgb, alpha);
+    if (tex.rgb == colorkey && useColorkey) {
+        f_color = tex * 0.0;
+    } else {
+        f_color = tex * globalAlpha;
+    }
 }

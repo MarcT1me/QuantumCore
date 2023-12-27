@@ -6,12 +6,12 @@
       1600,
       900
     ],
-    "VSYNC": true,
+    "VSYNC": false,
     "DISPLAY_num": 0,
     "FOV": 75
   },
   "game": {
-    "save_name": "test_scene",
+    "save_name": "test_scene2",
     "autosave": false
   }
 }

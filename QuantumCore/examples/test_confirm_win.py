@@ -2,15 +2,11 @@ import pygame
 import glm
 
 # import Engine
-try:
-    import QuantumCore
-except Exception as err:
-    import traceback; traceback.print_exception(err)
-    input()
-
-pygame.init()
+import QuantumCore
 
 if __name__ == '__main__':
+    pygame.init()
+    
     img = pygame.image.load(f'{QuantumCore.config.__ENGINE_DATA__}/textures/test_texture.jpg')
     
     surf = pygame.Surface(img.get_size())
@@ -19,17 +15,20 @@ if __name__ == '__main__':
     # Окно игры: размер, позиция
     win = pygame.display.set_mode((200, 200))
     cwin = []
+    
+    
     def add():
         cwin.append(
             QuantumCore.widgets.ConfirmWin(
-                size=surf.get_size()*glm.vec2(0.5),
+                size=surf.get_size() * glm.vec2(0.5),
                 opacity=0.5,
-                pos=(-surf.get_width()*0.5//2, 1080//2-100)
+                pos=(-surf.get_width() * 0.5 // 2, 1080 // 2-100)
             ).set(
                 surf
             )
         )
         cwin[-1].win.resizable = True
+    
     
     clock = pygame.time.Clock()
     
@@ -39,7 +38,7 @@ if __name__ == '__main__':
     k = [0, 0, 0, 0]
     
     QuantumCore.widgets.Button(
-        on_press= add,
+        on_press=add,
         pos=(0, 50),
         size=(200, 150)
     )
@@ -68,12 +67,11 @@ if __name__ == '__main__':
                     k = [0, 0, 0, 0]
                 
                 elif event.type == pygame.KEYDOWN:
-                    
                     if event.key == pygame.K_UP:
                         k1[0] = 1
                     elif event.key == pygame.K_DOWN:
                         k1[1] = 1
-                        
+                    
                     elif event.key == pygame.K_w:
                         k[0] = 1
                     elif event.key == pygame.K_a:
@@ -82,12 +80,11 @@ if __name__ == '__main__':
                         k[2] = 1
                     elif event.key == pygame.K_d:
                         k[3] = 1
-                        
+                    
                     elif event.key == pygame.K_RETURN:
                         event_window.hide()
                 
                 elif event.type == pygame.KEYUP:
-                    
                     if event.key == pygame.K_UP:
                         k1[0] = 0
                     elif event.key == pygame.K_DOWN:
@@ -108,24 +105,26 @@ if __name__ == '__main__':
                 event_window.opacity += .01
             if k1[1]:
                 event_window.opacity -= .01
-                
+            
             if k[0]:
-                event_window.position = event_window.position[0], event_window.position[1] - 5
+                event_window.position = event_window.position[0], event_window.position[1]-5
             if k[1]:
-                event_window.position = event_window.position[0] - 5, event_window.position[1]
+                event_window.position = event_window.position[0]-5, event_window.position[1]
             if k[2]:
-                event_window.position = event_window.position[0], event_window.position[1] + 5
+                event_window.position = event_window.position[0], event_window.position[1]+5
             if k[3]:
-                event_window.position = event_window.position[0] + 5, event_window.position[1]
-        except:
-            pass
+                event_window.position = event_window.position[0]+5, event_window.position[1]
+        except: pass
         
         """ render """
         win.fill('sea green')
         try:
-            win.blit(f1.render(f'opacity = {round(event_window.opacity, 2)}, position = {event_window.position}', True, 'white'), (0, 0))
-        except:
-            pass
+            win.blit(
+                f1.render(
+                    f'opacity = {round(event_window.opacity, 2)}, position = {event_window.position}', True, 'white'
+                ), (0, 0)
+            )
+        except: pass
         QuantumCore.widgets.Button.roster_render(win)
         
         pygame.display.flip()
