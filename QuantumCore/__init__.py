@@ -16,10 +16,11 @@ from QuantumCore.data import config
 import QuantumCore.widgets
 from QuantumCore.graphic.interface import __AdvancedInterface
 import QuantumCore.UI
+import QuantumCore.model
 
 window = None  # type: QuantumCore.graphic.__GRAPHIC
 
-__version = '0.11'
+__version = '0.12'
 name, short_name = 'QuantumCore', 'PyQC'
 
 logger.info(f'\n\n{name}: {__version=}\n')
@@ -27,7 +28,7 @@ logger.warning('This is an LEARN project written by an ordinary student')
 
 
 def init(*,
-         flags=None
+         flags: dict = None
          ) -> None:
     global window
     """ Init Engine """

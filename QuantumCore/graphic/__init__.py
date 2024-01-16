@@ -12,6 +12,7 @@ import QuantumCore.graphic.light
 import QuantumCore.graphic.mash
 import QuantumCore.graphic.texture
 import QuantumCore.graphic.vbo
+from QuantumCore.graphic.interface import __AdvancedInterface
 # engine config import
 from QuantumCore.data import config
 
@@ -22,8 +23,12 @@ class __GRAPHIC:
     pygame.display.gl_set_attribute(pygame.GL_CONTEXT_MINOR_VERSION, 3)
     pygame.display.gl_set_attribute(pygame.GL_CONTEXT_PROFILE_MASK, pygame.GL_CONTEXT_PROFILE_CORE)
     
-    interface = None  # type: QuantumCore.__AdvancedInterface
     context = None  # type: moderngl.Context
+    mash = None  # type: QuantumCore.graphic.mash.Mesh
+
+    scene = None  # type: QuantumCore.scene.QCScene
+    interface = None  # type: QuantumCore.__AdvancedInterface
+    camera = None  # type: QuantumCore.graphic.camera.Camera
     
     def __init__(self, flags):
         """ Init engine graphic
@@ -55,8 +60,8 @@ class __GRAPHIC:
     
     def set_mesh(self):
         """ INIT Engine core """
-        QuantumCore.graphic.camera.camera = QuantumCore.graphic.camera.Camera()
-        QuantumCore.graphic.mash.mesh = QuantumCore.graphic.mash.Mesh()
+        self.camera = QuantumCore.graphic.camera.Camera()
+        self.mash = QuantumCore.graphic.mash.Mesh()
     
         logger.info(f"Engine graphic - init\n"
                     f"screen: size = {config.SCREEN_size},"
@@ -65,9 +70,9 @@ class __GRAPHIC:
                     f"context: size = {self.context.screen.size},"
                     f" GPU = {self.context.info['GL_RENDERER']}\n"
                     f"mesh: "
-                    f"shaders_list = {QuantumCore.graphic.mash.mesh.vao.program.programs.keys()},\n"
-                    f"      VAOs_list = {QuantumCore.graphic.mash.mesh.vao.VAOs.keys()},\n"
-                    f"      textures_list = {QuantumCore.graphic.mash.mesh.texture.textures.keys()}\n")
+                    f"shaders_list = {self.mash.vao.program.programs.keys()},\n"
+                    f"      VAOs_list = {self.mash.vao.VAOs.keys()},\n"
+                    f"      textures_list = {self.mash.texture.textures.keys()}\n")
     
     def resset(self) -> None:
         """ Resset graphic, requires initialization of classes camera and scene """
@@ -75,9 +80,7 @@ class __GRAPHIC:
         logger.info(f'screen size = {config.SCREEN_size},  context size= {self.context.screen.size}')
         
         """ REWRITE Engine variables """
-        if QuantumCore.graphic.camera.camera is not None:
-            QuantumCore.graphic.camera.camera._aspect_ratio = config.SCREEN_size[0] / config.SCREEN_size[1]
-            QuantumCore.graphic.camera.camera.m_proj = QuantumCore.graphic.camera.camera._get_projection_matrix_
+        if self.camera is not None: self.camera.m_proj = self.camera._get_projection_matrix_
     
         logger.debug(f'graphics - restart\n\n')
     

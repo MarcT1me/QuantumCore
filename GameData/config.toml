@@ -1,0 +1,16 @@
+# game settings
+version = "0.5.2"
+
+# engene data tabl
+[engine]
+fps = 0
+full_screen = false
+SCREEN_size = [1600, 900]
+VSYNC = false
+DISPLAY_num = 0
+FOV = 75
+
+# game data tabl
+[game]
+save_name = "test_scene2"
+autosave = false

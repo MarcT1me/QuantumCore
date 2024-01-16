@@ -23,11 +23,11 @@ SCENE_YSETB: bool    # constant  # .CONFIG
 fps: int = 0              # easy
 full_screen: bool = True  # easy
 DISPLAY_num: int = 0      # heavy
-_, SCREEN_size = display_init(), get_desktop_sizes()[DISPLAY_num]  # dynamic
+_, SCREEN_size = display_init(), list(get_desktop_sizes()[DISPLAY_num])  # dynamic
 
 """ Render settings """
 SHADER_NAME: tuple = 'default', 'default'  # heavy  # .CONFIG
-__CONTEXT_SIZE__: tuple = SCREEN_size      # heavy
+__CONTEXT_SIZE__: list = SCREEN_size      # heavy
 VSYNC: bool = False                        # heavy
 
 """ Mouse & KeyBord settings """

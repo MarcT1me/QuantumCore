@@ -4,3 +4,4 @@ pyglm
 numpy
 pywavefront
 loguru
+toml

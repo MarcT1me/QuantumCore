@@ -10,7 +10,7 @@ from QuantumCore.app import App, mainloop
 from GameData import settings  # there is a rewrite
 
 # core elements
-from core.elements.locations import TestScene, Location  # load game scenes
+from core.elements.locations import TestLocation, TestScene,  QCLocation  # load game scenes
 from core.skripts import Mods
 
 # engine elements imports
@@ -45,9 +45,9 @@ class TestGame(App):
         """ Additional variables """
         self.clock = pygame.time.Clock()
         
-        QuantumCore.graphic.light.lights_list[0].clear()
-        self.test_scene: Location = TestScene(self).on_init()
-        QuantumCore.scene.scene = self.test_scene.load()
+        self.test_location: QCLocation = TestLocation()
+        QuantumCore.window.scene = TestScene(locations={'test': self.test_location}, app=self).on_init()
+        QuantumCore.window.scene.set()
         
         self.mods = Mods().search()
         self.mods.load()
@@ -62,14 +62,13 @@ class TestGame(App):
     
     def autosave(self):
         if settings.autosave:
-            new_name = self.test_scene.builder.name().split('_autosave')[0]+f'_autosave'
+            new_name = self.test_location.builder.name().split('_autosave')[0]+f'_autosave'
             settings.write_datafile({
                 'game': {
                     'save_name': new_name
                 }
             })
-            self.test_scene.builder.write(new_name)
-    
+            self.test_location.builder.write(new_name)
 
     def events(self) -> None:
         """ Event handling """
@@ -115,14 +114,14 @@ class TestGame(App):
         self.get_time()
         
         """ main update """
-        QuantumCore.scene.scene.__update__()
+        QuantumCore.window.scene.__update__()
 
     def update_window(self) -> None:
         """ Rendering the application itself (GPU) """
         
-        QuantumCore.scene.scene.__render__()
+        QuantumCore.window.scene.__render__()
         
-        self.ingame_interface.itrf.go(int(self.clock.get_fps()))
+        # self.ingame_interface.itrf.go(int(self.clock.get_fps()))
 
         # main pygame updating
         pygame.display.flip()

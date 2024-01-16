@@ -1,10 +1,9 @@
-
 # other
 from loguru import logger
 
 from QuantumCore.data.config import __APPLICATION_PATH__
 # engine elements import
-from QuantumCore.scene import Location, Builder
+from QuantumCore.scene import QCLocation, Builder, QCScene
 import QuantumCore.graphic.light
 from QuantumCore.graphic.light import Light
 from QuantumCore.graphic.vbo import CustomVBO_name
@@ -14,12 +13,11 @@ from GameData import settings
 from core.elements.entities import Cat, Cube, MovingCube, WoodenWatchTower, Earth
 
 
-class TestScene(Location):
-    def __init__(self, app) -> None:
-        super().__init__(app)
-        app.loading.itrf.step(15, stage='Init game Scene', status='builder')
-        self.builder = Builder(rf'{__APPLICATION_PATH__}/{settings.SAVES_path}/{settings.save_name}.sav', scene_=self)
-
+class TestScene(QCScene):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.app.loading.itrf.step(15, stage='Init game Scene', status='builder')
+    
     def on_init(self):
         self.app.loading.itrf.step(16, status='models path')
         CustomVBO_name['WoodenWatchTower'] = (
@@ -36,38 +34,50 @@ class TestScene(Location):
             rf'{__APPLICATION_PATH__}/{settings.MODEL_path}/earth', 'obj', 'png')
         self.app.loading.itrf.step(45, status='Game Canvas')
         return self
+    
+    def set(self):
+        self.app.loading.itrf.step(65, stage='Load game scene', status='Scene - build')
+        super().set()
+    
+    def __update__(self) -> None:
+        super().__update__()
+        QuantumCore.window.scene.locations['test'].lights_list['lighter'].position =\
+            QuantumCore.window.camera.data.pos
 
+
+class TestLocation(QCLocation):
+    def __init__(self) -> None:
+        super().__init__()
+        self.builder = Builder(rf'{__APPLICATION_PATH__}/{settings.SAVES_path}/{settings.save_name}.sav', scene_=self)
+    
     def build(self) -> None:
-        
         if self.builder.read() is not None:
             """ if scene.sav load successful """
             
             self.builder.load(
                 {
-                    'Earth': Earth,
-                    'Cat': Cat,
-                    'Cube':Cube,
-                    'MovingCube': MovingCube,
+                    'Earth':            Earth,
+                    'Cat':              Cat,
+                    'Cube':             Cube,
+                    'MovingCube':       MovingCube,
                     'WoodenWatchTower': WoodenWatchTower
                 },
                 light_code="""
-self.scene.app.loading.itrf.step(45, stage='Load game scene', status='sav - lighting')
+QuantumCore.window.scene.app.loading.itrf.step(45, stage='Load game scene', status='sav - lighting')
             """,
                 object_code="""
 lp = 0
 if lp:
-    self.scene.app.loading.itrf.step(67, stage='Load game scene', status='sav - objects')
+    QuantumCore.window.scene.app.loading.itrf.step(67, stage='Load game scene', status='sav - objects')
     lp = 1
             """,
                 camera_code="""
-self.scene.app.loading.itrf.step(93, stage='Load game scene', status='sav - camera')
+QuantumCore.window.scene.app.loading.itrf.step(93, stage='Load game scene', status='sav - camera')
             """
             )  # use builder, that easy constructing scene
-                        
+            
             logger.success('TestScene - construct .sav\n\n')
         else:
-            self.app.loading.itrf.step(65, stage='Load game scene', status='Scene - build')
-            
             """ in other a build scene in code """
             self.light(Light(pos=(25, 25, 25), ambient=.2, diffuse=1.5, specular=.5))
             self.light(Light(size=15), 'lighter')
@@ -79,16 +89,10 @@ self.scene.app.loading.itrf.step(93, stage='Load game scene', status='sav - came
             self.obj(MovingCube(pos=(44, 10, 44), scale=(5, 5, 5), tex_id='empty'))
             self.obj(Cat(pos=(7.0, 0.0, 44.0), rot=(0, 0, 125)))
             
-            QuantumCore.graphic.camera.camera.data = QuantumCore.graphic.camera.Camera.Snap(
+            QuantumCore.window.camera.data = QuantumCore.graphic.camera.Camera.Snap(
                 pos=(-7, 7, -7), yaw=45, pitch=-15
             )
             
             self.builder.write()
             
             logger.warning('TestScene - build\n\n')
-    
-    def __update__(self) -> None:
-        super().__update__()
-        
-        self.lights_list[0]['lighter'].position = QuantumCore.graphic.camera.camera.data.pos
-        

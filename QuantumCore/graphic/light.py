@@ -1,11 +1,11 @@
-
-# math
 import glm
+from dataclasses import dataclass, field
 
 
 class Light:
     def __init__(self, *, color=(1, 1, 1), pos=(3, 3, -3),
-                 ambient=0.1, diffuse=0.8, specular=1.0, size=32) -> None:
+                 ambient=0.1, diffuse=0.8, specular=1.0, size=32
+                 ) -> None:
         self.color = glm.vec3(color)
         # instances
         self.position = glm.vec3(pos)
@@ -15,4 +15,23 @@ class Light:
         self.size: int = size
 
 
-lights_list: dict[str: Light] = [{'0': Light()},]
+@dataclass
+class LightArray:
+    array: dict[Light] = field(init=True, default_factory=lambda: {'1': Light()})
+    
+    def __getitem__(self, item: str) -> Light:
+        return self.array[item]
+    
+    def __setitem__(self, key: str, value: Light) -> None:
+        self.array[key] = value
+    
+    @property
+    def roster(self):
+        return self.array
+    
+    @roster.setter
+    def roster(self, array=None) -> None:
+        self.array = array if array is not None else {'1': Light()}
+    
+    @property
+    def values(self): return self.array.values()

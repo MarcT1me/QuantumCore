@@ -7,7 +7,7 @@ import numpy as np
 
 # engine elements imports
 from QuantumCore.data.config import FAR
-from QuantumCore.model import ExtendedBaseModel, Cube, MetaData
+from QuantumCore.model import ExtendedQCModel, Cube, MetaData
 import QuantumCore.time
 
 
@@ -17,11 +17,11 @@ class MovingCube(Cube):
 
     def update(self) -> None:
 
-        m_model = glm.rotate(self.__get_model_matrix__(),
+        m_model = glm.rotate(self._get_model_matrix_(),
                              np.sin(QuantumCore.time.list_['cube animation'] * 0.5), glm.vec3(1, 0, 0))
         m_model = glm.rotate(m_model,
                              np.cos(QuantumCore.time.list_['cube animation'] * 0.5), glm.vec3(0, -1, 0))
-        self.m_model = glm.rotate(m_model,
+        self._m_model_ = glm.rotate(m_model,
                                   np.sin(QuantumCore.time.list_['cube animation'] * 0.5), glm.vec3(0, 0, 1))
 
         super().update()
@@ -29,7 +29,7 @@ class MovingCube(Cube):
     def light_update(self) -> None: super().update()
 
 
-class Cat(ExtendedBaseModel):
+class Cat(ExtendedQCModel):
     def __init__(self, metadata: MetaData = None, *, vao_id='Cat', tex_id='Cat',
                  pos=(0, 0, 0), rot=(0, 0, 0), scale=(1, 1, 1), render_area=FAR, sav=False) -> None:
         
@@ -74,13 +74,13 @@ class Cat(ExtendedBaseModel):
         else:
             self.speed = 0.01
 
-        self.m_model = self.__get_model_matrix__()
+        self._m_model_ = self._get_model_matrix_()
         super().update()
 
     def light_update(self) -> None: super().update()
 
 
-class WoodenWatchTower(ExtendedBaseModel):
+class WoodenWatchTower(ExtendedQCModel):
     def __init__(self, metadata: MetaData = None, *, vao_id='WoodenWatchTower', tex_id='WoodenWatchTower',
                  pos=(0, 0, 0), rot=(0, 0, 0), scale=(1, 1, 1), render_area=FAR, sav=False) -> None:
         
@@ -96,7 +96,7 @@ class WoodenWatchTower(ExtendedBaseModel):
                          render_area=render_area)
 
 
-class Earth(ExtendedBaseModel):
+class Earth(ExtendedQCModel):
     def __init__(self, metadata: MetaData = None, *, vao_id='Earth', tex_id='Earth',
                  pos=(0, 0, 0), rot=(0, 0, 0), scale=(1, 1, 1), render_area=FAR, sav=False) -> None:
         
@@ -113,7 +113,7 @@ class Earth(ExtendedBaseModel):
 
     def update(self) -> None:
 
-        self.m_model = glm.rotate(self.__get_model_matrix__(),
+        self._m_model_ = glm.rotate(self._get_model_matrix_(),
                                   QuantumCore.time.list_['earth animation'] * 0.5, glm.vec3(0, 1, 0))
         
         super().update()

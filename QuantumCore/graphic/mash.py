@@ -1,4 +1,3 @@
-
 # engine elements
 import QuantumCore.graphic
 from QuantumCore.graphic.vao import VAO
@@ -10,12 +9,9 @@ class Mesh:
         """ Engine graphics heart """
         self.vao = VAO()
         self.texture = Texture()
-
+    
     def __destroy__(self) -> None:
         """ delete data from GRAM """
         self.vao.__destroy__()
         self.texture.__destroy__()
         QuantumCore.graphic.vbo.CustomVBO_name.clear()
-
-
-mesh: Mesh = None
