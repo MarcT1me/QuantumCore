@@ -3,6 +3,8 @@ import time
 import os
 from loguru import logger
 
+import QuantumCore.data.config
+
 
 class SkipDebug:
     def __init__(self, *args, **kwargs): pass
@@ -103,6 +105,7 @@ class Debugging:
         relief:
           1. write an empty string to except_dirs to skip all directories and read-only files
         """
+        logger.info(f'\n\ncheck directory size with name: \n\t{self.directory}\n')
         
         # reset variables
         self._proj_size: dict = {
@@ -137,8 +140,8 @@ class Debugging:
 if __name__ == '__main__':
     size = Debugging.PSize(
         Debugging(
-            dir_name=rf'F:/project/QuantumCore',
-            see_lines=False
+            dir_name=QuantumCore.data.config.__APPLICATION_PATH__,
+            see_lines=False,
         ).get_proj_size()
     ).format_size
     
