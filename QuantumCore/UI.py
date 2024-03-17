@@ -1,14 +1,17 @@
 import importlib
+import sys
 
 import pygame
 import QuantumCore
 from typing import Callable
+from loguru import logger
 
 _creator: Callable = None
 
 
-def interface_creator(file_path, file_name, *,
-                      init_args=(), init_kwargs=None, go_args=(), go_kwargs=None, frames=10
+def interface_creator(file_path: str, file_name: str, *,
+                      init_args: tuple = (), init_kwargs: dict = None, go_args: tuple = (), go_kwargs: dict = None,
+                      frames=10
                       ) -> None:
     if init_kwargs is None: init_kwargs = {}
     if go_kwargs is None: go_kwargs = {}
@@ -19,8 +22,10 @@ def interface_creator(file_path, file_name, *,
     module = importlib.import_module(f'{".".join(file_path)}.{file_name}')
     last_code = ''
     
-    err_font = pygame.font.SysFont('Arial', 60)
+    err_font = pygame.font.SysFont('Arial', 30)
     clock = pygame.time.Clock()
+    
+    log = False
     
     while True:
         for event in pygame.event.get():
@@ -38,23 +43,35 @@ def interface_creator(file_path, file_name, *,
             ) as file:
                 interface_code = file.read().replace('# Callable: ', '')
                 
-                if interface_code.count('#uif') or last_code == '':
+                if interface_code.count('# uif') or last_code == '':
                     with open(module.__file__, 'r') as file:
                         head_code = file.read().replace('# Callable: ', '')
                         exec(head_code)
-                
                 exec(interface_code)
-                last_code = head_code
-                _creator.surface = QuantumCore.window.interface.surface
-                _creator(*init_args, **init_kwargs).go(*go_args, **go_kwargs)
+                
+            last_code = head_code
+            _creator.itr = QuantumCore.window.interface
+            _creator(*init_args, **init_kwargs).go(*go_args, **go_kwargs)
+            if log:
+                logger.success('File not count Errors')
+                log = False
         
         except Exception as err:
             try:
                 exec(last_code)
+                if not log:
+                    logger.warning(err)
+                    log = True
             except Exception as err:
-                pass
-            
-            QuantumCore.window.interface.surface.blit(err_font.render(str(err.args[0]), True, 'red'), (0, 0))
+                print(err)
+                logger.exception(err)
+                sys.exit(err)
+
+            _creator.itr.surface.blit(
+                err_font.render(str(err), True, 'red').convert_alpha(),
+                (0, 0)
+            )
+            _creator.itr.nonscene_render()
         
         # main pygame updating
         clock.tick(frames)

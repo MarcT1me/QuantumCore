@@ -65,16 +65,14 @@ class TestGame(App):
     
     def autosave(self):
         if settings.autosave:
-            new_name = self.test_scene.builder.name().split('_autosave')[0] + f'_autosave'
-            settings.write_datafile(
-                {
-                    'game': {
-                        'save_name': new_name
-                    }
+            new_name = self.test_scene.builder.name().split('_autosave')[0]+f'_autosave'
+            settings.write_datafile({
+                'game': {
+                    'save_name': new_name
                 }
-            )
+            })
             self.test_scene.builder.write(new_name)
-    
+            
     def events(self) -> None:
         """ Event handling """
         for event in pygame.event.get():
@@ -119,14 +117,14 @@ class TestGame(App):
         
         """ main update """
         QuantumCore.scene.scene.__update__()
-    
+
     def update_window(self) -> None:
         """ Rendering the application itself (GPU) """
         
         QuantumCore.scene.scene.__render__()
         
         self.ingame_interface.itrf.go(int(self.clock.get_fps()))
-        
+
         # main pygame updating
         pygame.display.flip()
         QuantumCore.time.delta = self.clock.tick(config.fps)

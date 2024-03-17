@@ -1,7 +1,7 @@
 """ Game settings.
  """
 from QuantumCore.data import config
-import json  # for rewrite engine configs
+import toml  # for rewrite engine configs
 
 """ Application settings """
 APPLICATION_NAME: str = 'QuantumGame'
@@ -23,8 +23,8 @@ autosave: bool = False
 
 def read_datafile_():
     """ Read CONFIG files """
-    with open(rf"{config.__APPLICATION_PATH__}/GameData/config.json", mode='r') as file:
-        return json.load(file)
+    with open(rf"{config.__APPLICATION_PATH__}/GameData/config.toml", mode='r') as file:
+        return toml.load(file)
     
 def change_datafile(changes):
     """ Change data in datafile variable """
@@ -36,8 +36,8 @@ def write_datafile(changes: dict[str: dict] =None):
     """ Write CONFIG files """
     change_datafile(changes) if changes is not None else Ellipsis
     
-    with open(rf"{config.__APPLICATION_PATH__}/GameData/config.json", mode='w') as file:
-        json.dump(datafile, file, indent=2)
+    with open(rf"{config.__APPLICATION_PATH__}/GameData/config.toml", mode='w') as file:
+        toml.dump(datafile, file)
 
 
 def rewrite_config():
