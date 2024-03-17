@@ -1,10 +1,12 @@
 __pycache__
-.idea
 venv
+.idea
+.vs
 
-dist
 build
+data_for_compile_files
 
+*.ini
 *.spec
 additional.py
 test.py

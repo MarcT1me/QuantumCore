@@ -1,0 +1,37 @@
+
+#noinspection PyUnresolvedReferences
+class Itrf(Head):  #type: core.UI.loading.Head  # not change
+    def step(self, value, stage=None, status=''):
+        """ Do step in loading progress bar """
+        self.stage_text = stage if stage is not None else self.stage_text
+        
+        """ static elements """
+        QuantumCore.window.interface.surface.blit(*self.background)
+        QuantumCore.window.interface.surface.blit(*self.loading_font)
+        
+        """ fonts """
+        # percents
+        fin_font = self.percent_font.render(f'{int(value)} %', True, 'white')
+        QuantumCore.window.interface.surface.blit(
+            fin_font, (self.sc_size[0]-fin_font.get_width()-20, self.sc_size[1]-fin_font.get_height()-50)
+        )
+        # stage name
+        fin_font1 = self.stage_font.render(f'{self.stage_text}', True, 'white')
+        QuantumCore.window.interface.surface.blit(
+            fin_font1, (40, self.sc_size[1]-fin_font1.get_height()-90)
+        )
+        # stage status
+        fin_font = self.status_font.render(f'{status}', True, 'white')
+        QuantumCore.window.interface.surface.blit(
+            fin_font, (60, self.sc_size[1]-fin_font.get_height()-60)
+        )
+        
+        pygame.draw.rect(QuantumCore.window.interface.surface, 'white', self.get_line_rect(value))
+        QuantumCore.window.interface.nonscene_render()
+        self.sleep(0.1)
+    
+    def go(self, value=100, stage='Init game scene'):
+        self.step(value, stage, 'load objects VBO`s')
+
+#noinspection PyUnresolvedReferences
+QuantumCore.UI._creator = Itrf
