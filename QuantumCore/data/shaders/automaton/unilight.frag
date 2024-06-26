@@ -24,7 +24,7 @@ uniform vec3 camPos;
 uniform float gamma;
 
 
-vec3 getLight(vec3 color) {
+vec4 getLight(inout vec4 color) {
     // Standard variable
     vec3 Normal = normalize(normal);
     vec3 ambient = vec3(0, 0, 0);
@@ -51,17 +51,16 @@ vec3 getLight(vec3 color) {
         specular = max(spec * light.Is, specular);
     };
 
-    return color * (ambient + deffuse + specular);
+    return color * vec4(ambient + deffuse + specular, 1.0);
 }
 
 
 void main() {
+    vec4 color  = texture(u_texture_0, uv_0);
 
-    vec3 color  = texture(u_texture_0, uv_0).rgb;
-
-    color = pow(color, vec3(gamma));
+    color = pow(color, vec4(gamma));
     color = getLight(color);
-    color = pow(color, 1/vec3(gamma));
+    color = pow(color, 1/vec4(gamma));
 
-    fragColor = vec4(color, 1.0);
+    fragColor = color;
 }
