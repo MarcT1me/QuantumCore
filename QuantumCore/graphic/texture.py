@@ -81,16 +81,16 @@ class Texture:
     def __get_texture__(self, path) -> moderngl.Texture:
         """ load texture """
         try:
-            texture = pygame.image.load(path).convert()
+            texture = pygame.image.load(path).convert_alpha()
         except FileNotFoundError:
             texture = self.textures['empty']
 
         texture = pygame.transform.flip(texture, flip_x=False, flip_y=True)  # debug
         # texture.fill((255, 0, 0))  # debug
-        texture = self.ctx.texture(size=texture.get_size(), components=3,
-                                   data=pygame.image.tostring(texture, 'RGB'))  # get GLSL texture array
+        texture = self.ctx.texture(size=texture.get_size(), components=4,
+                                   data=pygame.image.tostring(texture, 'RGBA'))  # get GLSL texture array
         # use GLSL methods
-        texture.filter = (moderngl.LINEAR_MIPMAP_LINEAR, moderngl.LINEAR)
+        texture.filter = moderngl.LINEAR_MIPMAP_LINEAR, moderngl.LINEAR
         texture.build_mipmaps()
         # AF
         texture.anisotropy = 32.0
@@ -98,7 +98,7 @@ class Texture:
 
         return texture
 
-    def __get_texture_cube__(self, dir_path, ext) -> moderngl.Texture:
+    def __get_texture_cube__(self, dir_path, ext) -> moderngl.TextureCube:
         """ use that load SkyBox """
 
         faces = ['right', 'left', 'top', 'bottom'] + ['front', 'back'][::-1]

@@ -6,6 +6,8 @@ in vec2 uv_0;
 in vec3 normal;
 in vec3 fragPos;
 
+#define lightArraySize 20
+
 // light
 struct Light {
     vec3 position;
@@ -15,7 +17,7 @@ struct Light {
     int size;
 };
 uniform int lights_source_size;
-uniform Light lights_source[20];
+uniform Light lights_source[lightArraySize];
 
 // poligon color variable
 uniform sampler2D u_texture_0;
