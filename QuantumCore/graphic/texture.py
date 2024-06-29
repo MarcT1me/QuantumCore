@@ -104,7 +104,7 @@ class Texture:
         faces = ['right', 'left', 'top', 'bottom'] + ['front', 'back'][::-1]
         textures = []
         for face in faces:
-            texture = pygame.image.load(dir_path + f'{face}.{ext}').convert()
+            texture = pygame.image.load(dir_path + f'{face}.{ext}').convert_alpha()
             if face in ['right', 'left', 'front', 'back']:
                 texture = pygame.transform.flip(texture, flip_x=True, flip_y=False)  # debug
             else:
@@ -112,10 +112,10 @@ class Texture:
             textures.append(texture)
 
         size = textures[0].get_size()
-        texture_cube = self.ctx.texture_cube(size=size, components=3, data=None)  # load in GLSL
+        texture_cube = self.ctx.texture_cube(size=size, components=4, data=None)  # load in GLSL
 
         for i in range(6):
-            texture_data = pygame.image.tostring(textures[i], 'RGB')
+            texture_data = pygame.image.tostring(textures[i], 'RGBA')
             texture_cube.write(face=i, data=texture_data)
 
         return texture_cube

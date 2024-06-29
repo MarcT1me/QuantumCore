@@ -8,7 +8,8 @@
     ],
     "VSYNC": false,
     "DISPLAY_num": 1,
-    "FOV": 75
+    "FOV": 75,
+    "RESOLUTION_SCALING": 0.5
   },
   "game": {
     "save_name": "test_scene2",

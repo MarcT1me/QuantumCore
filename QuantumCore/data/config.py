@@ -27,8 +27,9 @@ _, SCREEN_size = display_init(), get_desktop_sizes()[DISPLAY_num]  # dynamic
 
 """ Render settings """
 SHADER_NAME: tuple = 'default', 'default'  # heavy  # .CONFIG
-__CONTEXT_SIZE__: tuple = SCREEN_size      # heavy
 VSYNC: bool = False                        # heavy
+RESOLUTION_SCALING = 1.0
+RENDER_size = [SCREEN_size[0] * RESOLUTION_SCALING, SCREEN_size[1] * RESOLUTION_SCALING]
 
 """ Mouse & KeyBord settings """
 sensitivity: float = 0.05  # heavy

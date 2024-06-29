@@ -29,7 +29,7 @@ class __GRAPHIC:
         """ Init engine graphic
          """
         self.flags = flags
-
+        
         """ INIT PyGamse Window """
         if config.full_screen:
             config.SCREEN_SIZE = pygame.display.get_desktop_sizes()[config.DISPLAY_num]
@@ -46,28 +46,41 @@ class __GRAPHIC:
         w_size = pygame.display.get_window_size()
         config.SCREEN_size[0] = w_size[0]
         config.SCREEN_size[1] = w_size[1]
-
+        # rend surf
+        config.RENDER_size[0] = w_size[0]*config.RESOLUTION_SCALING
+        config.RENDER_size[1] = w_size[1]*config.RESOLUTION_SCALING
+        
         """ INIT GLSL context """
         self.context = moderngl.create_context()
         self.context.enable(flags=self.flags['glsl'])  # flags=moderngl.DEPTH_TEST | moderngl.CULL_FACE | moderngl.BLEND
         self.context.blend_func = moderngl.SRC_ALPHA, moderngl.ONE_MINUS_SRC_ALPHA
         self.context.viewport = (0, 0, *config.SCREEN_size)
+        
+        """ init render surface """
+        # Создание текстуры для рендера
+        # render_texture = self.context.texture(config.RENDER_size, 4)
+        # render_texture.build_mipmaps()
+        
+        # Создание фреймбуфера
+        # self._render_fbo = self.context.framebuffer(color_attachments=[render_texture])
     
     def set_mesh(self):
         """ INIT Engine core """
         QuantumCore.graphic.camera.camera = QuantumCore.graphic.camera.Camera()
         QuantumCore.graphic.mash.mesh = QuantumCore.graphic.mash.Mesh()
-    
-        logger.info(f"Engine graphic - init\n"
-                    f"screen: size = {config.SCREEN_size},"
-                    f" is full screen - {pygame.display.is_fullscreen()},"
-                    f" VSync - {config.VSYNC}\n"
-                    f"context: size = {self.context.screen.size},"
-                    f" GPU = {self.context.info['GL_RENDERER']}\n"
-                    f"mesh: "
-                    f"shaders_list = {QuantumCore.graphic.mash.mesh.vao.program.programs.keys()},\n"
-                    f"      VAOs_list = {QuantumCore.graphic.mash.mesh.vao.VAOs.keys()},\n"
-                    f"      textures_list = {QuantumCore.graphic.mash.mesh.texture.textures.keys()}\n")
+        
+        logger.info(
+            f"Engine graphic - init\n"
+            f"screen: size = {config.SCREEN_size},"
+            f" is full screen - {pygame.display.is_fullscreen()},"
+            f" VSync - {config.VSYNC}\n"
+            f"context: size = {self.context.screen.size},"
+            f" GPU = {self.context.info['GL_RENDERER']}\n"
+            f"mesh: "
+            f"shaders_list = {QuantumCore.graphic.mash.mesh.vao.program.programs.keys()},\n"
+            f"      VAOs_list = {QuantumCore.graphic.mash.mesh.vao.VAOs.keys()},\n"
+            f"      textures_list = {QuantumCore.graphic.mash.mesh.texture.textures.keys()}\n"
+        )
     
     def resset(self) -> None:
         """ Resset graphic, requires initialization of classes camera and scene """
@@ -76,12 +89,11 @@ class __GRAPHIC:
         
         """ REWRITE Engine variables """
         if QuantumCore.graphic.camera.camera is not None:
-            QuantumCore.graphic.camera.camera._aspect_ratio = config.SCREEN_size[0] / config.SCREEN_size[1]
+            QuantumCore.graphic.camera.camera._aspect_ratio = config.SCREEN_size[0]/config.SCREEN_size[1]
             QuantumCore.graphic.camera.camera.m_proj = QuantumCore.graphic.camera.camera._get_projection_matrix_
-    
+        
         logger.debug(f'graphics - restart\n\n')
     
     def close(self):
         self.context.release()
         self.interface.__destroy__()
-    

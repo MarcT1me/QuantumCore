@@ -39,7 +39,7 @@ class TestScene(Location):
         return self
     
     def build(self) -> None:
-        if self.builder.read() is not None:
+        if self.builder.read() is not None and False:
             """ if scene.sav load successful """
             
             self.builder.load(
@@ -73,7 +73,7 @@ self.scene.app.loading.itrf.step(93, stage='Load game scene', status='sav - came
             self.light(Light(size=15), 'lighter')  # camera light
 
             self.obj(Cube(pos=(40, 0, 40), scale=(40, 1, 40), tex_id='wall1'))  # wall
-            self.obj(MovingCube(pos=(15, 10, 15), scale=(5, 5, 5), tex_id='test1'))  # moving cube 1
+            self.obj(MovingCube(pos=(15, 10, 15), scale=(5, 10**-10, 5), tex_id='test1'))  # moving cube 1
             self.obj(WoodenWatchTower(pos=(60, -1, 30), scale=(3, 3, 3)))  # tower - custom model
             self.obj(Earth(pos=(30, 10, 60), scale=(2, 2, 2)))  # earth - custom model with no-event updating
             self.obj(MovingCube(pos=(44, 10, 44), scale=(5, 5, 5), tex_id='empty'))  # moving cube 2
