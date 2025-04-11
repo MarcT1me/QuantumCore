@@ -1,6 +1,6 @@
 pygame
 moderngl
-pyglm
+pyglm==2.7.3
 numpy
 pywavefront
 loguru

@@ -31,6 +31,12 @@ their use and in terms of documentation
   * Numpy;
   * PyGlm;
   * PyWaveFront;
+  * Loguru;
+
+### How install and run project
+1) clone repository from GitHub (https://github.com/MarcT1me/QuantumCore.git)
+2) install requirements `pip install -r requirements.txt`
+3) run main.pyw `python .\main.pyw`
 
 ### Compile:
 Compile command: `pyinstaller --name "Quantum Game v0.4.4" --icon="QuantumCore/data/QuantumCore.ico" --add-data "C:/Program Files/Python311/Lib/site-packages/moderngl;moderngl" --add-data "C:/Program Files/Python311/Lib/site-packages/glcontext;glcontext" --add-data "F:/project/QuantumCore/core/elements/entities.py;entities" main.pyw`\
