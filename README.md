@@ -1,5 +1,6 @@
 # QuantumCore - graphic Engine
 ###### _Just **PyQC**_
+###### minimum python version - 3.10
 \
 ㅤ
 Game Engine in Python ( **[Pygame](https://pypi.org/project/pygame/), [OpenGL](https://www.opengl.org/)**, _[Bullet Physics](https://pybullet.org/wordpress/), [Cython](https://cython.org/)_ ) \
